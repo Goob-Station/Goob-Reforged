@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFramework>$(TargetFramework)</TargetFramework>
+      <IsPackable>false</IsPackable>
+      <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+      <OutputPath>..\..\..\bin\Content.Client\</OutputPath>
+      <WarningsAsErrors>nullable</WarningsAsErrors>
+      <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nett" />
+  </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Content.Client\Content.Client.csproj" />
+      <ProjectReference Include="..\Content.WoundMod.Shared\Content.WoundMod.Shared.csproj" />
+    </ItemGroup>
+
+    <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+    <Import Project="..\..\..\RobustToolbox\MSBuild\XamlIL.targets" />
+</Project>

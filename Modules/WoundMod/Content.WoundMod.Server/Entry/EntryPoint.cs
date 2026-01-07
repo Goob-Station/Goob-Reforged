@@ -1,0 +1,37 @@
+﻿// SPDX-FileCopyrightText: 2025 Aiden <28298836+Aidenkrz@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 Misandry <mary@thughunt.ing>
+// SPDX-FileCopyrightText: 2025 Sara Aldrete's Top Guy <mary@thughunt.ing>
+// SPDX-FileCopyrightText: 2025 gus <august.eymann@gmail.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+using Content.WoundMod.Server.IoC;
+using Robust.Shared.ContentPack;
+using Robust.Shared.Timing;
+
+namespace Content.WoundMod.Server.Entry;
+
+public sealed class EntryPoint : GameServer
+{
+    public override void Init()
+    {
+        base.Init();
+        ServerWoundModContentIoC.Register();
+        IoCManager.BuildGraph();
+    }
+
+    public override void PostInit()
+    {
+        base.PostInit();
+    }
+
+    public override void Update(ModUpdateLevel level, FrameEventArgs frameEventArgs)
+    {
+        base.Update(level, frameEventArgs);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+    }
+}

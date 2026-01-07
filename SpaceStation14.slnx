@@ -35,6 +35,21 @@
       <BuildType Solution="Tools|*" Project="Debug" />
     </Project>
   </Folder>
+  <Folder Name="/Modules/WoundMod/">
+    <Project Path="Modules/WoundMod/Content.WoundMod.Client/Content.WoundMod.Client.csproj" />
+    <Project Path="Modules/WoundMod/Content.WoundMod.Common/Content.WoundMod.Common.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+    <Project Path="Modules/WoundMod/Content.WoundMod.Server/Content.WoundMod.Server.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+    <Project Path="Modules/WoundMod/Content.WoundMod.Shared/Content.WoundMod.Shared.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+  </Folder>
   <Folder Name="/MSBuild/">
     <File Path="MSBuild/Content.props" />
   </Folder>

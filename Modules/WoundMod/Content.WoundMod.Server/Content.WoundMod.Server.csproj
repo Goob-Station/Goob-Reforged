@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\..\..\bin\Content.Server\</OutputPath>
+    <NoWarn>1998</NoWarn>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Content.Server\Content.Server.csproj" />
+    <ProjectReference Include="..\Content.WoundMod.Common\Content.WoundMod.Common.csproj" />
+    <ProjectReference Include="..\Content.WoundMod.Shared\Content.WoundMod.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

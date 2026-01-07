@@ -1,0 +1,16 @@
+﻿name: WoundMod
+id: WoundMod
+version: 1.0.0
+
+projects:
+  - path: Content.WoundMod.Common
+    role: Common
+
+  - path: Content.WoundMod.Shared
+    role: Shared
+
+  - path: Content.WoundMod.Server
+    role: Server
+
+  - path: Content.WoundMod.Client
+    role: Client
