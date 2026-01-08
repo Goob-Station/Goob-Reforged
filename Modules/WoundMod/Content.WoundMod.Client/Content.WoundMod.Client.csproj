@@ -9,6 +9,7 @@
     </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Nett" />
   </ItemGroup>
 
