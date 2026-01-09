@@ -5,6 +5,7 @@
 
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Events;
+using Content.Shared.Body.Systems;
 using Content.WoundMod.Server.DelayedDeath;
 using Content.WoundMod.Shared.Body.Organ;
 
@@ -38,5 +39,4 @@ public sealed class HeartSystem : EntitySystem
         if (_bodySystem.TryGetBodyOrganEntityComps<BrainComponent>(args.Body, out var _))
             RemComp<DelayedDeathComponent>(args.Body);
     }
-    // Shitmed-End
 }

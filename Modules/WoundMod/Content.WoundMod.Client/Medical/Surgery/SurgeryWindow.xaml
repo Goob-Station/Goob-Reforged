@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <surgery:SurgeryWindow
     xmlns="https://spacestation14.io"
-    xmlns:surgery="clr-namespace:Content.WoundMod.Client.Medical.Surgery"
+    xmlns:surgery="using:Content.WoundMod.Client.Medical.Surgery"
     xmlns:cc="using:Content.Client.Administration.UI.CustomControls"
     MinSize="400 400">
     <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">

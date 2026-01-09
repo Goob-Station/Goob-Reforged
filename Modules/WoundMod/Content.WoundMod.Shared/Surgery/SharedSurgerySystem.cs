@@ -9,6 +9,7 @@
 
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
+using Content.Shared.Body.Systems;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage.Components;
@@ -24,6 +25,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Prototypes;
 using Content.Shared.Standing;
+using Content.Shared.StatusEffectNew;
 using Content.WoundMod.Shared.Body.Systems;
 using Content.WoundMod.Shared.Surgery.Conditions;
 using Content.WoundMod.Shared.Surgery.Steps;
@@ -44,6 +46,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly SharedWMBodySystem _wmBody = default!;
     [Dependency] private readonly SharedBodySystem _body = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly INetManager _net = default!;
@@ -56,6 +59,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     [Dependency] private readonly StandingStateSystem _standing = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
+    [Dependency] protected readonly StatusEffectsSystem _status = default!;
 
     /// <summary>
     /// Cache of all surgery prototypes' singleton entities.
@@ -211,7 +215,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
             return;
         }
 
-        var organSlotIdToOrgan = _body.GetPartOrgans(args.Part, part).ToDictionary(o => o.Item2.SlotId, o => o.Item2);
+        var organSlotIdToOrgan = _wmBody.GetPartOrgans(args.Part, part).ToDictionary(o => o.WMComponent.SlotId, o => (o.Component , o.WMComponent));
 
         var allOnAddFound = true;
         var zeroOnAddFound = true;
@@ -221,7 +225,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
             if (!organSlotIdToOrgan.TryGetValue(organSlotId, out var organ))
                 continue;
 
-            if (organ.OnAdd == null)
+            if (organ.WMComponent.OnAdd == null)
             {
                 allOnAddFound = false;
                 continue;
@@ -229,7 +233,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
             foreach (var key in components.Keys)
             {
-                if (!organ.OnAdd.ContainsKey(key))
+                if (!organ.WMComponent.OnAdd.ContainsKey(key))
                     allOnAddFound = false;
                 else
                     zeroOnAddFound = false;
@@ -274,7 +278,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
         foreach (var reg in ent.Comp.Organ.Values)
         {
-            if (_body.TryGetBodyPartOrgans(args.Part, reg.Component.GetType(), out var organs)
+            if (_wmBody.TryGetBodyPartOrgans(args.Part, reg.Component.GetType(), out var organs)
                 && organs.Count > 0)
             {
                 if (ent.Comp.Inverse
@@ -301,14 +305,14 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
     private void OnPartRemovedConditionValid(Entity<SurgeryPartRemovedConditionComponent> ent, ref SurgeryValidEvent args)
     {
-        if (!_body.CanAttachToSlot(args.Part, ent.Comp.Connection))
+        if (!_wmBody.CanAttachToSlot(args.Part, ent.Comp.Connection))
         {
             args.Cancelled = true;
             return;
         }
 
-        var results = _body.GetBodyChildrenOfType(args.Body, ent.Comp.Part, symmetry: ent.Comp.Symmetry).ToList();
-        if (results is not { } || !results.Any())
+        var results = _wmBody.GetBodyChildrenOfType(args.Body, ent.Comp.Part, symmetry: ent.Comp.Symmetry).ToList();
+        if (results.Count == 0)
             return;
 
         if (!results.Any(part => HasComp<BodyPartReattachedComponent>(part.Id)))

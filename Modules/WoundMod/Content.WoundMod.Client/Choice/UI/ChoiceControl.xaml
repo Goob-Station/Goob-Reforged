@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <ui:ChoiceControl
     xmlns="https://spacestation14.io"
-    xmlns:ui="clr-namespace:Content.WoundMod.Client.Choice.UI">
+    xmlns:ui="using:Content.WoundMod.Client.Choice.UI">
     <BoxContainer Orientation="Horizontal">
         <Button Name="Button" Access="Public"
                 HorizontalExpand="True" VerticalExpand="False"

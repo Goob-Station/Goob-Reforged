@@ -5,6 +5,7 @@
 
 using System.Numerics;
 using Content.Shared.Body.Part;
+using Content.Shared.Body.Systems;
 using Content.WoundMod.Shared.Body.Events;
 using Content.WoundMod.Shared.Body.Systems;
 using Robust.Shared.Map;
@@ -16,6 +17,7 @@ namespace Content.WoundMod.Shared.BodyEffects.Subsystems;
 public sealed class GenerateChildPartSystem : EntitySystem
 {
     [Dependency] private readonly SharedBodySystem _bodySystem = default!;
+    [Dependency] private readonly SharedWMBodySystem _wmBodySystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly INetManager _net = default!;
     public override void Initialize()
@@ -41,20 +43,19 @@ public sealed class GenerateChildPartSystem : EntitySystem
             return;
 
         // I pinky swear to also move this to the server side properly next update :)
-        if (_net.IsServer)
-        {
-            var childPart = Spawn(component.Id, new EntityCoordinates(partComp.Body.Value, Vector2.Zero));
+        if (!_net.IsServer)
+            return;
+        var childPart = Spawn(component.Id, new EntityCoordinates(partComp.Body.Value, Vector2.Zero));
 
-            if (!TryComp(childPart, out BodyPartComponent? childPartComp))
-                return;
+        if (!TryComp(childPart, out BodyPartComponent? childPartComp))
+            return;
 
-            var slotName = _bodySystem.GetSlotFromBodyPart(childPartComp);
-            _bodySystem.TryCreatePartSlot(uid, slotName, childPartComp.PartType, out var _);
-            _bodySystem.AttachPart(uid, slotName, childPart, partComp, childPartComp);
-            component.ChildPart = childPart;
-            component.Active = true;
-            Dirty(childPart, childPartComp);
-        }
+        var slotName = _wmBodySystem.GetSlotFromBodyPart(uid);
+        _bodySystem.TryCreatePartSlot(uid, slotName, childPartComp.PartType, out var _);
+        _bodySystem.AttachPart(uid, slotName, childPart, partComp, childPartComp);
+        component.ChildPart = childPart;
+        component.Active = true;
+        Dirty(childPart, childPartComp);
     }
 
     // Still unusued, gotta figure out what I want to do with this function outside of fuckery with mantis blades.
@@ -63,7 +64,7 @@ public sealed class GenerateChildPartSystem : EntitySystem
         if (!TryComp(uid, out BodyPartComponent? partComp))
             return;
 
-        _bodySystem.DropSlotContents((uid, partComp));
+        _wmBodySystem.DropSlotContents((uid, partComp));
         var ev = new BodyPartDroppedEvent((uid, partComp));
         RaiseLocalEvent(uid, ref ev);
         QueueDel(uid);

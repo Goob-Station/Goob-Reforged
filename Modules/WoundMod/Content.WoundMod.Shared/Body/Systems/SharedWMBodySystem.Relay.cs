@@ -12,7 +12,7 @@ using Content.WoundMod.Shared.DoAfter;
 
 namespace Content.WoundMod.Shared.Body.Systems;
 
-public partial class SharedBodySystem
+public partial class SharedWMBodySystem
 {
     private void InitializeRelay()
     {
@@ -29,38 +29,30 @@ public partial class SharedBodySystem
         RelayEvent((uid, component), args);
     }
 
-    public void RelayEvent<T>(Entity<BodyComponent> body, ref T args) where T : IBodyPartRelayEvent
+    private void RelayEvent<T>(Entity<BodyComponent> body, ref T args) where T : IBodyPartRelayEvent
     {
         // this copies the by-ref event if it is a struct
         var ev = new BodyPartRelayedEvent<T>(args);
-        foreach (var part in GetBodyChildrenOfType(body.Owner, args.TargetBodyPart, body.Comp))
-        {
+        foreach (var part in _body.GetBodyChildrenOfType(body.Owner, args.TargetBodyPart, body.Comp))
             RaiseLocalEvent(part.Id, ev);
-        }
+
 
         // and now we copy it back
         args = ev.Args;
     }
 
-    public void RelayEvent<T>(Entity<BodyComponent> body, T args) where T : IBodyPartRelayEvent
+    private void RelayEvent<T>(Entity<BodyComponent> body, T args) where T : IBodyPartRelayEvent
     {
         var ev = new BodyPartRelayedEvent<T>(args);
 
-        foreach (var part in GetBodyChildrenOfType(body.Owner, args.TargetBodyPart, body.Comp))
-        {
+        foreach (var part in _body.GetBodyChildrenOfType(body.Owner, args.TargetBodyPart, body.Comp))
             RaiseLocalEvent(part.Id, ev);
-        }
     }
 }
 
-public sealed class BodyPartRelayedEvent<TEvent> : EntityEventArgs
+public sealed class BodyPartRelayedEvent<TEvent>(TEvent args) : EntityEventArgs
 {
-    public TEvent Args;
-
-    public BodyPartRelayedEvent(TEvent args)
-    {
-        Args = args;
-    }
+    public readonly TEvent Args = args;
 }
 
 /// <summary>

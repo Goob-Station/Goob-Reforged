@@ -5,6 +5,7 @@
 
 using Content.Shared.Body.Part;
 using Content.WoundMod.Shared.Body.Events;
+using Content.WoundMod.Shared.Body.Part;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Timing;
@@ -40,26 +41,28 @@ public partial class BodyPartEffectSystem : EntitySystem
         }
     }
 
-    private void OnPartComponentsModify(Entity<BodyPartComponent> partEnt,
-        ref BodyPartComponentsModifyEvent ev)
+    private void OnPartComponentsModify(Entity<BodyPartComponent> partEnt, ref BodyPartComponentsModifyEvent ev)
     {
-        if (partEnt.Comp.OnAdd != null)
+        if (!TryComp<WMBodyPartComponent>(partEnt, out var part))
+            return;
+
+        if (part.OnAdd != null)
         {
             if (ev.Add)
-                AddComponents(ev.Body, partEnt, partEnt.Comp.OnAdd);
+                AddComponents(ev.Body, partEnt, part.OnAdd);
             else
-                RemoveComponents(ev.Body, partEnt, partEnt.Comp.OnAdd);
+                RemoveComponents(ev.Body, partEnt, part.OnAdd);
         }
 
-        if (partEnt.Comp.OnRemove != null)
+        if (part.OnRemove != null)
         {
             if (ev.Add)
-                AddComponents(ev.Body, partEnt, partEnt.Comp.OnRemove);
+                AddComponents(ev.Body, partEnt, part.OnRemove);
             else
-                RemoveComponents(ev.Body, partEnt, partEnt.Comp.OnRemove);
+                RemoveComponents(ev.Body, partEnt, part.OnRemove);
         }
 
-        Dirty(partEnt, partEnt.Comp);
+        Dirty(partEnt, part);
     }
 
     private void AddComponents(EntityUid body,

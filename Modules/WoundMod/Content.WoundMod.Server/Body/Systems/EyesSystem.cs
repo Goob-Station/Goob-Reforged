@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Eye.Blinding.Systems;
 using Content.WoundMod.Shared.Body.Organ;
@@ -15,7 +16,7 @@ namespace Content.WoundMod.Server.Body.Systems
     {
         [Dependency] private readonly IEntityManager _entityManager = default!;
         [Dependency] private readonly BlindableSystem _blindableSystem = default!;
-        [Dependency] private readonly BodySystem _bodySystem = default!;
+        [Dependency] private readonly SharedBodySystem _bodySystem = default!;
 
         public override void Initialize()
         {
@@ -30,17 +31,15 @@ namespace Content.WoundMod.Server.Body.Systems
             if (TerminatingOrDeleted(newEntity) || TerminatingOrDeleted(oldEntity))
                 return;
 
-            BlindableComponent? newSight;
-            BlindableComponent? oldSight;
             //transfer existing component to organ
-            if (!TryComp(newEntity, out newSight))
+            if (!TryComp(newEntity, out BlindableComponent? newSight))
                 newSight = EnsureComp<BlindableComponent>(newEntity);
 
-            if (!TryComp(oldEntity, out oldSight))
+            if (!TryComp(oldEntity, out BlindableComponent? oldSight))
                 oldSight = EnsureComp<BlindableComponent>(oldEntity);
 
             //give new sight all values of old sight
-            _blindableSystem.TransferBlindness(newSight, oldSight, newEntity);
+            TransferBlindness(newSight, oldSight, newEntity);
 
             var hasOtherEyes = false;
             //check for other eye components on owning body and owning body organs (if old entity has a body)
@@ -52,11 +51,10 @@ namespace Content.WoundMod.Server.Body.Systems
                 {
                     foreach (var (organ, _) in _bodySystem.GetBodyOrgans(oldEntity, body))
                     {
-                        if (TryComp<EyesComponent>(organ, out var eyes))
-                        {
-                            hasOtherEyes = true;
-                            break;
-                        }
+                        if (!TryComp<EyesComponent>(organ, out var eyes))
+                            continue;
+                        hasOtherEyes = true;
+                        break;
                     }
                     //TODO (MS14): Should we do this for body parts too? might be a little overpowered but could be funny/interesting
                 }
@@ -66,6 +64,16 @@ namespace Content.WoundMod.Server.Body.Systems
             if (!hasOtherEyes && !TryComp<EyesComponent>(oldEntity, out var self))
                 _blindableSystem.AdjustEyeDamage((oldEntity, oldSight), oldSight.MaxDamage);
 
+        }
+
+        private void TransferBlindness(BlindableComponent newSight, BlindableComponent oldSight, EntityUid newEntity)
+        {
+            newSight.IsBlind = oldSight.IsBlind;
+            newSight.LightSetup = oldSight.LightSetup;
+            newSight.GraceFrame = oldSight.GraceFrame;
+            newSight.MinDamage = oldSight.MinDamage;
+            newSight.MaxDamage = oldSight.MaxDamage;
+            _blindableSystem.AdjustEyeDamage(newEntity, oldSight.EyeDamage - newSight.MaxDamage); // hack to not touch upstream
         }
 
         private void OnOrganEnabled(EntityUid uid, EyesComponent component, OrganEnabledEvent args)

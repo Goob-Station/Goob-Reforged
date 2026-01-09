@@ -78,7 +78,7 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
 
     private void OnVestInteract(Entity<AbductorVestComponent> ent, ref AfterInteractEvent args)
     {
-        if (!_actionBlockerSystem.CanInstrumentInteract(args.User, args.Used, args.Target)) return;
+        if (!_actionBlockerSystemSystem.CanInstrumentInteract(args.User, args.Used, args.Target)) return;
         if (!args.Target.HasValue) return;
 
         if (TryComp<AbductorConsoleComponent>(args.Target, out var console))

@@ -17,7 +17,7 @@ internal sealed class CyberneticsSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<CyberneticsComponent, EmpPulseEvent>(OnEmpPulse);
-        SubscribeLocalEvent<CyberneticsComponent, EmpDisabledRemoved>(OnEmpDisabledRemoved);
+        SubscribeLocalEvent<CyberneticsComponent, EmpDisabledRemovedEvent>(OnEmpDisabledRemoved);
     }
     private void OnEmpPulse(Entity<CyberneticsComponent> cyberEnt, ref EmpPulseEvent ev)
     {
@@ -39,21 +39,20 @@ internal sealed class CyberneticsSystem : EntitySystem
         }
     }
 
-    private void OnEmpDisabledRemoved(Entity<CyberneticsComponent> cyberEnt, ref EmpDisabledRemoved ev)
+    private void OnEmpDisabledRemoved(Entity<CyberneticsComponent> cyberEnt, ref EmpDisabledRemovedEvent ev)
     {
-        if (cyberEnt.Comp.Disabled)
+        if (!cyberEnt.Comp.Disabled)
+            return;
+        cyberEnt.Comp.Disabled = false;
+        if (HasComp<OrganComponent>(cyberEnt))
         {
-            cyberEnt.Comp.Disabled = false;
-            if (HasComp<OrganComponent>(cyberEnt))
-            {
-                var enableEvent = new OrganEnableChangedEvent(true);
-                RaiseLocalEvent(cyberEnt, ref enableEvent);
-            }
-            else if (HasComp<BodyPartComponent>(cyberEnt))
-            {
-                var enableEvent = new BodyPartEnableChangedEvent(true);
-                RaiseLocalEvent(cyberEnt, ref enableEvent);
-            }
+            var enableEvent = new OrganEnableChangedEvent(true);
+            RaiseLocalEvent(cyberEnt, ref enableEvent);
+        }
+        else if (HasComp<BodyPartComponent>(cyberEnt))
+        {
+            var enableEvent = new BodyPartEnableChangedEvent(true);
+            RaiseLocalEvent(cyberEnt, ref enableEvent);
         }
     }
 }

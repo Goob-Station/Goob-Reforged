@@ -29,6 +29,7 @@ public sealed class TargetingSystem : SharedTargetingSystem
         SubscribeLocalEvent<TargetingComponent, ComponentShutdown>(OnTargetingShutdown);
         SubscribeNetworkEvent<TargetIntegrityChangeEvent>(OnTargetIntegrityChange);
 
+        /*
         CommandBinds.Builder
         .Bind(ContentKeyFunctions.TargetHead,
             InputCmdHandler.FromDelegate((session) => HandleTargetChange(session, TargetBodyPart.Head)))
@@ -51,6 +52,9 @@ public sealed class TargetingSystem : SharedTargetingSystem
         .Bind(ContentKeyFunctions.TargetRightFoot,
             InputCmdHandler.FromDelegate((session) => HandleTargetChange(session, TargetBodyPart.RightFoot)))
         .Register<SharedTargetingSystem>();
+        TODO: binds last
+        */
+
     }
 
     private void HandlePlayerAttached(EntityUid uid, TargetingComponent component, LocalPlayerAttachedEvent args)

@@ -7,5 +7,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <surgery:SurgeryStepButton
     xmlns="https://spacestation14.io"
-    xmlns:surgery="clr-namespace:Content.WoundMod.Client.Medical.Surgery">
+    xmlns:surgery="using:Content.WoundMod.Client.Medical.Surgery">
 </surgery:SurgeryStepButton>

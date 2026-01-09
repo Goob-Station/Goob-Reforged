@@ -9,11 +9,13 @@
 using Content.Shared.Administration.Logs;
 using Content.Shared.Bed.Sleep;
 using Content.Shared.Body.Part;
+using Content.Shared.Body.Systems;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Database;
 using Content.Shared.DeviceLinking.Events;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Labels.EntitySystems;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
@@ -33,9 +35,10 @@ public abstract class SharedAutodocSystem : EntitySystem
     [Dependency] protected readonly IGameTiming Timing = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly SharedWMBodySystem _wmBody = default!;
     [Dependency] private readonly SharedBodySystem _body = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedLabelSystem _label = default!;
+    [Dependency] private readonly LabelSystem _label = default!;
     [Dependency] private readonly SharedStorageSystem _storage = default!;
     [Dependency] private readonly SharedSurgerySystem _surgery = default!;
     [Dependency] private readonly SleepingSystem _sleeping = default!;
@@ -227,7 +230,7 @@ public abstract class SharedAutodocSystem : EntitySystem
         return null;
     }
 
-    public bool GrabItem(Entity<AutodocComponent, HandsComponent> ent, EntityUid item)
+    private bool GrabItem(Entity<AutodocComponent, HandsComponent> ent, EntityUid item)
     {
         return _hands.TryPickup(ent, item, ent.Comp1.ItemSlot, animate: false, handsComp: ent.Comp2);
     }
@@ -247,13 +250,9 @@ public abstract class SharedAutodocSystem : EntitySystem
 
     public EntityUid GetHeldOrThrow(Entity<AutodocComponent, HandsComponent> ent)
     {
-        if (!_hands.TryGetHand(ent, ent.Comp1.ItemSlot, out var hand, ent.Comp2))
+        if (!_hands.TryGetHand(ent.Owner, ent.Comp1.ItemSlot, out var hand) || _hands.TryGetHeldItem(ent.Owner, ent.Comp1.ItemSlot, out var item) || !item.HasValue)
             throw new AutodocError("item-unavailable");
-
-        if (hand.HeldEntity is not {} item)
-            throw new AutodocError("item-unavailable");
-
-        return item;
+        return item.Value;
     }
 
     public void LabelItem(EntityUid item, string label)
@@ -285,18 +284,13 @@ public abstract class SharedAutodocSystem : EntitySystem
 
     public EntityUid GetPatientOrThrow(Entity<AutodocComponent> ent)
     {
-        if (GetPatient(ent) is not {} patient)
-            throw new AutodocError("missing-patient");
-
-        return patient;
+        return GetPatient(ent) ?? throw new AutodocError("missing-patient");
     }
 
     public EntityUid? FindPart(EntityUid patient, BodyPartType type, BodyPartSymmetry? symmetry)
     {
-        foreach (var ent in _body.GetBodyChildrenOfType(patient, type, symmetry: symmetry))
-        {
+        foreach (var ent in _wmBody.GetBodyChildrenOfType(patient, type, symmetry: symmetry))
             return ent.Id;
-        }
 
         return null;
     }
@@ -341,7 +335,7 @@ public abstract class SharedAutodocSystem : EntitySystem
         if (!idx.HasValue)
             return false;
 
-        for (int key = 0; key < program.Steps.Count; ++key)
+        for (var key = 0; key < program.Steps.Count; ++key)
         {
             if (!program.Steps[key].Validate(ent, this))
             {

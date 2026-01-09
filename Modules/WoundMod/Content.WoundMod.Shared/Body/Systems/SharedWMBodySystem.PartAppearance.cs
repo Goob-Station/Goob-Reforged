@@ -13,7 +13,7 @@ using Content.WoundMod.Shared.Body.Part;
 using Robust.Shared.Prototypes;
 
 namespace Content.WoundMod.Shared.Body.Systems;
-public partial class SharedBodySystem
+public abstract partial class SharedWMBodySystem
 {
     [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoid = default!;
     [Dependency] private readonly MarkingManager _markingManager = default!;
@@ -30,12 +30,13 @@ public partial class SharedBodySystem
     private void OnPartAppearanceStartup(EntityUid uid, BodyPartAppearanceComponent component, ComponentStartup args)
     {
         if (!TryComp(uid, out BodyPartComponent? part)
+            || !TryComp(uid, out WMBodyPartComponent? wmPart)
             || part.ToHumanoidLayers() is not { } relevantLayer)
             return;
 
-        if (part.BaseLayerId != null)
+        if (wmPart.BaseLayerId != null)
         {
-            component.ID = part.BaseLayerId;
+            component.ID = wmPart.BaseLayerId;
             component.Type = relevantLayer;
             return;
         }
@@ -48,16 +49,16 @@ public partial class SharedBodySystem
         var spriteLayers = bodyAppearance.BaseLayers;
         component.Type = relevantLayer;
 
-        part.Species = bodyAppearance.Species;
+        wmPart.Species = bodyAppearance.Species;
 
-        if (customLayers.ContainsKey(component.Type))
+        if (customLayers.TryGetValue(component.Type, out var typeValue))
         {
-            component.ID = customLayers[component.Type].Id;
-            component.Color = customLayers[component.Type].Color;
+            component.ID = typeValue.Id;
+            component.Color = typeValue.Color;
         }
-        else if (spriteLayers.ContainsKey(component.Type))
+        else if (spriteLayers.TryGetValue(component.Type, out var layer))
         {
-            component.ID = spriteLayers[component.Type].ID;
+            component.ID = layer.ID;
             component.Color = bodyAppearance.SkinColor;
         }
         else
@@ -85,12 +86,9 @@ public partial class SharedBodySystem
     private string? CreateIdFromPart(HumanoidAppearanceComponent bodyAppearance, HumanoidVisualLayers part)
     {
         var speciesProto = _prototypeManager.Index(bodyAppearance.Species);
-        var baseSprites = _prototypeManager.Index<HumanoidSpeciesBaseSpritesPrototype>(speciesProto.SpriteSet);
+        var baseSprites = _prototypeManager.Index(speciesProto.SpriteSet);
 
-        if (!baseSprites.Sprites.ContainsKey(part))
-            return null;
-
-        return HumanoidVisualLayersExtension.GetSexMorph(part, bodyAppearance.Sex, baseSprites.Sprites[part]);
+        return !baseSprites.Sprites.TryGetValue(part, out var value) ? null : HumanoidVisualLayersExtension.GetSexMorph(part, bodyAppearance.Sex, value);
     }
 
     public void ModifyMarkings(EntityUid uid,
@@ -104,28 +102,26 @@ public partial class SharedBodySystem
         if (!Resolve(partAppearance, ref partAppearance.Comp))
             return;
 
-        if (!remove)
-        {
+        if (remove)
+            return;
+        if (!_markingManager.Markings.TryGetValue(markingId, out var prototype))
+            return;
 
-            if (!_markingManager.Markings.TryGetValue(markingId, out var prototype))
-                return;
+        var markingColors = MarkingColoring.GetMarkingLayerColors(
+            prototype,
+            bodyAppearance.SkinColor,
+            bodyAppearance.EyeColor,
+            bodyAppearance.MarkingSet
+        );
 
-            var markingColors = MarkingColoring.GetMarkingLayerColors(
-                    prototype,
-                    bodyAppearance.SkinColor,
-                    bodyAppearance.EyeColor,
-                    bodyAppearance.MarkingSet
-                );
+        var marking = new Marking(markingId, markingColors);
 
-            var marking = new Marking(markingId, markingColors);
+        _humanoid.SetLayerVisibility((uid, bodyAppearance), targetLayer, true);
+        _humanoid.AddMarking(uid, markingId, markingColors, true, true, bodyAppearance);
+        if (!partAppearance.Comp.Markings.ContainsKey(targetLayer))
+            partAppearance.Comp.Markings[targetLayer] = new List<Marking>();
 
-            _humanoid.SetLayerVisibility((uid, bodyAppearance), targetLayer, true);
-            _humanoid.AddMarking(uid, markingId, markingColors, true, true, bodyAppearance);
-            if (!partAppearance.Comp.Markings.ContainsKey(targetLayer))
-                partAppearance.Comp.Markings[targetLayer] = new List<Marking>();
-
-            partAppearance.Comp.Markings[targetLayer].Add(marking);
-        }
+        partAppearance.Comp.Markings[targetLayer].Add(marking);
         //else
             //RemovePartMarkings(uid, component, bodyAppearance);
     }
@@ -161,7 +157,7 @@ public partial class SharedBodySystem
             RemoveAppearance(uid, partAppearance, args.Part);
     }
 
-    protected void UpdateAppearance(EntityUid target,
+    private void UpdateAppearance(EntityUid target,
         BodyPartAppearanceComponent component)
     {
         if (!TryComp(target, out HumanoidAppearanceComponent? bodyAppearance))
@@ -190,19 +186,17 @@ public partial class SharedBodySystem
         Dirty(target, bodyAppearance);
     }
 
-    protected void RemoveAppearance(EntityUid entity, BodyPartAppearanceComponent component, EntityUid partEntity)
+    private void RemoveAppearance(EntityUid entity, BodyPartAppearanceComponent component, EntityUid partEntity)
     {
         if (!TryComp(entity, out HumanoidAppearanceComponent? bodyAppearance))
             return;
 
-        foreach (var (visualLayer, markingList) in component.Markings)
-        {
+        foreach (var (visualLayer, _) in component.Markings)
             _humanoid.SetLayerVisibility((entity, bodyAppearance), visualLayer, false);
-        }
+
         RemoveBodyMarkings(entity, component, bodyAppearance);
     }
 
     protected abstract void ApplyPartMarkings(EntityUid target, BodyPartAppearanceComponent component);
-
     protected abstract void RemoveBodyMarkings(EntityUid target, BodyPartAppearanceComponent partAppearance, HumanoidAppearanceComponent bodyAppearance);
 }

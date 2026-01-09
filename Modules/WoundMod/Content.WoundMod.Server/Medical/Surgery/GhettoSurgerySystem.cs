@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared.Kitchen.Components;
+using Content.WoundMod.Shared.Surgery;
 using Content.WoundMod.Shared.Surgery.Tools;
 using Robust.Shared.Audio;
 
@@ -19,23 +20,26 @@ public sealed partial class GhettoSurgerySystem : EntitySystem
     {
         base.Initialize();
 
+        SubscribeLocalEvent<WMSharpComponent, MapInitEvent>(OnWMSharpInit);
         SubscribeLocalEvent<SharpComponent, MapInitEvent>(OnSharpInit);
-        SubscribeLocalEvent<SharpComponent, ComponentShutdown>(OnSharpShutdown);
+        SubscribeLocalEvent<WMSharpComponent, ComponentShutdown>(OnSharpShutdown);
     }
 
     private void OnSharpInit(Entity<SharpComponent> ent, ref MapInitEvent args)
     {
+        EnsureComp<WMSharpComponent>(ent);
+    }
+
+    private void OnWMSharpInit(Entity<WMSharpComponent> ent, ref MapInitEvent args)
+    {
         if (EnsureComp<SurgeryToolComponent>(ent, out var tool))
-        {
             ent.Comp.HadSurgeryTool = true;
-        }
         else
         {
             tool.StartSound = new SoundPathSpecifier("/Audio/_Shitmed/Medical/Surgery/scalpel1.ogg");
             tool.EndSound = new SoundPathSpecifier("/Audio/_Shitmed/Medical/Surgery/scalpel2.ogg");
             Dirty(ent.Owner, tool);
         }
-
         if (EnsureComp<ScalpelComponent>(ent, out var scalpel))
         {
             ent.Comp.HadScalpel = true;
@@ -57,14 +61,12 @@ public sealed partial class GhettoSurgerySystem : EntitySystem
         }
     }
 
-    private void OnSharpShutdown(Entity<SharpComponent> ent, ref ComponentShutdown args)
+    private void OnSharpShutdown(Entity<WMSharpComponent> ent, ref ComponentShutdown args)
     {
         if (!ent.Comp.HadSurgeryTool)
             RemComp<SurgeryToolComponent>(ent);
-
         if (!ent.Comp.HadScalpel)
             RemComp<ScalpelComponent>(ent);
-
         if (!ent.Comp.HadBoneSaw)
             RemComp<BoneSawComponent>(ent);
     }

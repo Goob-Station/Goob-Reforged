@@ -11,12 +11,16 @@
 using Content.Server.Atmos.Rotting;
 using Content.Server.Chat.Systems;
 using Content.Server.Popups;
+using Content.Shared.Bed.Sleep;
 using Content.Shared.Body.Part;
+using Content.Shared.Body.Systems;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Eye.Blinding.Systems;
+using Content.Shared.StatusEffectNew;
 using Content.Shared.Verbs;
 using Content.WoundMod.Server.Body.Systems;
+using Content.WoundMod.Shared.CCVar;
 using Content.WoundMod.Shared.Surgery;
 using Content.WoundMod.Shared.Surgery.Conditions;
 using Content.WoundMod.Shared.Surgery.Effects.Step;
@@ -30,15 +34,14 @@ namespace Content.WoundMod.Server.Medical.Surgery;
 
 public sealed class SurgerySystem : SharedSurgerySystem
 {
-    [Dependency] private readonly BodySystem _body = default!;
+    [Dependency] private readonly SharedBodySystem _body = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly RottingSystem _rot = default!;
-    [Dependency] private readonly BlindableSystem _blindableSystem = default!;
+    [Dependency] private readonly StatusEffectsSystem _status = default!;
 
     public override void Initialize()
     {
@@ -94,10 +97,10 @@ public sealed class SurgerySystem : SharedSurgerySystem
         _damageable.TryChangeDamage(body,
             damage,
             true,
-            origin: user,
-            canSever: false,
-            partMultiplier: partMultiplier,
-            targetPart: _body.GetTargetBodyPart(partComp));
+            origin: user);//,
+        //canSever: false,
+        //partMultiplier: partMultiplier,
+        //targetPart: _body.GetTargetBodyPart(partComp));
     }
 
     private void AttemptStartSurgery(Entity<SurgeryToolComponent> ent, EntityUid user, EntityUid target)
@@ -105,7 +108,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
         if (!IsLyingDown(target, user))
             return;
 
-        if (user == target && !_config.GetCVar(GoobCVars.CanOperateOnSelf))
+        if (user == target && !_config.GetCVar(WoundModCVars.CanOperateOnSelf))
         {
             _popup.PopupEntity(Loc.GetString("surgery-error-self-surgery"), user, user);
             return;
@@ -143,7 +146,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
     private void OnSurgeryDamageChange(Entity<SurgeryDamageChangeEffectComponent> ent, ref SurgeryStepDamageChangeEvent args)
     {
         var damageChange = ent.Comp.Damage;
-        if (HasComp<ForcedSleepingComponent>(args.Body))
+        if (_status.HasStatusEffect(args.Body, SleepingSystem.StatusEffectForcedSleeping))
             damageChange *= ent.Comp.SleepModifier;
 
         SetDamage(args.Body, damageChange, 0.5f, args.User, args.Part);
@@ -162,7 +165,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
 
     private void OnStepScreamComplete(Entity<SurgeryStepEmoteEffectComponent> ent, ref SurgeryStepEvent args)
     {
-        if (HasComp<ForcedSleepingComponent>(args.Body))
+        if (_status.HasStatusEffect(ent, SleepingSystem.StatusEffectForcedSleeping))
             return;
 
         _chat.TryEmoteWithChat(args.Body, ent.Comp.Emote);

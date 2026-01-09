@@ -8,6 +8,7 @@
 // will delete or refactor as time goes on.
 
 using Content.Shared.Body.Organ;
+using Content.WoundMod.Shared.Body.Components;
 using Content.WoundMod.Shared.Body.Organ;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
@@ -33,14 +34,14 @@ public sealed partial class OrganEffectSystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-        var query = EntityQueryEnumerator<OrganEffectComponent, OrganComponent>();
+        var query = EntityQueryEnumerator<OrganEffectComponent, OrganComponent, WMOrganComponent>();
         var now = _gameTiming.CurTime;
-        while (query.MoveNext(out var uid, out var comp, out var part))
+        while (query.MoveNext(out var uid, out var comp, out var part, out var wmPart))
         {
             if (now < comp.NextUpdate
                 || !comp.Active.Any()
                 || part.Body is not { } body
-                || !part.Enabled)
+                || !wmPart.Enabled)
                 continue;
 
             comp.NextUpdate = now + comp.Delay;
@@ -48,24 +49,23 @@ public sealed partial class OrganEffectSystem : EntitySystem
         }
     }
 
-    private void OnOrganComponentsModify(Entity<OrganComponent> organEnt,
-        ref OrganComponentsModifyEvent ev)
+    private void OnOrganComponentsModify(Entity<OrganComponent> organEnt, ref OrganComponentsModifyEvent ev)
     {
-        if (organEnt.Comp.OnAdd != null)
+        if (!TryComp<WMOrganComponent>(organEnt, out var wmPart))
+            return;
+        if (wmPart.OnAdd != null)
         {
             if (ev.Add)
-                AddComponents(ev.Body, organEnt, organEnt.Comp.OnAdd);
+                AddComponents(ev.Body, organEnt, wmPart.OnAdd);
             else
-                RemoveComponents(ev.Body, organEnt, organEnt.Comp.OnAdd);
+                RemoveComponents(ev.Body, organEnt, wmPart.OnAdd);
         }
-
-        if (organEnt.Comp.OnRemove != null)
-        {
-            if (ev.Add)
-                AddComponents(ev.Body, organEnt, organEnt.Comp.OnRemove);
-            else
-                RemoveComponents(ev.Body, organEnt, organEnt.Comp.OnRemove);
-        }
+        if (wmPart.OnRemove == null)
+            return;
+        if (ev.Add)
+            AddComponents(ev.Body, organEnt, wmPart.OnRemove);
+        else
+            RemoveComponents(ev.Body, organEnt, wmPart.OnRemove);
     }
 
     private void AddComponents(EntityUid body,

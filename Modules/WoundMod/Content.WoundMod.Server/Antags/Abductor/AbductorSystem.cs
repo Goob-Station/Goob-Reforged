@@ -19,7 +19,9 @@ using Content.Shared.Silicons.StationAi;
 using Content.Shared.Station.Components;
 using Content.Shared.Tag;
 using Content.Shared.UserInterface;
+using Content.WoundMod.Shared.Actions;
 using Content.WoundMod.Shared.Antags.Abductor;
+using Content.WoundMod.Shared.Eye;
 using Robust.Server.Containers;
 using Robust.Server.GameObjects;
 using Robust.Shared.Maths;
@@ -34,6 +36,7 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
     [Dependency] private readonly SharedEyeSystem _eye = default!;
     [Dependency] private readonly SharedMoverController _mover = default!;
     [Dependency] private readonly ActionsSystem _actions = default!;
+    [Dependency] private readonly SharedWMActionsSystem _wmActions = default!;
     [Dependency] private readonly DoAfterSystem _doAfter = default!;
     [Dependency] private readonly TransformSystem _xformSys = default!;
     [Dependency] private readonly TagSystem _tags = default!;
@@ -66,40 +69,33 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
 
             if (TryComp<HandsComponent>(args.Actor, out var handsComponent))
             {
-                foreach (var hand in _hands.EnumerateHands(args.Actor, handsComponent))
+                foreach (var id in _hands.EnumerateHands(args.Actor))
                 {
-                    if (hand.HeldEntity == null)
+                    if (!_hands.TryGetHand(args.Actor, id, out var hand))
                         continue;
-
-                    if (HasComp<UnremoveableComponent>(hand.HeldEntity))
+                    var held = _hands.GetHeldItem(args.Actor, id);
+                    if (HasComp<UnremoveableComponent>(held))
                         continue;
-
-                    _hands.DoDrop(args.Actor, hand, true, handsComponent);
+                    _hands.DoDrop(args.Actor, id, true, false);
                 }
 
                 if (_virtualItem.TrySpawnVirtualItemInHand(ent.Owner, args.Actor, out var virtItem1))
-                {
                     EnsureComp<UnremoveableComponent>(virtItem1.Value);
-                }
-
                 if (_virtualItem.TrySpawnVirtualItemInHand(ent.Owner, args.Actor, out var virtItem2))
-                {
                     EnsureComp<UnremoveableComponent>(virtItem2.Value);
-                }
             }
 
-            var visibility = EnsureComp<VisibilityComponent>(eye);
+            EnsureComp<VisibilityComponent>(eye);
 
             Dirty(ent);
-
             if (TryComp(args.Actor, out EyeComponent? eyeComp))
             {
-                _eye.SetVisibilityMask(args.Actor, eyeComp.VisibilityMask | (int) VisibilityFlags.Abductor, eyeComp);
+                _eye.SetVisibilityMask(args.Actor, eyeComp.VisibilityMask | (int) WMVisibilityFlags.Abductor, eyeComp);
                 _eye.SetTarget(args.Actor, eye, eyeComp);
                 _eye.SetDrawFov(args.Actor, false);
                 _eye.SetRotation(args.Actor, Angle.Zero, eyeComp);
                 if (!HasComp<StationAiOverlayComponent>(args.Actor))
-                    AddComp(args.Actor, new StationAiOverlayComponent { AllowCrossGrid = true });
+                    AddComp(args.Actor, new StationAiOverlayComponent());
                 if (!TryComp(eye, out RemoteEyeSourceContainerComponent? remoteEyeSourceContainerComponent))
                 {
                     remoteEyeSourceContainerComponent = new RemoteEyeSourceContainerComponent { Actor = args.Actor };
@@ -119,27 +115,26 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
 
     private void OnCameraExit(EntityUid actor)
     {
-        if (TryComp<RelayInputMoverComponent>(actor, out var comp)
-            && TryComp<AbductorScientistComponent>(actor, out var abductorComp))
+        if (!TryComp<RelayInputMoverComponent>(actor, out var comp)
+            || !TryComp<AbductorScientistComponent>(actor, out var abductorComp))
+            return;
+        var relay = comp.RelayEntity;
+        RemComp(actor, comp);
+
+        if (abductorComp.Console != null)
+            _virtualItem.DeleteInHandsMatching(actor, abductorComp.Console.Value);
+
+        if (TryComp(actor, out EyeComponent? eyeComp))
         {
-            var relay = comp.RelayEntity;
-            RemComp(actor, comp);
+            if (HasComp<StationAiOverlayComponent>(actor))
+                RemComp<StationAiOverlayComponent>(actor);
 
-            if (abductorComp.Console != null)
-                _virtualItem.DeleteInHandsMatching(actor, abductorComp.Console.Value);
-
-            if (TryComp(actor, out EyeComponent? eyeComp))
-            {
-                if (HasComp<StationAiOverlayComponent>(actor))
-                    RemComp<StationAiOverlayComponent>(actor);
-
-                _eye.SetVisibilityMask(actor, eyeComp.VisibilityMask ^ (int) VisibilityFlags.Abductor, eyeComp);
-                _eye.SetDrawFov(actor, true);
-                _eye.SetTarget(actor, null, eyeComp);
-            }
-            RemoveActions(actor);
-            QueueDel(relay);
+            _eye.SetVisibilityMask(actor, eyeComp.VisibilityMask ^ (int) WMVisibilityFlags.Abductor, eyeComp);
+            _eye.SetDrawFov(actor, true);
+            _eye.SetTarget(actor, null, eyeComp);
         }
+        RemoveActions(actor);
+        QueueDel(relay);
     }
 
     private void OnBeforeActivatableUIOpen(Entity<AbductorHumanObservationConsoleComponent> ent, ref BeforeActivatableUIOpenEvent args)
@@ -154,7 +149,8 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
 
         foreach (var station in stations)
         {
-            if (_stationSystem.GetLargestGrid(Comp<StationDataComponent>(station)) is not { } grid
+            if (!TryComp<StationDataComponent>(station, out var dataComp)
+                || _stationSystem.GetLargestGrid((station,dataComp)) is not { } grid
                 || !TryComp(station, out MetaDataComponent? stationMetaData))
                 return;
 

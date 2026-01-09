@@ -138,7 +138,8 @@ public abstract partial class GrabAnyItemAutodocStep : IAutodocStep
     /// <summary>
     /// A whitelist that must be matched.
     /// </summary>
-    public virtual EntityWhitelist Whitelist { get; }
+    public virtual EntityWhitelist Whitelist { get; } = new();
+
     private EntityWhitelist? _whitelist;
 
     /// <summary>

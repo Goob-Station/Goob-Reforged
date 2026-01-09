@@ -29,17 +29,16 @@ public sealed class HandsFillSystem : EntitySystem
         var coords = Transform(ent).Coordinates;
         foreach (var (name, fill) in ent.Comp.Hands)
         {
-            _hands.AddHand(ent, name, HandLocation.Middle, hands);
+            _hands.AddHand(ent.Owner, name, HandLocation.Middle);
 
             if (fill is not {} id)
                 continue;
 
             var uid = Spawn(id, coords);
-            if (!_hands.TryPickup(ent, uid, name, animate: false, handsComp: hands))
-            {
-                Log.Error($"Entity {ToPrettyString(ent)} couldn't pick up item {id} into its '{name}' hand!");
-                Del(uid);
-            }
+            if (_hands.TryPickup(ent, uid, name, animate: false, handsComp: hands))
+                continue;
+            Log.Error($"Entity {ToPrettyString(ent)} couldn't pick up item {id} into its '{name}' hand!");
+            Del(uid);
         }
     }
 }

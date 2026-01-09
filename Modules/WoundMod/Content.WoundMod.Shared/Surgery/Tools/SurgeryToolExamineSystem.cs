@@ -10,6 +10,8 @@ using Content.Shared.Body.Organ;
 using Content.Shared.Body.Part;
 using Content.Shared.Examine;
 using Content.Shared.Verbs;
+using Content.WoundMod.Shared.Body.Components;
+using Content.WoundMod.Shared.Body.Part;
 using Robust.Shared.Utility;
 
 namespace Content.WoundMod.Shared.Surgery.Tools;
@@ -35,8 +37,8 @@ public sealed class SurgeryToolExamineSystem : EntitySystem
         SubscribeLocalEvent<TendingComponent, SurgeryToolExaminedEvent>(OnExamined);
         SubscribeLocalEvent<TweezersComponent, SurgeryToolExaminedEvent>(OnExamined);
         SubscribeLocalEvent<BoneSetterComponent, SurgeryToolExaminedEvent>(OnExamined);
-        SubscribeLocalEvent<BodyPartComponent, SurgeryToolExaminedEvent>(OnExamined);
-        SubscribeLocalEvent<OrganComponent, SurgeryToolExaminedEvent>(OnExamined);
+        SubscribeLocalEvent<WMBodyPartComponent, SurgeryToolExaminedEvent>(OnExamined);
+        SubscribeLocalEvent<WMOrganComponent, SurgeryToolExaminedEvent>(OnExamined);
     }
 
     private void OnGetVerbs(Entity<SurgeryToolComponent> ent, ref GetVerbsEvent<ExamineVerb> args)
