@@ -16,6 +16,7 @@ using Content.Shared.UserInterface;
 using Content.WoundMod.Shared.Antags.Abductor;
 using Content.WoundMod.Shared.ItemSwitch;
 using Content.WoundMod.Shared.ItemSwitch.Components;
+using Robust.Shared.Audio;
 using Robust.Shared.Spawners;
 
 namespace Content.WoundMod.Server.Antags.Abductor;
@@ -58,31 +59,28 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
 
     private void OnCompleteExperimentBuiMsg(EntityUid uid, AbductorConsoleComponent component, AbductorCompleteExperimentBuiMsg args)
     {
-        if (component.Experimentator != null
-            && GetEntity(component.Experimentator) is EntityUid experimentatorId
-            && TryComp<AbductorExperimentatorComponent>(experimentatorId, out var experimentatorComp))
+        if (component.Experimentator == null
+            || GetEntity(component.Experimentator) is not { } experimenterId
+            || !TryComp<AbductorExperimentatorComponent>(experimenterId, out var experimenterComp))
+            return;
+        var container = _container.GetContainer(experimenterId, experimenterComp.ContainerId);
+        var victim = container.ContainedEntities.FirstOrDefault(HasComp<AbductorVictimComponent>);
+        if (victim == default || !TryComp(victim, out AbductorVictimComponent? victimComp))
+            return;
+        if (victimComp.Implanted
+            && TryComp<MindContainerComponent>(args.Actor, out var mindContainer)
+            && mindContainer.Mind.HasValue
+            && TryComp<MindComponent>(mindContainer.Mind.Value, out var mind)
+            && mind.Objectives.FirstOrDefault(HasComp<AbductConditionComponent>) is EntityUid objId
+            && TryComp<AbductConditionComponent>(objId, out var condition)
+            && !condition.AbductedHashs.Contains(GetNetEntity(victim)))
         {
-            var container = _container.GetContainer(experimentatorId, experimentatorComp.ContainerId);
-            var victim = container.ContainedEntities.FirstOrDefault(HasComp<AbductorVictimComponent>);
-            if (victim != default && TryComp(victim, out AbductorVictimComponent? victimComp))
-            {
-                if (victimComp.Implanted
-                    && TryComp<MindContainerComponent>(args.Actor, out var mindContainer)
-                    && mindContainer.Mind.HasValue
-                    && TryComp<MindComponent>(mindContainer.Mind.Value, out var mind)
-                    && mind.Objectives.FirstOrDefault(HasComp<AbductConditionComponent>) is EntityUid objId
-                    && TryComp<AbductConditionComponent>(objId, out var condition)
-                    && !condition.AbductedHashs.Contains(GetNetEntity(victim)))
-                {
-                    condition.AbductedHashs.Add(GetNetEntity(victim));
-                    condition.Abducted++;
-                }
-                _audioSystem.PlayPvs("/Audio/Voice/Human/wilhelm_scream.ogg", experimentatorId);
-
-                if (victimComp.Position is not null)
-                    _xformSys.SetCoordinates(victim, victimComp.Position.Value);
-            }
+            condition.AbductedHashs.Add(GetNetEntity(victim));
+            condition.Abducted++;
         }
+        _audioSystem.PlayPvs(new SoundPathSpecifier("/Audio/Voice/Human/wilhelm_scream.ogg"), experimenterId);
+        if (victimComp.Position is not null)
+            _xformSys.SetCoordinates(victim, victimComp.Position.Value);
     }
 
     private void OnAttractBuiMsg(Entity<AbductorConsoleComponent> ent, ref AbductorAttractBuiMsg args)
@@ -192,7 +190,7 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
             ExperimentatorFound = computer.Comp.Experimentator != default,
             ArmorFound = computer.Comp.Armor != default,
             ArmorLocked = armorLock,
-            CurrentArmorMode = armorMode
+            CurrentArmorMode = armorMode,
         });
     }
 }

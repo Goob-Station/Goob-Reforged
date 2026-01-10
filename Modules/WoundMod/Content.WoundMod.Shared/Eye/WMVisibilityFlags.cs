@@ -3,8 +3,7 @@
 namespace Content.WoundMod.Shared.Eye;
 
 [Flags]
-[FlagsFor(typeof(VisibilityMaskLayer))]
-public enum WMVisibilityFlags : int
+public enum WMVisibilityFlags
 {
-    Abductor  = 1 << 3, // Shitmed Change - Starlight Abductor
+    Abductor  = 1 << 3,
 }

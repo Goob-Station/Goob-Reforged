@@ -18,12 +18,11 @@ public sealed class GenerateChildPartSystem : EntitySystem
 {
     [Dependency] private readonly SharedBodySystem _bodySystem = default!;
     [Dependency] private readonly SharedWMBodySystem _wmBodySystem = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly INetManager _net = default!;
+
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeLocalEvent<GenerateChildPartComponent, BodyPartComponentsModifyEvent>(OnPartComponentsModify);
     }
 

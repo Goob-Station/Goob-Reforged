@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Events;
 using Content.Shared.Body.Organ;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
+using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Inventory;
 using Content.Shared.Mobs.Systems;
@@ -14,6 +16,7 @@ using Content.WoundMod.Shared.Body.Components;
 using Content.WoundMod.Shared.Body.Events;
 using Content.WoundMod.Shared.Body.Organ;
 using Content.WoundMod.Shared.Body.Part;
+using Content.WoundMod.Shared.BodyEffects;
 using Robust.Shared.Containers;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
@@ -30,19 +33,15 @@ public abstract partial class SharedWMBodySystem : EntitySystem
     [Dependency] private readonly SharedBodySystem _body = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly InventorySystem _inventorySystem = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly RandomHelperSystem _randomHelper = default!;
-    [Dependency] private readonly DamageableSystem Damageable = default!;
-    [Dependency] private readonly MovementSpeedModifierSystem Movement = default!;
-    [Dependency] private readonly SharedContainerSystem Containers = default!;
+    [Dependency] private readonly SharedContainerSystem _containers = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly StandingStateSystem Standing = default!;
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly ItemSlotsSystem _slots = default!; // Shitmed Change
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -54,12 +53,21 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         InitializePartAppearances();
         InitializeOrgans();
         InitializeRelay();
+        InitializeParts();
+    }
+
+    private void InitializeParts()
+    {
+        SubscribeLocalEvent<BodyPartComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<BodyPartComponent, ComponentRemove>(OnBodyPartRemove);
+        SubscribeLocalEvent<BodyPartComponent, AmputateAttemptEvent>(OnAmputateAttempt);
+        SubscribeLocalEvent<BodyPartComponent, BodyPartEnableChangedEvent>(OnPartEnableChanged);
+        SubscribeLocalEvent<WMBodyPartComponent, EntInsertedIntoContainerMessage>(OnWMPartInserted);
+        SubscribeLocalEvent<WMBodyPartComponent, EntRemovedFromContainerMessage>(OnWMPartRemoved);
     }
 
     private void InitializeOrgans()
     {
-        // Ensure WM component exists on all organs
-        SubscribeLocalEvent<OrganComponent, ComponentInit>(OnOrganInit);
         SubscribeLocalEvent<OrganComponent, ComponentInit>(OnOrganInit);
         SubscribeLocalEvent<OrganComponent, OrganEnableChangedEvent>(OnOrganEnableChanged);
     }
@@ -67,6 +75,50 @@ public abstract partial class SharedWMBodySystem : EntitySystem
     private void OnOrganInit(Entity<OrganComponent> ent, ref ComponentInit args)
     {
         EnsureComp<WMOrganComponent>(ent);
+    }
+
+    private void OnWMPartInserted(Entity<WMBodyPartComponent> ent, ref EntInsertedIntoContainerMessage args)
+    {
+        if (!TryComp<BodyPartComponent>(ent, out var part))
+            return;
+
+        if (TryComp<BodyPartComponent>(args.Container.Owner, out var parentPart)
+            && parentPart.Body is { Valid: true } bodyUid)
+        {
+            foreach (var (organId, _, _) in GetPartOrgans(ent, part))
+            {
+                var ev = new OrganAddedToBodyEvent(bodyUid, ent);
+                RaiseLocalEvent(organId, ref ev);
+            }
+
+            CheckBodyPart((ent, part), GetTargetBodyPart(part), false, wmPart: ent.Comp);
+        }
+
+        Dirty(ent, ent.Comp);
+    }
+
+    private void OnWMPartRemoved(Entity<WMBodyPartComponent> ent, ref EntRemovedFromContainerMessage args)
+    {
+        if (!TryComp<BodyPartComponent>(ent, out var part))
+            return;
+
+        var parentSlot = _body.GetParentPartAndSlotOrNull(ent);
+        if (parentSlot == null)
+            return;
+
+        if (TryComp<BodyPartComponent>(args.Container.Owner, out var parentPart)
+            && parentPart.Body is { Valid: true } oldBodyUid)
+        {
+            foreach (var (organId, _, _) in GetPartOrgans(ent, part))
+            {
+                var ev = new OrganRemovedFromBodyEvent(oldBodyUid, ent);
+                RaiseLocalEvent(organId, ref ev);
+            }
+
+            CheckBodyPart((ent, part), GetTargetBodyPart(part), true, wmPart: ent.Comp);
+        }
+
+        Dirty(ent, ent.Comp);
     }
 
     private void OnBodyPartStartup(Entity<BodyPartComponent> ent, ref ComponentStartup args)
@@ -129,6 +181,7 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         var ev = new OrganDisabledEvent(organEnt);
         RaiseLocalEvent(organEnt, ref ev);
     }
+    // end of organ partial
 
     // move to parts partial
     /// <summary>
@@ -218,7 +271,7 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         bodyEnt.Comp.LegEntities.Remove(legEnt);
         _body.UpdateMovementSpeed(bodyEnt);
         Dirty(bodyEnt, bodyEnt.Comp);
-        Standing.Down(bodyEnt); // Shitmed Change
+        _standing.Down(bodyEnt);
     }
 
     private void DisablePart(Entity<BodyPartComponent> partEnt)
@@ -230,7 +283,6 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         {
             case BodyPartType.Leg:
                 RemoveLeg(partEnt, (partEnt.Comp.Body.Value, body));
-                _standing.Down(partEnt.Comp.Body.Value);
                 break;
             case BodyPartType.Arm:
             {
@@ -270,7 +322,7 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         foreach (var slotId in part.Organs.Keys)
         {
             var containerSlotId = SharedBodySystem.GetOrganContainerId(slotId);
-            if (!Containers.TryGetContainer(partId, containerSlotId, out var container))
+            if (!_containers.TryGetContainer(partId, containerSlotId, out var container))
                 continue;
 
             foreach (var containedEnt in container.ContainedEntities)
@@ -282,6 +334,17 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         }
     }
 
+    private void OnPartGibbed(Entity<BodyPartComponent> ent, ref BeingGibbedEvent args)
+    {
+        // Upstream drops Hands/Pockets. We drop Shoes/Gloves/Etc.
+        DropSlotContents(ent);
+        // Disable the part in WM so integrity checks stop immediately
+        if (!TryComp<WMBodyPartComponent>(ent, out var wmPart))
+            return;
+        wmPart.Enabled = false;
+        Dirty(ent, wmPart);
+    }
+
     protected void RemovePartChildren(Entity<BodyPartComponent> partEnt, EntityUid bodyEnt, BodyComponent? body = null)
     {
         if (!Resolve(bodyEnt, ref body, logMissing: false) || partEnt.Comp.Children.Count == 0)
@@ -290,7 +353,7 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         foreach (var slotId in partEnt.Comp.Children.Keys)
         {
             var realId = SharedBodySystem.GetPartSlotContainerId(slotId);
-            if (!Containers.TryGetContainer(partEnt, realId, out var container)
+            if (!_containers.TryGetContainer(partEnt, realId, out var container)
                 || container is not ContainerSlot { ContainedEntity: { } childEntity }
                 || !TryComp(childEntity, out BodyPartComponent? childPart))
                 continue;
@@ -326,10 +389,10 @@ public abstract partial class SharedWMBodySystem : EntitySystem
     {
         containerNames = partType switch
         {
-            BodyPartType.Hand => new() { "gloves" },
-            BodyPartType.Foot => new() { "shoes" },
-            BodyPartType.Head => new() { "eyes", "ears", "head", "mask" },
-            _ => new()
+            BodyPartType.Hand => ["gloves"],
+            BodyPartType.Foot => ["shoes"],
+            BodyPartType.Head => ["eyes", "ears", "head", "mask"],
+            _ => [],
         };
         return containerNames.Count > 0;
     }
@@ -398,6 +461,98 @@ public abstract partial class SharedWMBodySystem : EntitySystem
 
         slotName = wmPart.SlotId != "" ? wmPart.SlotId : part.PartType.ToString().ToLower();
         return part.Symmetry != BodyPartSymmetry.None ? $"{part.Symmetry.ToString().ToLower()} {slotName}" : slotName;
+    }
+
+    private void OnMapInit(Entity<BodyPartComponent> ent, ref MapInitEvent args)
+    {
+        if (!TryComp<WMBodyPartComponent>(ent, out var wmPart))
+            return;
+        if (ent.Comp.PartType == BodyPartType.Torso)
+        {
+            // For whatever reason this slot is initialized properly on the server, but not on the client.
+            // This seems to be an issue due to wiz-merge, on my old branch it was properly instantiating
+            // ItemInsertionSlot's container on both ends. It does show up properly on ItemSlotsComponent though.
+            _slots.AddItemSlot(ent, wmPart.ContainerName, wmPart.ItemInsertionSlot);
+            Dirty(ent, ent.Comp);
+        }
+
+        if (wmPart.OnAdd is not null || wmPart.OnRemove is not null)
+            EnsureComp<BodyPartEffectComponent>(ent);
+
+        foreach (var connection in ent.Comp.Children.Keys)
+            _containers.EnsureContainer<ContainerSlot>(ent, SharedBodySystem.GetPartSlotContainerId(connection));
+
+
+        foreach (var organ in ent.Comp.Organs.Keys)
+            _containers.EnsureContainer<ContainerSlot>(ent, SharedBodySystem.GetOrganContainerId(organ));
+
+    }
+
+    private void OnBodyPartRemove(Entity<BodyPartComponent> ent, ref ComponentRemove args)
+    {
+        if (!TryComp<WMBodyPartComponent>(ent, out var comp)
+            || ent.Comp.PartType != BodyPartType.Torso)
+            return;
+        _slots.RemoveItemSlot(ent, comp.ItemInsertionSlot);
+    }
+
+    private void OnPartEnableChanged(Entity<BodyPartComponent> partEnt, ref BodyPartEnableChangedEvent args)
+    {
+        if (!TryComp<WMBodyPartComponent>(partEnt, out var wmPart) || wmPart.CanEnable && args.Enabled)
+            return;
+
+        wmPart.Enabled = args.Enabled;
+
+        if (args.Enabled)
+        {
+            EnablePart(partEnt);
+            if (partEnt.Comp.Body is { Valid: true } bodyEnt)
+                RaiseLocalEvent(partEnt, new BodyPartComponentsModifyEvent(bodyEnt, true));
+        }
+        else
+        {
+            DisablePart(partEnt);
+            if (partEnt.Comp.Body is { Valid: true } bodyEnt)
+                RaiseLocalEvent(partEnt, new BodyPartComponentsModifyEvent(bodyEnt, false));
+        }
+
+        Dirty(partEnt, partEnt.Comp);
+    }
+
+    private void AddLeg(Entity<BodyPartComponent> legEnt, Entity<BodyComponent?> bodyEnt)
+    {
+        if (!Resolve(bodyEnt, ref bodyEnt.Comp, logMissing: false))
+            return;
+
+        if (legEnt.Comp.PartType != BodyPartType.Leg)
+            return;
+        bodyEnt.Comp.LegEntities.Add(legEnt);
+        _body.UpdateMovementSpeed(bodyEnt);
+        Dirty(bodyEnt, bodyEnt.Comp);
+    }
+
+    private void EnablePart(Entity<BodyPartComponent> partEnt)
+    {
+        if (!TryComp(partEnt.Comp.Body, out BodyComponent? body))
+            return;
+
+        // I hate having to hardcode these checks so much.
+        if (partEnt.Comp.PartType == BodyPartType.Leg)
+            AddLeg(partEnt, (partEnt.Comp.Body.Value, body));
+        if (partEnt.Comp.PartType == BodyPartType.Arm)
+        {
+            var hand = GetBodyChildrenOfType(partEnt.Comp.Body.Value, BodyPartType.Hand, symmetry: partEnt.Comp.Symmetry).FirstOrDefault();
+            if (hand != default)
+            {
+                var ev = new BodyPartEnabledEvent(hand);
+                RaiseLocalEvent(partEnt.Comp.Body.Value, ref ev);
+            }
+        }
+        if (partEnt.Comp.PartType == BodyPartType.Hand)
+        {
+            var ev = new BodyPartEnabledEvent(partEnt);
+            RaiseLocalEvent(partEnt.Comp.Body.Value, ref ev);
+        }
     }
 
 }
