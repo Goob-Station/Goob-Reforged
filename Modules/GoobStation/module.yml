@@ -1,4 +1,8 @@
-﻿name: GoobStation
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
+name: GoobStation
 id: goobstation
 version: 1.0.0
 
