@@ -5,6 +5,7 @@ using Content.Shared.Body.Organ;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Inventory;
 using Content.Shared.Mobs.Systems;
@@ -64,6 +65,42 @@ public abstract partial class SharedWMBodySystem : EntitySystem
         SubscribeLocalEvent<BodyPartComponent, BodyPartEnableChangedEvent>(OnPartEnableChanged);
         SubscribeLocalEvent<WMBodyPartComponent, EntInsertedIntoContainerMessage>(OnWMPartInserted);
         SubscribeLocalEvent<WMBodyPartComponent, EntRemovedFromContainerMessage>(OnWMPartRemoved);
+        SubscribeLocalEvent<BodyComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
+    }
+    private void OnRefreshMovespeed(Entity<BodyComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
+    {
+        var legs = _body.GetBodyChildrenOfType(ent, BodyPartType.Leg);
+
+        //var totalLegs = 0;
+        var functionalLegs = 0;
+        //var damagePenalty = 0f;
+
+        foreach (var leg in legs)
+        {
+            // Check WM Component for integrity
+            if (!TryComp<WMBodyPartComponent>(leg.Id, out var wmLeg) || !wmLeg.Enabled)
+                continue;
+            functionalLegs++;
+
+            // Calculate damage penalty (optional Shitmed mechanic)
+            if (TryComp<DamageableComponent>(leg.Id, out var damageable))
+            {
+                // Example: Max health 50. If 25 damage, 50% penalty?
+                // You can tune this math based on your preferences.
+                // For now, let's just count functional legs.
+            }
+        }
+
+        if (ent.Comp.RequiredLegs <= 0)
+            return;
+        if (functionalLegs >= ent.Comp.RequiredLegs)
+            return;
+
+        var ratio = (float)functionalLegs / ent.Comp.RequiredLegs;
+
+        var modifier = Math.Max(0.1f, ratio);
+
+        args.ModifySpeed(modifier, modifier);
     }
 
     private void InitializeOrgans()
