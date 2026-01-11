@@ -35,7 +35,6 @@ public sealed class WMHealingSystem : EntitySystem
 
     private void OnHealingMapInit(Entity<HealingComponent> ent, ref MapInitEvent args)
     {
-        // if i had reflection bro this wouldnt be a problem but fuck me ig.
         EnsureComp<WMHealingComponent>(ent);
     }
 
@@ -99,13 +98,11 @@ public sealed class WMHealingSystem : EntitySystem
 
         foreach (var part in parts)
         {
-            if(! _damageable.TryChangeDamage(
-                   part.Id,
+            if(!_damageable.TryChangeDamage(part.Id,
                    healing.Damage * _damageable.UniversalTopicalsHealModifier,
                    ignoreResistances: true,
                    origin: args.User))
                 continue;
-
             healedAny = true;
             totalHealed += (healing.Damage * _damageable.UniversalTopicalsHealModifier).GetTotal();
         }
