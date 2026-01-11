@@ -1,4 +1,8 @@
-﻿using Content.Shared.Body.Part;
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using Content.Shared.Body.Part;
 using Content.Shared.Hands.Components;
 using Content.WoundMod.Shared.Body.Events;
 using Content.WoundMod.Shared.Body.Systems;

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using System.Collections.Generic;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.WoundMod.Shared.Body.Part;
