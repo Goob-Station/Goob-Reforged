@@ -60,63 +60,35 @@ public sealed class CommandLineArgs
             var arg = enumerator.Current;
             if (i == 0)
             {
-                if (arg == "client")
+                switch (arg)
                 {
-                    client = true;
+                    case "client": client = true; break;
+                    case "server": client = false; break;
+                    default: return false;
                 }
-                else if (arg == "server")
-                {
-                    client = false;
-                }
-                else
-                {
-                    return false;
-                }
-
                 continue;
             }
 
-            if (arg == "--skip-build")
+            switch (arg)
             {
-                skipBuild = true;
-            }
-            else if (arg == "--no-wipe-release")
-            {
-                wipeRelease = false;
-            }
-            else if (arg == "--hybrid-acz")
-            {
-                hybridAcz = true;
-            }
-            else if (arg == "--platform")
-            {
-                if (!enumerator.MoveNext())
-                {
+                case "--skip-build": skipBuild = true; break;
+                case "--no-wipe-release": wipeRelease = false; break;
+                case "--hybrid-acz": hybridAcz = true; break;
+                case "--platform" when !enumerator.MoveNext():
                     Console.WriteLine("No platform provided");
                     return false;
-                }
-
-                platforms ??= new List<string>();
-                platforms.Add(enumerator.Current);
-            }
-            else if (arg == "--configuration")
-            {
-                if (!enumerator.MoveNext())
-                {
+                case "--platform":
+                    platforms ??= [];
+                    platforms.Add(enumerator.Current);
+                    break;
+                case "--configuration" when !enumerator.MoveNext():
                     Console.WriteLine("No configuration provided");
                     return false;
-                }
-
-                configuration = enumerator.Current;
-            }
-            else if (arg == "--help")
-            {
-                PrintHelp();
-                return false;
-            }
-            else
-            {
-                Console.WriteLine("Unknown argument: {0}", arg);
+                case "--configuration": configuration = enumerator.Current; break;
+                case "--help":
+                    PrintHelp();
+                    return false;
+                default: Console.WriteLine("Unknown argument: {0}", arg); break;
             }
         }
 
