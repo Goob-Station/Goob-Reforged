@@ -18,7 +18,6 @@
     sprite: /Textures/Objects/Weapons/Melee/lollychop.rsi
     state: icon
   - type: MeleeWeapon
-    heavyStaminaCost: 15
     wideAnimationRotation: 135
     swingLeft: true
     attackRate: 0.75
@@ -45,7 +44,6 @@
   - type: Tool
     qualities:
     - Prying
-    - Axing
   - type: ToolTileCompatible
   - type: Prying
   - type: UseDelay
