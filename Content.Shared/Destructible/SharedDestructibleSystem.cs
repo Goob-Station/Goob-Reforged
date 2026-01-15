@@ -18,6 +18,7 @@ public abstract class SharedDestructibleSystem : EntitySystem
 
         var eventArgs = new DestructionEventArgs();
         RaiseLocalEvent(owner, eventArgs);
+
         PredictedQueueDel(owner);
         return true;
     }
