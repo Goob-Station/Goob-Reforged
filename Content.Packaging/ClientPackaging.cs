@@ -41,8 +41,8 @@ public static class ClientPackaging
                         "/v:m",
                         "/t:Rebuild",
                         "/p:FullRelease=true",
-                        "/m"
-                    }
+                        "/m",
+                    },
                 });
             }
         }
@@ -53,7 +53,7 @@ public static class ClientPackaging
         {
             await using var zipFile =
                 File.Open(Path.Combine("release", "SS14.Client.zip"), FileMode.Create, FileAccess.ReadWrite);
-            using var zip = new ZipArchive(zipFile, ZipArchiveMode.Update);
+            await using var zip = new ZipArchive(zipFile, ZipArchiveMode.Update);
             var writer = new AssetPassZipWriter(zip);
 
             await WriteResources("", writer, logger, default);
@@ -123,9 +123,41 @@ public static class ClientPackaging
             modules,
             cancel);
 
-        await RobustClientPackaging.WriteClientResources(contentDir, inputPass, SharedPackaging.AdditionalIgnoredResources, cancel);
+        await WriteClientResources(contentDir, inputPass, SharedPackaging.AdditionalIgnoredResources, cancel);
 
         inputPass.InjectFinished();
+    }
+
+    private static async Task WriteClientResources(
+        string contentDir,
+        AssetPass pass,
+        IReadOnlySet<string> additionalIgnoredResources,
+        CancellationToken cancel = default)
+    {
+        var ignoreSet = RobustClientPackaging.ClientIgnoredResources
+            .Union(RobustSharedPackaging.SharedIgnoredResources)
+            .Union(additionalIgnoredResources)
+            .ToHashSet();
+
+        await RobustSharedPackaging.DoResourceCopy(Path.Combine(contentDir, "Resources"), pass, ignoreSet, cancel: cancel);
+        await DoModularResourceCopy(contentDir, pass, ignoreSet, cancel);
+    }
+
+    private static Task DoModularResourceCopy(
+        string contentDir,
+        AssetPass pass,
+        HashSet<string> ignoreSet,
+        CancellationToken cancel = default)
+    {
+        var dirs = Directory.GetDirectories(Path.Combine(contentDir, "Modules"));
+        foreach (var dir in dirs)
+        {
+            var resourcesPath = Path.Combine(dir, "Resources");
+            if (!Directory.Exists(resourcesPath))
+                continue;
+            RobustSharedPackaging.DoResourceCopy(resourcesPath, pass, ignoreSet, "", cancel);
+        }
+        return Task.CompletedTask;
     }
 
     private static Task WriteClientContentAssemblies(

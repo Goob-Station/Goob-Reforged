@@ -20,19 +20,23 @@
     <File Path="Modules/GoobStation/module.yml" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Client/Content.Goobstation.Client.csproj">
       <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Release" />
     </Project>
     <Project Path="Modules/GoobStation/Content.Goobstation.Common/Content.Goobstation.Common.csproj">
       <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Release" />
+    </Project>
+    <Project Path="Modules/GoobStation/Content.Goobstation.Server.Database/Content.Goobstation.Server.Database.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Release" />
     </Project>
     <Project Path="Modules/GoobStation/Content.Goobstation.Server/Content.Goobstation.Server.csproj">
       <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Release" />
     </Project>
     <Project Path="Modules/GoobStation/Content.Goobstation.Shared/Content.Goobstation.Shared.csproj">
       <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Release" />
     </Project>
   </Folder>
   <Folder Name="/Modules/WoundMod/">

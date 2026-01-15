@@ -10,8 +10,6 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NpgsqlTypes;
 
@@ -23,24 +21,6 @@ namespace Content.Server.Database
         {
 #if USE_SYSTEM_SQLITE
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
-#endif
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            ((IDbContextOptionsBuilderInfrastructure) options).AddOrUpdateExtension(new SnakeCaseExtension());
-
-            options.ConfigureWarnings(x =>
-            {
-                x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning);
-#if DEBUG
-                // for tests
-                x.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning);
-#endif
-            });
-
-#if DEBUG
-            options.EnableSensitiveDataLogging();
 #endif
         }
 

@@ -1,0 +1,52 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MPL-2.0
+
+- type: entity
+  name: lollychop
+  parent: BaseItem
+  id: LollyChop
+  description: Fill (split) your buddies' tummies (skulls) with this delicious candy (cold steel).
+  components:
+  - type: Tag
+    tags:
+    - FireAxe
+  - type: Sharp
+  - type: Execution
+    doAfterDuration: 4.0
+  - type: Sprite
+    sprite: /Textures/Objects/Weapons/Melee/lollychop.rsi
+    state: icon
+  - type: MeleeWeapon
+    wideAnimationRotation: 135
+    swingLeft: true
+    attackRate: 0.75
+    damage:
+      types:
+        Blunt: 10
+        Slash: 5
+        Structural: 10
+    soundHit:
+      collection: MetalThud
+  - type: Wieldable
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 10
+        Structural: 40
+  - type: Item
+    size: Huge
+  - type: Clothing
+    sprite: _Goobstation/Objects/Weapons/Melee/lollychop.rsi
+    quickEquip: false
+    slots:
+    - back
+  - type: Tool
+    qualities:
+    - Prying
+  - type: ToolTileCompatible
+  - type: Prying
+  - type: UseDelay
+    delay: 1
+  - type: IgniteOnMeleeHit
+    fireStacks: -4
