@@ -6,7 +6,7 @@ using Content.WoundMod.Shared.Targeting;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
-namespace Content.WoundMod.Shared.Body.Part;
+namespace Content.WoundMod.Shared.Body.Components;
 
 /// <summary>
 /// Wound mod extensions for body parts - integrity, healing, severing, etc.

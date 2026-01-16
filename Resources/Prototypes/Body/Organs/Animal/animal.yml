@@ -8,6 +8,7 @@
   abstract: true
   components:
   - type: Organ
+  - type: WMOrgan
   - type: Edible
   - type: Sprite
     sprite: Mobs/Species/Human/organs.rsi
@@ -45,6 +46,7 @@
     - state: lung-l
     - state: lung-r
   - type: Organ
+  - type: WMOrgan
   - type: Lung
   - type: Metabolizer
     removeEmpty: true
@@ -77,6 +79,7 @@
   - type: Sprite
     state: stomach
   - type: Organ
+  - type: WMOrgan
   - type: SolutionContainerManager
     solutions:
       stomach:
@@ -124,6 +127,7 @@
   - type: Sprite
     state: liver
   - type: Organ
+  - type: WMOrgan
   - type: Metabolizer
     maxReagents: 1
     metabolizerTypes: [ Animal ]
@@ -142,6 +146,7 @@
   - type: Sprite
     state: heart-on
   - type: Organ
+  - type: WMOrgan
   - type: Metabolizer
     maxReagents: 2
     metabolizerTypes: [ Animal ]
@@ -164,6 +169,7 @@
     - state: kidney-l
     - state: kidney-r
   - type: Organ
+  - type: WMOrgan
   - type: Metabolizer
     maxReagents: 5
     metabolizerTypes: [ Animal ]

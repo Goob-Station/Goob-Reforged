@@ -26,6 +26,7 @@
   - type: Sprite
     state: stomach
   - type: Organ
+  - type: WMOrgan
   - type: SolutionContainerManager
     solutions:
       stomach:

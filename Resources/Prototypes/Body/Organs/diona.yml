@@ -10,6 +10,7 @@
   - type: Sprite
     sprite: Mobs/Species/Diona/organs.rsi
   - type: Organ
+  - type: WMOrgan
   - type: Edible
   - type: Extractable
     grindableSolutionName: organ
@@ -55,6 +56,8 @@
         reagents:
         - ReagentId: GreyMatter
           Quantity: 5
+   - type: WMOrgan # WoundMod Change
+     slotId: brain # WoundMod Change
 
 - type: entity
   id: OrganDionaEyes

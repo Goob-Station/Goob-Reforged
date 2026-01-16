@@ -9,6 +9,7 @@ using Content.Shared.Body.Part;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
+using Content.WoundMod.Shared.Body.Components;
 using Content.WoundMod.Shared.Body.Part;
 using Robust.Shared.Prototypes;
 

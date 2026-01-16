@@ -9,6 +9,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Inventory;
 using Content.Shared.Mobs.Components;
+using Content.WoundMod.Shared.Body.Components;
 using Content.WoundMod.Shared.Body.Events;
 using Content.WoundMod.Shared.Body.Part;
 using Content.WoundMod.Shared.Damage;

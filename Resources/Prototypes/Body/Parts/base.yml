@@ -2,127 +2,122 @@
 #
 # SPDX-License-Identifier: MIT-WIZARDS
 
-# TODO: Add descriptions (many)
-# TODO BODY: Part damage
 - type: entity
-  id: BasePart
-  parent: BaseItem
-  name: "body part"
   abstract: true
+  parent: BasePartInorganic
+  id: BasePart
   components:
   - type: Damageable
-    damageContainer: Biological
-  - type: BodyPart
-  - type: Gibbable
-  - type: ContainerContainer
-    containers:
-      bodypart: !type:Container
-        ents: []
-  - type: StaticPrice
-    price: 100
-  - type: Tag
+    damageContainer: OrganicPart # WoundMod Change
+  # WoundMod START: Add the WoundMod component to track integrity/severing
+  - type: WMBodyPart
+    integrityThresholds:
+      Healthy: 0
+      Wounded: 10
+      HeavilyWounded: 20
+      CriticallyWounded: 40
+      Dead: 50
+    severIntegrity: 55
+    enableIntegrity: 30
+    minIntegrity: 0
+    selfHealingAmount: 1
+    healingTime: 15
+  # WoundMod END
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 110
+      behaviors:
+      - !type:GibPartBehavior { }
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Slash
+        damage: 150
+      behaviors:
+      - !type:GibPartBehavior { }
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Heat
+        damage: 200
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          Ash:
+            min: 1
+            max: 1
+      - !type:BurnBodyBehavior { }
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MeatLaserImpact
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Fat
+        Quantity: 3
+      - ReagentId: Blood
+        Quantity: 10
+  - type: Tag # Goobstation
     tags:
-      - Trash
+    - Trash
+    - Meat
 
+# organic torsos have higher health
+# this doesn't affect gibbing bodies as there is code to prevent torso gibbing while part of a body
 - type: entity
+  abstract: true
+  parent: BaseTorsoInorganic
   id: BaseTorso
-  name: "torso"
-  parent: BasePart
-  abstract: true
   components:
-  - type: BodyPart
-    partType: Torso
-
-- type: entity
-  id: BaseHead
-  name: "head"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Head
-    vital: true
-  - type: Input
-    context: "ghost"
-
-- type: entity
-  id: BaseLeftArm
-  name: "left arm"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Arm
-    symmetry: Left
-
-- type: entity
-  id: BaseRightArm
-  name: "right arm"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Arm
-    symmetry: Right
-
-- type: entity
-  id: BaseLeftHand
-  name: "left hand"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Hand
-    symmetry: Left
-
-- type: entity
-  id: BaseRightHand
-  name: "right hand"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Hand
-    symmetry: Right
-
-- type: entity
-  id: BaseLeftLeg
-  name: "left leg"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Leg
-    symmetry: Left
-  - type: MovementBodyPart
-
-- type: entity
-  id: BaseRightLeg
-  name: "right leg"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Leg
-    symmetry: Right
-  - type: MovementBodyPart
-
-- type: entity
-  id: BaseLeftFoot
-  name: "left foot"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Foot
-    symmetry: Left
-
-- type: entity
-  id: BaseRightFoot
-  name: "right foot"
-  parent: BasePart
-  abstract: true
-  components:
-  - type: BodyPart
-    partType: Foot
-    symmetry: Right
+  # WoundMod START: Torsos are much harder to destroy/sever
+  - type: WMBodyPart
+    integrityThresholds:
+      Healthy: 0
+      Wounded: 50
+      HeavilyWounded: 100
+      CriticallyWounded: 150
+      Dead: 200
+    severIntegrity: 1000 # Effectively impossible to sever via damage alone
+    enableIntegrity: 150
+    minIntegrity: 0
+    selfHealingAmount: 2
+    healingTime: 10
+  # WoundMod END
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 400
+      behaviors:
+      - !type:GibPartBehavior { }
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Slash
+        damage: 400
+      behaviors:
+      - !type:GibPartBehavior { }
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Heat
+        damage: 400
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          Ash:
+            min: 1
+            max: 1
+      - !type:BurnBodyBehavior { }
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MeatLaserImpact
+  - type: Extractable # torso is meatier
+    juiceSolution:
+      reagents:
+      - ReagentId: Fat
+        Quantity: 10
+      - ReagentId: Blood
+        Quantity: 20

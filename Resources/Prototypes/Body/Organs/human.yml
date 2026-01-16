@@ -10,6 +10,7 @@
   - type: Sprite
     sprite: Mobs/Species/Human/organs.rsi
   - type: Organ
+  - type: WMOrgan
   - type: Edible
   - type: Extractable
     grindableSolutionName: organ
@@ -47,6 +48,8 @@
   - type: Sprite
     state: brain
   - type: Organ
+  - type: WMOrgan
+    slotId: brain
   - type: Input
     context: "ghost"
   - type: Brain

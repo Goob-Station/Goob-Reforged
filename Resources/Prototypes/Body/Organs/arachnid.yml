@@ -10,6 +10,7 @@
   - type: Sprite
     sprite: Mobs/Species/Arachnid/organs.rsi
   - type: Organ
+  - type: WMOrgan
   - type: Edible
   - type: Extractable
     grindableSolutionName: organ

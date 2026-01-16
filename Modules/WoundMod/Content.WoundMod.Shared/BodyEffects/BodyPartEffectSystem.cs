@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared.Body.Part;
+using Content.WoundMod.Shared.Body.Components;
 using Content.WoundMod.Shared.Body.Events;
 using Content.WoundMod.Shared.Body.Part;
 using Robust.Shared.Prototypes;
