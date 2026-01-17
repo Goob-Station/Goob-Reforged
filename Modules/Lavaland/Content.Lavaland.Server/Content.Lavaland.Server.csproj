@@ -1,12 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
-    <TargetFramework>$(TargetFramework)</TargetFramework>
-    <LangVersion>12</LangVersion>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\bin\Content.Server\</OutputPath>
+    <OutputPath>..\..\..\bin\Content.Server\</OutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputType Condition="'$(FullRelease)' != 'True'">Exe</OutputType>
     <NoWarn>1998</NoWarn>
@@ -14,15 +12,11 @@
     <Nullable>enable</Nullable>
     <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Concentus" />
-    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
-  </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\Content.Lavaland.Shared\Content.Lavaland.Shared.csproj" />
-      <ProjectReference Include="..\..\..\Content.Server\Content.Server.csproj" />
-      <ProjectReference Include="..\..\..\RobustToolbox\Robust.Shared\Robust.Shared.csproj" />
-    </ItemGroup>
 
-  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Content.Server\Content.Server.csproj" />
+    <ProjectReference Include="..\Content.Lavaland.Common\Content.Lavaland.Common.csproj" />
+    <ProjectReference Include="..\Content.Lavaland.Shared\Content.Lavaland.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

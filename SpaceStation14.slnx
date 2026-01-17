@@ -39,6 +39,25 @@
       <BuildType Solution="Tools|*" Project="Release" />
     </Project>
   </Folder>
+  <Folder Name="/Modules/Lavaland/">
+    <File Path="Modules/Lavaland/module.yml" />
+    <Project Path="Modules/Lavaland/Content.Lavaland.Client/Content.Lavaland.Client.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+    <Project Path="Modules/Lavaland/Content.Lavaland.Common/Content.Lavaland.Common.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+    <Project Path="Modules/Lavaland/Content.Lavaland.Server/Content.Lavaland.Server.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+    <Project Path="Modules/Lavaland/Content.Lavaland.Shared/Content.Lavaland.Shared.csproj">
+      <BuildType Solution="DebugOpt|*" Project="Debug" />
+      <BuildType Solution="Tools|*" Project="Debug" />
+    </Project>
+  </Folder>
   <Folder Name="/MSBuild/">
     <File Path="MSBuild/Content.props" />
   </Folder>
