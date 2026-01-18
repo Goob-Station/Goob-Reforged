@@ -10,4 +10,4 @@ if [ "$(dirname $0)" != "." ]; then
 fi
 
 cd ../../
-dotnet run --project Content.Goobstation.Server --no-build
+dotnet run --project Modules/GoobStation/Content.Goobstation.Server --no-build
