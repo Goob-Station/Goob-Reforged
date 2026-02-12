@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Content.Packaging;
