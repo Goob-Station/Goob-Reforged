@@ -57,6 +57,30 @@ public sealed class DepsHandler
         }
     }
 
+    public static HashSet<string> GetModuleUniqueAssemblies(string coreDepsPath, string moduleDepsPath)
+    {
+        var core = Load(coreDepsPath);
+        var module = Load(moduleDepsPath);
+
+        var unique = new HashSet<string>(module.Libraries.Keys);
+        unique.ExceptWith(core.Libraries.Keys);
+
+        return unique;
+    }
+
+    public static IEnumerable<string> GetModuleUniqueDlls(string coreDepsPath, string moduleDepsPath)
+    {
+        var core = Load(coreDepsPath);
+        var module = Load(moduleDepsPath);
+
+        var uniqueLibs = new HashSet<string>(module.Libraries.Keys);
+        uniqueLibs.ExceptWith(core.Libraries.Keys);
+
+        return uniqueLibs
+            .Where(lib => module.Libraries.ContainsKey(lib))
+            .SelectMany(lib => module.Libraries[lib].GetDllNames());
+    }
+
     public sealed class DepsData
     {
         [JsonInclude, JsonPropertyName("targets")]
