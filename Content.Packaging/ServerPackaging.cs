@@ -39,15 +39,6 @@ public static class ServerPackaging
         .Select(o => o.Rid)
         .ToList();
 
-    private static readonly List<string> CoreServerContentAssemblies = new()
-    {
-        "Content.Server.Database",
-        "Content.Server",
-        "Content.Shared",
-        "Content.Shared.Database",
-        "Content.ModuleManager", // I cant be fucked to figure out how to this dynamically
-    };
-
     private static readonly List<string> ServerExtraAssemblies = new()
     {
         // Python script had Npgsql. though we want Npgsql.dll as well soooo
@@ -170,16 +161,27 @@ public static class ServerPackaging
 
     private static List<string> FindAllServerModules(string path = ".")
     {
-        var modules = new List<string>(CoreServerContentAssemblies);
+        if (string.IsNullOrEmpty(path))
+            path = ".";
 
-        // Modules - Add modules from Modules/ directory
-        modules.AddRange(ModuleDiscovery.DiscoverModules(path)
-            .Where(m => m.Type != ModuleRole.Client)
-            .Select(m => m.Name)
-            .Distinct()
-        );
+        var modules = new List<string> { "Content.Server.Database", "Content.Server", "Content.Shared", "Content.Shared.Database", "Content.ModuleManager" };
 
-        return modules;
+        var coreDepsPath = Path.Combine(path, "bin", "Content.Server", "Content.Server.deps.json");
+
+        foreach (var mod in ModuleDiscovery.DiscoverModules(path).Where(m => m.Type != ModuleRole.Client).DistinctBy(m => m.Name))
+        {
+            modules.Add(mod.Name);
+
+            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(mod.ProjectPath);
+            var moduleDepsPath = Path.Combine(moduleOutputDir, $"{mod.Name}.deps.json");
+
+            if (File.Exists(coreDepsPath) && File.Exists(moduleDepsPath))
+            {
+                modules.AddRange(DepsHandler.GetModuleUniqueAssemblies(coreDepsPath, moduleDepsPath));
+            }
+        }
+
+        return modules.Distinct().ToList();
     }
 
     private static async Task PublishClientServer(string runtime, string targetOs, string configuration)
@@ -272,10 +274,10 @@ public static class ServerPackaging
         var mainBinDir = Path.Combine(contentDir, "bin", "Content.Server");
 
         var moduleAssemblyPaths = ModuleDiscovery.DiscoverModules(contentDir)
-            .Where(m => m.Type == ModuleRole.Server)
+            .Where(m => m.Type != ModuleRole.Client)
             .ToDictionary(
                 m => m.Name,
-                m => Path.Combine(GetModuleRoot(m.ProjectPath), "bin", "Content.Server")
+                m => ModuleDiscovery.GetModuleOutputDir(m.ProjectPath)
             );
 
         foreach (var asm in contentAssemblies)
@@ -294,15 +296,6 @@ public static class ServerPackaging
         }
 
         return Task.CompletedTask;
-    }
-
-    private static string GetModuleRoot(string projectPath)
-    {
-        // Extracts the module root from the project path
-        // e.g., "Modules/GoobStation/Content.Goobstation.Server/Content.Goobstation.Server.csproj"
-        // -> "Modules/GoobStation"
-        var projectDir = Path.GetDirectoryName(projectPath);
-        return Path.GetDirectoryName(projectDir)!;
     }
 
     private readonly record struct PlatformReg(string Rid, string TargetOs, bool BuildByDefault);
