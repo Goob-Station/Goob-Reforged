@@ -1,4 +1,8 @@
-﻿name: soft-repoban check
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
+name: soft-repoban check
 
 on:
   pull_request:
