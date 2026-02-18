@@ -1,0 +1,47 @@
+using Content.Goobstation.Shared.Supermatter.Components;
+using Robust.Shared.Serialization;
+
+namespace Content.Goobstation.Shared.Supermatter.Systems;
+
+public abstract class SharedSupermatterSystem : EntitySystem
+{
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<SupermatterComponent, ComponentStartup>(OnSupermatterStartup);
+    }
+
+    public enum SuperMatterSound : sbyte
+    {
+        Aggressive = 0,
+        Delam = 1
+    }
+
+    public enum DelamType : sbyte
+    {
+        Explosion = 0,
+        Singulo = 1,
+        Tesla = 2,
+        Cascade = 3
+    }
+    #region Getters/Setters
+
+    public static void OnSupermatterStartup(EntityUid uid, SupermatterComponent comp, ComponentStartup args)
+    {
+    }
+
+    #endregion Getters/Setters
+
+    #region Serialization
+    /// <summary>
+    /// A state wrapper used to sync the supermatter between the server and client.
+    /// </summary>
+    [Serializable, NetSerializable]
+    protected sealed class SupermatterComponentState(SupermatterComponent supermatter) : ComponentState
+    {
+        private readonly SupermatterComponent _supermatter = supermatter;
+    }
+
+    #endregion Serialization
+
+}
