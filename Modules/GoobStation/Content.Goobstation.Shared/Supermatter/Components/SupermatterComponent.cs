@@ -1,11 +1,12 @@
 using Content.Goobstation.Shared.Supermatter.Systems;
-using Content.Goobstation.Shared.Supermatter.Monitor;
 using Content.Shared.Atmos;
 using Content.Shared.DoAfter;
 using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
+using Robust.Shared.Prototypes;
 
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
@@ -21,8 +22,8 @@ public sealed partial class SupermatterComponent : Component
     [ViewVariables(VVAccess.ReadWrite)]
     public bool Activated = false;
 
-    [DataField("supermatterSliverPrototype")]
-    public string SliverPrototypeId = "SupermatterSliver";
+    [DataField("supermatterSliverPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    public string SliverPrototypeId { get; private set; } = "SupermatterSliver";
 
     /// <summary>
     ///     Affects delamination timer. If removed - delamination timer is divided by 2.
@@ -43,13 +44,13 @@ public sealed partial class SupermatterComponent : Component
         "HyperchargedLightning"
     ];
 
-    [DataField("singularitySpawnPrototype")]
+    [DataField("singularitySpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string SingularityPrototypeId = "Singularity";
 
-    [DataField("teslaSpawnPrototype")]
+    [DataField("teslaSpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string TeslaPrototypeId = "TeslaEnergyBall";
 
-    [DataField("supermatterKudzuSpawnPrototype")]
+    [DataField("supermatterKudzuSpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string SupermatterKudzuPrototypeId = "SupermatterKudzu";
 
     [ViewVariables(VVAccess.ReadWrite)]
@@ -272,14 +273,6 @@ public sealed partial class SupermatterComponent : Component
     public float MolePenaltyThreshold = 900f;
 
     /// <summary>
-    /// more moles of gases are harder to heat than fewer,
-    /// so let's scale heat damage around them
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    [DataField("moleheatpenaltyThreshold")]
-    public float MoleHeatPenaltyThreshold;
-
-    /// <summary>
     /// The cutoff on power properly doing damage, pulling shit around,
     /// and delamming into a tesla. Low chance of pyro anomalies, +2 bolts of electricity
     /// </summary>
@@ -358,47 +351,61 @@ public sealed partial class SupermatterComponent : Component
     #endregion SM Delamm
 
     #region SM Gas
-    /// <summary>
-    /// Is used to store gas
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    [DataField("gasStorage")]
-    public Dictionary<Gas, float> GasStorage = new()
-    {
-        {Gas.Oxygen, 0f},
-        {Gas.Nitrogen, 0f},
-        {Gas.CarbonDioxide, 0f},
-        {Gas.Plasma, 0f},
-        {Gas.Tritium, 0f},
-        {Gas.WaterVapor, 0f},
-        {Gas.Frezon, 0f }, // EE Compatibility
-        {Gas.Ammonia, 0f }, // EE Compatibility
-        {Gas.NitrousOxide, 0f }, // EE Compatibility
-    };
 
     /// <summary>
-    ///     Stores each gas facts
+    ///     Stores every gas fact
     /// </summary>
-    public readonly Dictionary<Gas, (float TransmitModifier, float HeatPenalty, float PowerMixRatio)> GasDataFields = new()
+    /// <returns>
+    ///     Given gasses:
+    ///     <list type="bullet">
+    ///     <item>
+    ///     <c>RadMod</c>
+    ///     <description>- radiation power modifier.</description>
+    ///     </item>
+    ///     <item>
+    ///     <c>ZapMod</c>
+    ///     <description>- tesla zap power modifier.</description>
+    ///     </item>
+    ///     <item>
+    ///     <c>HeatMod</c>
+    ///     <description>- modifier to crystal power gain from heat.</description>
+    ///     </item>
+    ///     <item>
+    ///     <c>MoleMod</c>
+    ///     <description>- produced gas mole count modifier.</description>
+    ///     </item>
+    ///     <item>
+    ///     <c>HeatResistMod</c>
+    ///     <description>- modifies threshold for crystal receiving heat damage.</description>
+    ///     </item>
+    ///     </list>
+    /// </returns>
+    /// <remarks>
+    /// <para>RadMod has no /tg/ equivalents, however since SS14 meta is centered slightly more around rad collectors, this helps designs that rely on them instead of coils. Usually similar to ZapMod.</para>
+    /// <para>ZapMod = "Power Transmission" on /tg/ wiki. High values will naturally create more powerful zaps.</para>
+    /// <para>HeatMod = "Heat Power Gain" on /tg/ wiki. Makes SM get energy from temperature.</para>
+    /// <para>MoleMod ~= "Gas Waste Multiplier" on /tg/ wiki. Temperature (not energy!) of produced gas depends on crystal energy instead.</para>
+    /// <para>HeatResistMod = "Heat Resistance" on /tg/ wiki. Should never be so high as to shield from a trit fire.</para>
+    /// <para>These values are for a 100% mix of such gas. These are additive, not multiplicative (so, 100%+mod)</para>
+    /// </remarks>
+    public static (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod) GasDataFields(Gas? gas = null) => gas switch
     {
-        [Gas.Oxygen] = (TransmitModifier: 1.5f, HeatPenalty: 1f, PowerMixRatio: 1f),
-        [Gas.Nitrogen] = (TransmitModifier: 0f, HeatPenalty: -1.5f, PowerMixRatio: -1f),
-        [Gas.CarbonDioxide] = (TransmitModifier: 0f, HeatPenalty: 0.1f, PowerMixRatio: 1f),
-        [Gas.Plasma] = (TransmitModifier: 4f, HeatPenalty: 15f, PowerMixRatio: 1f),
-        [Gas.Tritium] = (TransmitModifier: 30f, HeatPenalty: 10f, PowerMixRatio: 1f),
-        [Gas.WaterVapor] = (TransmitModifier: 2f, HeatPenalty: 12f, PowerMixRatio: 1f),
-        [Gas.Frezon] = (TransmitModifier: 3f, HeatPenalty: -10f, PowerMixRatio: -1f),
-        [Gas.Ammonia] = (TransmitModifier: 0f, HeatPenalty: .5f, PowerMixRatio: 1f),
-        [Gas.NitrousOxide] = (TransmitModifier: 0f, HeatPenalty: -5f, PowerMixRatio: -1f),
+        // /tg/ values are an ok start, but definitely don't have to be adhered to.
+        // Some values might seem extreme - completely intentional to encourage mixes.
+        Gas.Oxygen => (0.8f, 0.4f, 1f, 0f, 0f), // Baby's first performance booster.
+        Gas.Nitrogen => (0f, 0f, -1f, -2.5f, 0f), // Baseline. If SM doesn't work safely with 100% N2 something is wrong.
+        Gas.CarbonDioxide => (0f, 0f, 1f, 1f, 0f), // Only useful for its special effect, decreasing power decay.
+        Gas.Plasma => (2f, 1.5f, 1f, 19f, 0f), // Gives more power, and a lot more gases. 
+        Gas.Tritium => (4f, 3f, 1f, 9f, 0f), // Go-to for massive power gains :)
+        Gas.WaterVapor => (-0.25f, -0.25f, 1f, 11f, 0.25f), // Dangerous and useless. Or useless and dangerous?
+        Gas.Frezon => (-3f, -3f, -1f, -9f, -0.5f), // Quick cooling, but won't save you at the last second due to heat mod. It's your fault ngl.
+        Gas.Ammonia => (0f, 0f, .3f, 0f, 0f), // Another special effect, it's being consumed to give more power to the crystal.
+        Gas.NitrousOxide => (0f, 0f, 0f, 0f, 5f), // Just gives heat resist
+        _ => (0f, 0f, 0f, 0f, 0f)
     };
 
     #endregion SM Gas
-
-    #region EE
-
-    [DataField]
-    public SupermatterStatusType Status = SupermatterStatusType.Inactive;
-    #endregion EE
+    public float AmmoniaEnergyPerMole;
 }
 
 [Serializable, NetSerializable]

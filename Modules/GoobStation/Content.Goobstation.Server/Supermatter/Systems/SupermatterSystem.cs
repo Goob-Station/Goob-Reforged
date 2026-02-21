@@ -26,7 +26,6 @@ using Robust.Shared.Maths;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Timing;
-using System.Linq;
 using System.Text;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
@@ -139,6 +138,8 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     /// </summary>
     private void ProcessAtmos(EntityUid uid, SupermatterComponent sm)
     {
+        #region Get gas mix
+
         var mix = _atmosphere.GetContainingMixture(uid, true, true);
 
         if (mix is not { })
@@ -150,44 +151,19 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (!(moles > 0f))
             return;
 
-        var gases = sm.GasStorage;
-        var facts = sm.GasDataFields;
+        #endregion
 
-        //Lets get the proportions of the gasses in the mix for scaling stuff later
-        //They range between 0 and 1
-        gases = gases.ToDictionary(
-            gas => gas.Key,
-            gas => Math.Clamp(absorbedGas.GetMoles(gas.Key) / moles, 0, 1)
-        );
+        var (radModifier, zapModifier, moleModifier, heatModifier, heatResistModifier) = GetGasModifiers(absorbedGas);
 
-        //No less then zero, and no greater then one, we use this to do explosions and heat to power transfer.
-        var powerRatio = gases.Sum(gas => gases[gas.Key] * facts[gas.Key].PowerMixRatio);
+        #region Calculate CO2 powerloss inhibition effect
 
-        // Minimum value of -10, maximum value of 23. Affects plasma, o2 and heat output.
-        var heatModifier = gases.Sum(gas => gases[gas.Key] * facts[gas.Key].HeatPenalty);
-
-        // Minimum value of -10, maximum value of 23. Affects plasma, o2 and heat output.
-        var transmissionBonus = gases.Sum(gas => gases[gas.Key] * facts[gas.Key].TransmitModifier);
-
-        var h2OBonus = 1 - gases[Gas.WaterVapor] * 0.25f;
-
-        powerRatio = Math.Clamp(powerRatio, 0, 1);
-        heatModifier = Math.Max(heatModifier, 0.5f);
-        transmissionBonus *= h2OBonus;
-
-        // Effects the damage heat does to the crystal
-        sm.DynamicHeatResistance = 1f;
-
-        // more moles of gases are harder to heat than fewer,
-        // so let's scale heat damage around them
-        sm.MoleHeatPenaltyThreshold = (float)Math.Max(moles * sm.MoleHeatPenalty, 0.25);
-
+        // Calculate powerloss modifier based on CO2
         // Ramps up or down in increments of 0.02 up to the proportion of co2
         // Given infinite time, powerloss_dynamic_scaling = co2comp
         // Some value between 0 and 1
-        if (moles > sm.PowerlossInhibitionMoleThreshold && gases[Gas.CarbonDioxide] > sm.PowerlossInhibitionGasThreshold)
+        if (moles > sm.PowerlossInhibitionMoleThreshold && absorbedGas.GetMoles(Gas.CarbonDioxide) / moles > sm.PowerlossInhibitionGasThreshold)
         {
-            var co2powerloss = Math.Clamp(gases[Gas.CarbonDioxide] - sm.PowerlossDynamicScaling, -0.02f, 0.02f);
+            var co2powerloss = Math.Clamp(absorbedGas.GetMoles(Gas.CarbonDioxide) / moles - sm.PowerlossDynamicScaling, -0.02f, 0.02f);
             sm.PowerlossDynamicScaling = Math.Clamp(sm.PowerlossDynamicScaling + co2powerloss, 0f, 1f);
         }
         else
@@ -203,75 +179,104 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
                 Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f),
                 0f, 1f);
 
-        if (sm.MatterPower != 0) //We base our removed power off one 10th of the matter_power.
+        #endregion
+
+        #region Add power to crystal
+
+        // Transfer matter power to power
+        if (sm.MatterPower != 0)
         {
-            var removedMatter = Math.Max(sm.MatterPower / sm.MatterPowerConversion, 40);
-            //Adds at least 40 power
+            // Get how much matter power to transfer. Above 400 starts scaling. Min wrapped to ensure we don't magically create more power.
+            var removedMatter = Math.Min(Math.Max(sm.MatterPower / sm.MatterPowerConversion, 40), sm.MatterPower);
+            //Adds at least 40 power 
             sm.Power = Math.Max(sm.Power + removedMatter, 0);
             //Removes at least 40 matter power
             sm.MatterPower = Math.Max(sm.MatterPower - removedMatter, 0);
         }
 
-        //based on gas mix, makes the power more based on heat or less effected by heat
-        var tempFactor = powerRatio > 0.8 ? 50f : 30f;
+        // Additional scaling of power gen from temperature above .8 factor.
+        var tempFactor = heatModifier > 0.8 ? 50f : 30f;
 
-        //if there is more pluox and n2 then anything else, we receive no power increase from heat
-        sm.Power = Math.Max(absorbedGas.Temperature * tempFactor / Atmospherics.T0C * powerRatio + sm.Power, 0);
+        // Increase power from temperature
+        sm.Power = Math.Max(absorbedGas.Temperature * heatModifier * tempFactor / Atmospherics.T0C + sm.Power, 0);
+
+        // Yeah, it consumes all ammonia in one tick cuz it's funny af
+        sm.Power = Math.Max(absorbedGas.GetMoles(Gas.Ammonia) * sm.AmmoniaEnergyPerMole + sm.Power, 0);
+        absorbedGas.SetMoles(Gas.Ammonia, 0f);
+
+        #endregion
+
+        #region Generate outputs
 
         //Radiate stuff
         if (TryComp<RadiationSourceComponent>(uid, out var rad))
         {
-            var transmittedpower = sm.Power * Math.Max(0, 1f + transmissionBonus / 10f);
-            rad.Intensity = transmittedpower * sm.RadiationOutputFactor;
+            rad.Intensity = sm.Power * radModifier * sm.RadiationOutputFactor;
         }
 
-        //Power * 0.55 * a value between 1 and 0.8
+        // Convert power to energy
         var energy = sm.Power * sm.ReactionPowerModifier;
 
-        // Keep in mind we are only adding this temperature to (efficiency)% of the one tile the rock
-        // is on. An increase of 4*C @ 25% efficiency here results in an increase of 1*C / (#tilesincore) overall.
-        // Power * 0.55 * (some value between 1.5 and 23) / 5
-        absorbedGas.Temperature += energy * heatModifier * sm.ThermalReleaseModifier;
-        absorbedGas.Temperature = Math.Max(0,
-            Math.Min(absorbedGas.Temperature, sm.HeatThreshold * heatModifier));
+        // Release the waste. Both are scaled by modifier and energy, but o2 also scales with temperatures.
+        absorbedGas.AdjustMoles(Gas.Oxygen, Math.Max(moleModifier * (energy + absorbedGas.Temperature - Atmospherics.T0C) * sm.OxygenReleaseEfficiencyModifier, 0f));
+        absorbedGas.AdjustMoles(Gas.Plasma, Math.Max(moleModifier * sm.PlasmaReleaseModifier * energy, 0f));
 
-        // Assmos - /tg/ gases
-        // Checks for carbon dioxide and spits out pluoxium if both CO2 and oxygen are present.
-        if (mix.GetMoles(Gas.CarbonDioxide) > 0.01f)
-        {
-            var co2PP = absorbedGas.Pressure * (mix.GetMoles(Gas.CarbonDioxide) / mix.TotalMoles * 100);
-            var co2Ratio = Math.Clamp(0.5f * (co2PP - 101.325f * 0.01f) / (co2PP + 101.325f * 0.25f), 0, 1);
-            var consumedCO2 = absorbedGas.GetMoles(Gas.CarbonDioxide) * co2Ratio;
-            consumedCO2 = Math.Min(consumedCO2, Math.Min(absorbedGas.GetMoles(Gas.Oxygen), absorbedGas.GetMoles(Gas.CarbonDioxide)));
+        // Increase temperature
+        absorbedGas.Temperature += energy * sm.ThermalReleaseModifier;
 
-            if (consumedCO2 > 0)
-            {
-                absorbedGas.AdjustMoles(Gas.CarbonDioxide, -consumedCO2);
-                absorbedGas.AdjustMoles(Gas.Oxygen, -consumedCO2);
-            }
-        }
-        // Assmos - /tg/ gases end
-
-        // Release the waste
-        absorbedGas.AdjustMoles(Gas.Plasma, Math.Max(energy * heatModifier * sm.PlasmaReleaseModifier, 0f));
-        absorbedGas.AdjustMoles(Gas.Oxygen, Math.Max((energy + absorbedGas.Temperature * heatModifier - Atmospherics.T0C) * sm.OxygenReleaseEfficiencyModifier, 0f));
-
+        // Return the gas to nature :)
         _atmosphere.Merge(mix, absorbedGas);
 
-        var powerReduction = (float)Math.Pow(sm.Power / 500, 3);
+        #endregion
+
+        #region Scale down power
+
+        var powerReduction = (float)Math.Pow(sm.Power / 500f, 3f);
 
         // After this point power is lowered
         // This wraps around to the begining of the function
         sm.Power = Math.Max(sm.Power - Math.Min(powerReduction * powerlossInhibitor, sm.Power * 0.83f * powerlossInhibitor), 0f);
 
-        sm.GasStorage = sm.GasStorage.ToDictionary(
-            gas => gas.Key,
-            gas => absorbedGas.GetMoles(gas.Key)
-        );
+        #endregion
+    }
 
-        // Console Compatibility from EE
-        sm.Temperature = absorbedGas.Temperature;
-        sm.WasteMultiplier = heatModifier;
+    /// <summary>
+    /// Get SM related data about a provided gas mix.
+    /// </summary>
+    /// <param name="absorbedGas">Mix to be parsed</param>
+    /// <returns>A selection of values, check <see cref="SupermatterComponent.GasDataFields(Gas?)"/></returns>
+    private (float radModifier, float zapModifier, float moleModifier, float heatModifier, float heatResistModifier) GetGasModifiers(GasMixture absorbedGas)
+    {
+        // Get the proportions of the gasses in the mix, which range between 0 and 1
+        // Also get their corresponding facts and calculate mods from it.
+        // Preallocate variables
+        var facts = SupermatterComponent.GasDataFields();
+        var gasPercentages = new Dictionary<Gas, float>(Enum.GetNames<Gas>().Length);
+        var radModifier = 1f;
+        var zapModifier = 1f;
+        var moleModifier = 1f;
+        var heatModifier = 1f;
+        var heatResistModifier = 1f;
+        for (int i = 0; i < Enum.GetNames<Gas>().Length; i++)
+        {
+            gasPercentages[(Gas)i] = absorbedGas[i] / absorbedGas.TotalMoles;
+            facts = SupermatterComponent.GasDataFields((Gas)i);
+            radModifier += gasPercentages[(Gas)i] * facts.RadMod;
+            zapModifier += gasPercentages[(Gas)i] * facts.ZapMod;
+            moleModifier += gasPercentages[(Gas)i] * facts.MoleMod;
+            heatModifier += gasPercentages[(Gas)i] * facts.HeatMod;
+            heatResistModifier += gasPercentages[(Gas)i] * facts.HeatResistMod;
+        }
+
+        // Ensure we don't do something stupid later
+        return (
+            Math.Max(radModifier, 0f),
+            Math.Max(zapModifier, 0f),
+            Math.Max(moleModifier, 0f),
+            Math.Max(heatModifier, 0f),
+            Math.Max(heatResistModifier, 0f)
+            );
+
     }
 
     /// <summary>
@@ -279,10 +284,31 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     /// </summary>
     private void SupermatterZap(EntityUid uid, SupermatterComponent sm)
     {
+
+        #region Calc modifiers for zap
+
+        // This isn't DRY but erm whatever. Alternatively I can surface this. And add a few params or some weird struct.
+        // (Also I can't cleanly run it on top level anyways since damage is independent
+
+        var mix = _atmosphere.GetContainingMixture(uid, true, true);
+
+        if (mix is not { })
+            return;
+
+        var gas = mix.Clone();
+        var moles = gas.TotalMoles;
+
+        if (!(moles > 0f))
+            return;
+
+        var (_,zapModifier,_,_,_) = GetGasModifiers(gas);
+
+        #endregion
+
         // Divide power by it's threshold to get a value from 0 to 1, then multiply by the amount of possible lightnings
         // Makes it pretty obvious that if SM is shooting out red lightnings something is wrong.
         // And if it shoots too weak lightnings it means that it's underfed. Feed the SM :godo:
-        var zapPower = sm.Power / sm.PowerPenaltyThreshold * sm.LightningPrototypes.Length;
+        var zapPower = sm.Power * zapModifier / sm.PowerPenaltyThreshold * sm.LightningPrototypes.Length;
         var zapPowerNorm = (int)Math.Clamp(zapPower, 0, sm.LightningPrototypes.Length - 1);
         _lightning.ShootRandomLightnings(uid, 3.5f, sm.Power > sm.PowerPenaltyThreshold ? 3 : 1, sm.LightningPrototypes[zapPowerNorm]);
     }

@@ -20,6 +20,10 @@
       <ProjectReference Include="..\Content.Goobstation.Shared\Content.Goobstation.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Supermatter\Consoles\" />
+    </ItemGroup>
+
     <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
     <Import Project="..\..\..\RobustToolbox\MSBuild\XamlIL.targets" />
 </Project>
