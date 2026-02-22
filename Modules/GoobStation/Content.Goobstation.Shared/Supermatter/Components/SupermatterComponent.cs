@@ -4,9 +4,9 @@ using Content.Shared.DoAfter;
 using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
-using Robust.Shared.Prototypes;
 
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
@@ -75,6 +75,9 @@ public sealed partial class SupermatterComponent : Component
     public float Damage = 0f;
 
     [ViewVariables(VVAccess.ReadWrite)]
+    public float DamageDelta = 0f;
+
+    [ViewVariables(VVAccess.ReadWrite)]
     public float MatterPower;
 
     [ViewVariables(VVAccess.ReadWrite)]
@@ -124,13 +127,6 @@ public sealed partial class SupermatterComponent : Component
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
     public float PowerlossDynamicScaling;
-
-    /// <summary>
-    /// Affects the amount of damage and minimum point
-    /// at which the sm takes heat damage
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    public float DynamicHeatResistance = 1;
 
     /// <summary>
     /// Multiplier on damage the core takes from absorbing hot gas
@@ -185,14 +181,14 @@ public sealed partial class SupermatterComponent : Component
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("WarningPoint")]
-    public float WarningPoint = 50;
+    public const float WarningPoint = 50;
 
     /// <summary>
     /// The point at which we start sending messages to the common channel
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("emergencyPoint")]
-    public float EmergencyPoint = 500;
+    public const float EmergencyPoint = 500;
 
     /// <summary>
     /// we yell if over 50 damage every YellTimer Seconds
@@ -286,12 +282,6 @@ public sealed partial class SupermatterComponent : Component
     [ViewVariables(VVAccess.ReadOnly)]
     [DataField("heatpenaltyThreshold")]
     public float HeatPenaltyThreshold = 40f;
-
-    /// <summary>
-    /// The damage we had before this cycle. Used to limit the damage we can take each cycle, and for safe alert
-    /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
-    public float DamageArchived = 0f;
 
     /// <summary>
     /// is multiplied by ExplosionPoint to cap

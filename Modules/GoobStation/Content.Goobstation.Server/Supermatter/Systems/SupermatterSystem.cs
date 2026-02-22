@@ -301,7 +301,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (!(moles > 0f))
             return;
 
-        var (_,zapModifier,_,_,_) = GetGasModifiers(gas);
+        var (_, zapModifier, _, _, _) = GetGasModifiers(gas);
 
         #endregion
 
@@ -318,30 +318,32 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     /// </summary>
     private void HandleDamage(EntityUid uid, SupermatterComponent sm)
     {
-        var xform = Transform(uid);
-        var indices = _xform.GetGridOrMapTilePosition(uid, xform);
+        var damageArchived = sm.Damage;
 
-        sm.DamageArchived = sm.Damage;
+        #region Get gas info
 
         var mix = _atmosphere.GetContainingMixture(uid, true, true);
 
         // We're in space or there is no gas to process
-        if (!xform.GridUid.HasValue || mix is not { } || mix.TotalMoles == 0f)
+        if (mix is not { } || mix.TotalMoles == 0f)
         {
             sm.Damage += Math.Max(sm.Power / 1000 * sm.DamageIncreaseMultiplier, 0.1f);
             return;
         }
 
         // Absorbed gas from surrounding area
-        var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
-        var moles = absorbedGas.TotalMoles;
+        var gas = mix.Clone();
+        var moles = gas.TotalMoles;
+        var (_, _, _, _, heatResistModifier) = GetGasModifiers(gas);
+
+        #endregion
 
         var totalDamage = 0f;
 
-        var tempThreshold = Atmospherics.T0C + sm.HeatPenaltyThreshold;
+        var tempThreshold = (Atmospherics.T0C + sm.HeatPenaltyThreshold) * heatResistModifier;
 
         // Temperature start to have a positive effect on damage after 350
-        var tempDamage = Math.Max(Math.Clamp(moles / 200f, .5f, 1f) * absorbedGas.Temperature - tempThreshold * sm.DynamicHeatResistance, 0f) * sm.MoleHeatThreshold / 150f * sm.DamageIncreaseMultiplier;
+        var tempDamage = Math.Max(Math.Clamp(moles / 200f, .5f, 1f) * gas.Temperature - tempThreshold, 0f) * sm.MoleHeatThreshold / 150f * sm.DamageIncreaseMultiplier;
         totalDamage += tempDamage;
 
         // Power only starts affecting damage when it is above 5000
@@ -356,39 +358,12 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (moles < sm.MolePenaltyThreshold)
         {
             // left there a very small float value so that it doesn't eventually divide by 0.
-            var healHeatDamage = Math.Min(absorbedGas.Temperature - tempThreshold, 0.001f) / 150;
+            var healHeatDamage = Math.Min(gas.Temperature - tempThreshold, 0.001f) / 150;
             totalDamage += healHeatDamage;
         }
 
-        // Check for space tiles next to SM
-        // TODO: change moles out for checking if adjacent tiles exist
-        var enumerator = _atmosphere.GetAdjacentTileMixtures(xform.GridUid.Value, indices, false, false);
-        while (enumerator.MoveNext(out var ind))
-        {
-            if (ind.TotalMoles != 0)
-                continue;
-
-            var integrity = GetIntegrity(sm);
-
-            // this is some magic number shit
-            var factor = integrity switch
-            {
-                < 10 => 0.0005f,
-                < 25 => 0.0009f,
-                < 45 => 0.005f,
-                < 75 => 0.002f,
-                _ => 0f
-            };
-
-            totalDamage += Math.Clamp(sm.Power * factor * sm.DamageIncreaseMultiplier, 0, sm.MaxSpaceExposureDamage);
-
-            break;
-        }
-
-        sm.Damage = Math.Min(sm.DamageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage);
-
-        // Return the manipulated gas back to the mix
-        _atmosphere.Merge(mix, absorbedGas);
+        sm.Damage = Math.Min(damageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage);
+        sm.DamageDelta = sm.Damage - damageArchived;
     }
 
     /// <summary>
@@ -401,13 +376,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         var integrity = GetIntegrity(sm).ToString("0.00");
 
-        // Special cases
-        if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
-        {
-            message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
-            sm.DelamAnnounced = false;
-            global = true;
-        }
+        // Delam is happening
         if (sm.Delamming && !sm.DelamAnnounced)
         {
             var sb = new StringBuilder();
@@ -452,21 +421,38 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
             return;
         }
 
-        // We are not taking consistent damage. Engis not needed.
-        if (sm.Damage <= sm.DamageArchived)
+        // Delam stopped, let everyone know.
+        if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
+        {
+            message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
+            sm.DelamAnnounced = false;
+            global = true;
+            SupermatterAnnouncement(uid, message, global);
+            return;
+        }
+
+        // We are not taking consistent damage. Engis/warn not needed.
+        if (sm.DamageDelta >= 0)
             return;
 
-        if (sm.Damage >= sm.WarningPoint)
+        // Check if we need to warn anyone
+        switch (sm.Damage)
         {
-            message = Loc.GetString("supermatter-warning", ("integrity", integrity));
-            if (sm.Damage >= sm.EmergencyPoint)
-            {
+            case >= SupermatterComponent.EmergencyPoint:
                 message = Loc.GetString("supermatter-emergency", ("integrity", integrity));
                 global = true;
-            }
+                break;
+            case >= SupermatterComponent.WarningPoint:
+                message = Loc.GetString("supermatter-warning", ("integrity", integrity));
+                break;
         }
+
         SupermatterAnnouncement(uid, message, global);
     }
+
+    #endregion
+
+    #region Helper functions
 
     /// <summary>
     ///     Help the SM announce something.
@@ -504,7 +490,6 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         if (mix is { })
         {
-            // var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
             var moles = mix.TotalMoles;
 
             if (moles >= sm.MolePenaltyThreshold)
@@ -513,8 +498,6 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         if (sm.Power >= sm.PowerPenaltyThreshold)
             return DelamType.Tesla;
-
-        // TODO: add resonance cascade when there's crazy conditions, or a destabilizing crystal :godo:
 
         return DelamType.Explosion;
     }
@@ -567,7 +550,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
     private void HandleSoundLoop(SupermatterComponent sm)
     {
-        var isAggressive = sm.Damage > sm.WarningPoint;
+        var isAggressive = sm.Damage > SupermatterComponent.WarningPoint;
         var isDelamming = sm.Damage > sm.DelaminationPoint;
 
         if (!isAggressive && !isDelamming)
@@ -586,7 +569,6 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     }
 
     #endregion
-
 
     #region Event Handlers
 
@@ -686,7 +668,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         // your criminal actions will not go unnoticed
         sm.Damage += sm.DelaminationPoint / 10;
-        sm.DamageArchived += sm.DelaminationPoint / 10;
+        sm.DamageDelta += sm.DelaminationPoint / 10;
 
         var integrity = GetIntegrity(sm).ToString("0.00");
         SupermatterAnnouncement(uid, Loc.GetString("supermatter-announcement-cc-tamper", ("integrity", integrity)), true, "Central Command");
