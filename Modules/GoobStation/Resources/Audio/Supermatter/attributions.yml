@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MPL-2.0
+
 - files: ["calm.ogg"]
   license: "CC-BY-3.0"
   copyright: "Unknown"
