@@ -45,6 +45,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     [Dependency] private readonly DoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLog = default!;
+    [Dependency] private readonly ISharedChatManager _sharedChat = default!;
 
     private DelamType _delamType = DelamType.Explosion;
 
@@ -587,13 +588,10 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
             // Extra logging for supermatter
             var activator = ToPrettyString(args.OtherEntity);
 
-            // Original log entry
-            //_adminLog.Add(LogType.Supermatter, impact,
-            //    $"{activator:actor} activated Supermatter {ToPrettyString(uid):subject}");
+            _sharedChat.SendAdminAlert($"Supermatter activated by {activator} at {Transform(uid).Coordinates}");
 
-            // New admin alert
-            _adminLog.Add(LogType.AdminMessage, LogImpact.Extreme,
-                $"SUPERMATTER ACTIVATED BY {activator} AT {Transform(uid).Coordinates}");
+            _adminLog.Add(LogType.Action, LogImpact.High,
+                $"Supermatter activated by {activator} at {Transform(uid).Coordinates}");
 
             sm.Activated = true;
         }
@@ -609,7 +607,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         if (!HasComp<ProjectileComponent>(target))
         {
-            //_adminLog.Add(LogType.Supermatter, LogImpact.Medium, $"Supermatter {ToPrettyString(uid)} has consumed {ToPrettyString(target)}");
+            _adminLog.Add(LogType.EntityDelete, LogImpact.Medium, $"Supermatter {ToPrettyString(uid)} has consumed {ToPrettyString(target)}");
             EntityManager.SpawnAttachedTo(sm.AshPrototypeId, Transform(target).Coordinates);
             _audio.PlayPvs(sm.DustSound, uid);
         }
