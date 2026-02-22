@@ -31,6 +31,7 @@
         density: 15
         layer:
         - GhostImpassable
+  - type: SupermatterImmune # Goobstation mod
 
 # shared parent between aghosts, replay spectators and normal observers
 - type: entity

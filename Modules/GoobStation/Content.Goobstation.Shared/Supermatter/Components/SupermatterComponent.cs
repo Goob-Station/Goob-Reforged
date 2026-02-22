@@ -32,6 +32,9 @@ public sealed partial class SupermatterComponent : Component
     [ViewVariables(VVAccess.ReadWrite)]
     public bool SliverRemoved = false;
 
+    [DataField("ashPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    public string AshPrototypeId { get; private set; } = "Ash";
+
     [DataField("whitelist")]
     public EntityWhitelist Whitelist = new();
     public string IdTag = "EmitterBolt";
@@ -109,10 +112,10 @@ public sealed partial class SupermatterComponent : Component
     public SharedSupermatterSystem.SuperMatterSound? SmSound;
 
     [DataField("dustSound")]
-    public SoundSpecifier DustSound = new SoundPathSpecifier("/Audio/_Goobstation/Wizard/supermatter.ogg");
+    public SoundSpecifier DustSound = new SoundPathSpecifier("/Audio/Supermatter/dust.ogg");
 
     [DataField("delamSound")]
-    public SoundSpecifier DelamSound = new SoundPathSpecifier("/Audio/_Goobstation/Supermatter/delamming.ogg");
+    public SoundSpecifier DelamSound = new SoundPathSpecifier("/Audio/Supermatter/delamming.ogg");
 
     [DataField("delamAlarm")]
     public SoundSpecifier DelamAlarm = new SoundPathSpecifier("/Audio/Machines/alarm.ogg");

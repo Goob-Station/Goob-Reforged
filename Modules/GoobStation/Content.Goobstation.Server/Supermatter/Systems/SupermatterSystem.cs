@@ -578,6 +578,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         // Stop immune entities from activating the sm.
         if (args.OtherBody.BodyType == BodyType.Static
             || HasComp<SupermatterImmuneComponent>(target)
+            || MetaData(target).EntityPrototype?.ID == sm.AshPrototypeId
             || _container.IsEntityInContainer(uid))
             return;
 
@@ -609,7 +610,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (!HasComp<ProjectileComponent>(target))
         {
             //_adminLog.Add(LogType.Supermatter, LogImpact.Medium, $"Supermatter {ToPrettyString(uid)} has consumed {ToPrettyString(target)}");
-            EntityManager.SpawnEntity("Ash", Transform(target).Coordinates);
+            EntityManager.SpawnAttachedTo(sm.AshPrototypeId, Transform(target).Coordinates);
             _audio.PlayPvs(sm.DustSound, uid);
         }
 

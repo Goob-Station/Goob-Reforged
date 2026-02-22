@@ -18,7 +18,7 @@
       range: 5
       volume: 0
       sound:
-        path: /Audio/_Goobstation/Supermatter/calm.ogg
+        path: /Audio/Supermatter/calm.ogg
     - type: Physics
     - type: Speech
       speechSounds: Pai
@@ -60,14 +60,12 @@
       energy: 5
       color: "#ffe000"
     - type: Explosive
-      explosionType: Supermatter
+      explosionType: Radioactive
       maxIntensity: 10000
       intensitySlope: 5
       totalIntensity: 10000
     - type: GuideHelp
-      guides: [ Supermatter, Power ]
+      guides: [ Power ]
     - type: WarpPoint
       follow: true
       location: supermatter
-    - type: StealTarget
-      stealGroup: SupermatterSliver # uses to verify sm existense on map

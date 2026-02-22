@@ -32,16 +32,4 @@ public abstract class SharedSupermatterSystem : EntitySystem
 
     #endregion Getters/Setters
 
-    #region Serialization
-    /// <summary>
-    /// A state wrapper used to sync the supermatter between the server and client.
-    /// </summary>
-    [Serializable, NetSerializable]
-    protected sealed class SupermatterComponentState(SupermatterComponent supermatter) : ComponentState
-    {
-        private readonly SupermatterComponent _supermatter = supermatter;
-    }
-
-    #endregion Serialization
-
 }
