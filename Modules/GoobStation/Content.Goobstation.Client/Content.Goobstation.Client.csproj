@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
       <TargetFramework>$(TargetFramework)</TargetFramework>
       <IsPackable>false</IsPackable>
@@ -18,10 +18,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Content.Client\Content.Client.csproj" />
       <ProjectReference Include="..\Content.Goobstation.Shared\Content.Goobstation.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Supermatter\Consoles\" />
     </ItemGroup>
 
     <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
