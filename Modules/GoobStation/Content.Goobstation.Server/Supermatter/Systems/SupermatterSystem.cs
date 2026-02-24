@@ -190,19 +190,15 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         // Transfer matter power to power
         if (sm.MatterPower != 0)
         {
-            // Get how much matter power to transfer. Above 400 starts scaling. Min wrapped to ensure we don't magically create more power.
-            var removedMatter = Math.Min(Math.Max(sm.MatterPower / sm.MatterPowerConversion, 40), sm.MatterPower);
-            //Adds at least 40 power 
+            // Get how much matter power to transfer
+            var removedMatter = Math.Clamp(sm.MatterPower, 0f, 1f * sm.MatterPowerConversion);
+
             sm.Power = Math.Max(sm.Power + removedMatter, 0);
-            //Removes at least 40 matter power
             sm.MatterPower = Math.Max(sm.MatterPower - removedMatter, 0);
         }
 
-        // Additional scaling of power gen from temperature above .8 factor.
-        var tempFactor = heatModifier > 0.8 ? 50f : 30f;
-
         // Increase power from temperature
-        sm.Power = Math.Max(absorbedGas.Temperature * heatModifier * tempFactor / Atmospherics.T0C + sm.Power, 0);
+        sm.Power = Math.Max(absorbedGas.Temperature * heatModifier / Atmospherics.T0C + sm.Power, 0);
 
         // Yeah, it consumes all ammonia in one tick cuz it's funny af
         sm.Power = Math.Max(absorbedGas.GetMoles(Gas.Ammonia) * sm.AmmoniaEnergyPerMole + sm.Power, 0);
@@ -235,11 +231,16 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         #region Scale down power
 
-        var powerReduction = (float)Math.Pow(sm.Power / 500f, 3f);
+        // I'd recommend plotting these two if you want to get it
+        // but in general this lets it need less input to stay under 10 power than above
+        // Below 10 power it substracts very little, and above it substracts 1/10
+        // 10f (and 0.9f) hardcoded to discourage yaml majors messing with it since it impacts a lot
+        // (And would require massive structural changes, all to minuscule benefit)
+        var powerReduction = (float)Math.Pow(sm.Power / 5f, 3f);
 
         // After this point power is lowered
         // This wraps around to the begining of the function
-        sm.Power = Math.Max(sm.Power - Math.Min(powerReduction * powerlossInhibitor, sm.Power * 0.83f * powerlossInhibitor), 0f);
+        sm.Power = Math.Max(sm.Power - Math.Min(powerReduction, sm.Power * 0.8f) * powerlossInhibitor, 0f);
 
         #endregion
     }
@@ -607,7 +608,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         else
             sm.Power++;
 
-        sm.MatterPower += HasComp<MobStateComponent>(target) ? 200 : 0;
+        sm.MatterPower += HasComp<MobStateComponent>(target) ? 10 : 0;
 
         if (!HasComp<ProjectileComponent>(target))
         {
@@ -629,7 +630,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (!sm.Activated)
             sm.Activated = true;
 
-        sm.MatterPower += 200;
+        sm.MatterPower += 10;
 
         EntityManager.SpawnEntity("Ash", Transform(target).Coordinates);
         _audio.PlayPvs(sm.DustSound, uid);

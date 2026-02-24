@@ -11,6 +11,7 @@ using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
@@ -23,7 +24,6 @@ public sealed partial class SupermatterComponent : Component
     ///     The SM will only cycle if activated.
     /// </summary>
     [DataField("activated")]
-    [ViewVariables(VVAccess.ReadWrite)]
     public bool Activated = false;
 
     [DataField("supermatterSliverPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
@@ -33,17 +33,18 @@ public sealed partial class SupermatterComponent : Component
     ///     Affects delamination timer. If removed - delamination timer is divided by 2.
     /// </summary>
     [DataField("sliverRemoved")]
-    [ViewVariables(VVAccess.ReadWrite)]
     public bool SliverRemoved = false;
 
+    /// <summary>
+    /// What will be spawned when an entity that's not supermatter immune interacts with it.
+    /// </summary>
     [DataField("ashPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string AshPrototypeId { get; private set; } = "Ash";
 
-    [DataField("whitelist")]
-    public EntityWhitelist Whitelist = new();
-    public string IdTag = "EmitterBolt";
-
-    public string[] LightningPrototypes =
+    /// <summary>
+    /// There has to be a way to serialize this properly
+    /// </summary>
+    public readonly string[] LightningPrototypes =
     [
         "Lightning",
         "ChargedLightning",
@@ -60,20 +61,11 @@ public sealed partial class SupermatterComponent : Component
     [DataField("supermatterKudzuSpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string SupermatterKudzuPrototypeId = "SupermatterKudzu";
 
+    /// <summary>
+    /// This is what you're here for
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     public float Power;
-
-    /// <summary>
-    /// EE Console Compatibility
-    /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
-    public float Temperature;
-
-    /// <summary>
-    /// EE Console Compatibility
-    /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
-    public float WasteMultiplier;
 
     /// <summary>
     /// The amount of damage we have currently
@@ -81,30 +73,37 @@ public sealed partial class SupermatterComponent : Component
     [ViewVariables(VVAccess.ReadWrite)]
     public float Damage = 0f;
 
+    /// <summary>
+    /// Damage change since last cycle
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     public float DamageDelta = 0f;
 
+    /// <summary>
+    /// Temporary power gained from mob consumption. Purely to not instaspike power to 2000 or something.
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     public float MatterPower;
 
+    /// <summary>
+    /// Ratio of matter power to power conversion rate. 1 mob = 10 matter power
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
-    public float MatterPowerConversion = 10f;
+    public float MatterPowerConversion = 1f;
 
     /// <summary>
-    /// The portion of the gasmix we're on
+    /// The portion of the gasmix we're on. Relevant for gas processing but not for plain checks.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     public float GasEfficiency = 0.15f;
 
     /// <summary>
-    /// The amount of heat we apply scaled
+    /// Multiply outgoing rads by this. Generic knob.
     /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
-    public float HeatThreshold = 2500f;
-
     [DataField("radiationOutputFactor")]
     [ViewVariables(VVAccess.ReadWrite)]
-    public float RadiationOutputFactor = 0.03f;
+    public float RadiationOutputFactor = 1f;
+
     #endregion SM Base
 
     #region SM Sound
