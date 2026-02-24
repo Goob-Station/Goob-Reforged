@@ -23,20 +23,20 @@ using Content.Shared.Kitchen.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Projectiles;
 using Content.Shared.Radiation.Components;
-using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Maths;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Timing;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
 public sealed class SupermatterSystem : SharedSupermatterSystem
 {
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
+    [Dependency] private static readonly AtmosphereSystem Atmosphere = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly ExplosionSystem _explosion = default!;
@@ -80,7 +80,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         _ambient.SetAmbience(uid, true);
 
         //Add Air to the initialized SM in the Map so it doesnt delam on default
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
+        var mix = Atmosphere.GetContainingMixture(uid, true, true);
         mix?.AdjustMoles(Gas.Oxygen, Atmospherics.OxygenMolesStandard);
         mix?.AdjustMoles(Gas.Nitrogen, Atmospherics.NitrogenMolesStandard);
     }
@@ -144,65 +144,54 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     {
         #region Get gas mix
 
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
+        var mix = Atmosphere.GetContainingMixture(uid, true, true);
 
         if (mix is not { })
             return;
 
-        var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
-        var moles = absorbedGas.TotalMoles;
+        using var absorbed = new GasWrapper(mix, sm.GasEfficiency);
+
+        var moles = absorbed.Gas.TotalMoles;
 
         if (!(moles > 0f))
             return;
 
         #endregion
 
-        var (radModifier, zapModifier, moleModifier, heatModifier, heatResistModifier) = GetGasModifiers(absorbedGas);
+        var (radModifier, zapModifier, moleModifier, heatModifier, heatResistModifier) = SupermatterComponent.GetGasModifiers(absorbed.Gas);
 
         #region Calculate CO2 powerloss inhibition effect
 
-        // Calculate powerloss modifier based on CO2
-        // Ramps up or down in increments of 0.02 up to the proportion of co2
-        // Given infinite time, powerloss_dynamic_scaling = co2comp
-        // Some value between 0 and 1
-        if (moles > sm.PowerlossInhibitionMoleThreshold && absorbedGas.GetMoles(Gas.CarbonDioxide) / moles > sm.PowerlossInhibitionGasThreshold)
-        {
-            var co2powerloss = Math.Clamp(absorbedGas.GetMoles(Gas.CarbonDioxide) / moles - sm.PowerlossDynamicScaling, -0.02f, 0.02f);
-            sm.PowerlossDynamicScaling = Math.Clamp(sm.PowerlossDynamicScaling + co2powerloss, 0f, 1f);
-        }
-        else
-        {
-            sm.PowerlossDynamicScaling = Math.Clamp(sm.PowerlossDynamicScaling - 0.05f, 0f, 1f);
-        }
+        //var co2Ratio = absorbed.Gas.GetMoles(Gas.CarbonDioxide) / moles;
 
-        // Ranges from 0 to 1(1-(value between 0 and 1 * ranges from 1 to 1.5(mol / 500)))
-        // We take the mol count, and scale it to be our inhibitor
-        var powerlossInhibitor =
-            Math.Clamp(
-                1 - sm.PowerlossDynamicScaling *
-                Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f),
-                0f, 1f);
+        //// Instantly apply CO2 ratio if thresholds are met, otherwise 0
+        //sm.PowerlossDynamicScaling = (moles > sm.PowerlossInhibitionMoleThreshold && co2Ratio > sm.PowerlossInhibitionGasThreshold)
+        //    ? co2Ratio
+        //    : 0f;
+
+        //var moleBoost = Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f);
+        //var powerlossInhibitor = Math.Clamp(1f - sm.PowerlossDynamicScaling * moleBoost, 0f, 1f);
 
         #endregion
 
         #region Add power to crystal
 
-        // Transfer matter power to power
-        if (sm.MatterPower != 0)
-        {
-            // Get how much matter power to transfer
-            var removedMatter = Math.Clamp(sm.MatterPower, 0f, 1f * sm.MatterPowerConversion);
+        //// Transfer matter power to power
+        //if (sm.MatterPower != 0)
+        //{
+        //    // Get how much matter power to transfer
+        //    var removedMatter = Math.Clamp(sm.MatterPower, 0f, 1f * sm.MatterPowerConversion);
 
-            sm.Power = Math.Max(sm.Power + removedMatter, 0);
-            sm.MatterPower = Math.Max(sm.MatterPower - removedMatter, 0);
-        }
+        //    sm.Power = Math.Max(sm.Power + removedMatter, 0);
+        //    sm.MatterPower = Math.Max(sm.MatterPower - removedMatter, 0);
+        //}
 
         // Increase power from temperature
-        sm.Power = Math.Max(absorbedGas.Temperature * heatModifier / Atmospherics.T0C + sm.Power, 0);
+        sm.Power = Math.Max(absorbed.Gas.Temperature * heatModifier / Atmospherics.T0C + sm.Power, 0);
 
-        // Yeah, it consumes all ammonia in one tick cuz it's funny af
-        sm.Power = Math.Max(absorbedGas.GetMoles(Gas.Ammonia) * sm.AmmoniaEnergyPerMole + sm.Power, 0);
-        absorbedGas.SetMoles(Gas.Ammonia, 0f);
+        //// Yeah, it consumes all ammonia in one tick cuz it's funny af
+        //sm.Power = Math.Max(absorbed.Gas.GetMoles(Gas.Ammonia) * sm.AmmoniaEnergyPerMole + sm.Power, 0);
+        //absorbed.Gas.SetMoles(Gas.Ammonia, 0f);
 
         #endregion
 
@@ -218,14 +207,11 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         var energy = sm.Power * sm.ReactionPowerModifier;
 
         // Release the waste. Both are scaled by modifier and energy, but o2 also scales with temperatures.
-        absorbedGas.AdjustMoles(Gas.Oxygen, Math.Max(moleModifier * (energy + absorbedGas.Temperature - Atmospherics.T0C) * sm.OxygenReleaseEfficiencyModifier, 0f));
-        absorbedGas.AdjustMoles(Gas.Plasma, Math.Max(moleModifier * sm.PlasmaReleaseModifier * energy, 0f));
+        absorbed.Gas.AdjustMoles(Gas.Oxygen, Math.Max(moleModifier * (energy + absorbed.Gas.Temperature - Atmospherics.T0C) * sm.OxygenReleaseEfficiencyModifier, 0f));
+        absorbed.Gas.AdjustMoles(Gas.Plasma, Math.Max(moleModifier * sm.PlasmaReleaseModifier * energy, 0f));
 
         // Increase temperature
-        absorbedGas.Temperature += energy * sm.ThermalReleaseModifier;
-
-        // Return the gas to nature :)
-        _atmosphere.Merge(mix, absorbedGas);
+        absorbed.Gas.Temperature += energy * sm.ThermalReleaseModifier;
 
         #endregion
 
@@ -246,45 +232,6 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     }
 
     /// <summary>
-    /// Get SM related data about a provided gas mix.
-    /// </summary>
-    /// <param name="absorbedGas">Mix to be parsed</param>
-    /// <returns>A selection of values, check <see cref="SupermatterComponent.GasDataFields(Gas?)"/></returns>
-    private (float radModifier, float zapModifier, float moleModifier, float heatModifier, float heatResistModifier) GetGasModifiers(GasMixture absorbedGas)
-    {
-        // Get the proportions of the gasses in the mix, which range between 0 and 1
-        // Also get their corresponding facts and calculate mods from it.
-        // Preallocate variables
-        var facts = SupermatterComponent.GasDataFields();
-        var gasPercentages = new Dictionary<Gas, float>(Enum.GetNames<Gas>().Length);
-        var radModifier = 1f;
-        var zapModifier = 1f;
-        var moleModifier = 1f;
-        var heatModifier = 1f;
-        var heatResistModifier = 1f;
-        for (int i = 0; i < Enum.GetNames<Gas>().Length; i++)
-        {
-            gasPercentages[(Gas)i] = absorbedGas[i] / absorbedGas.TotalMoles;
-            facts = SupermatterComponent.GasDataFields((Gas)i);
-            radModifier += gasPercentages[(Gas)i] * facts.RadMod;
-            zapModifier += gasPercentages[(Gas)i] * facts.ZapMod;
-            moleModifier += gasPercentages[(Gas)i] * facts.MoleMod;
-            heatModifier += gasPercentages[(Gas)i] * facts.HeatMod;
-            heatResistModifier += gasPercentages[(Gas)i] * facts.HeatResistMod;
-        }
-
-        // Ensure we don't do something stupid later
-        return (
-            Math.Max(radModifier, 0f),
-            Math.Max(zapModifier, 0f),
-            Math.Max(moleModifier, 0f),
-            Math.Max(heatModifier, 0f),
-            Math.Max(heatResistModifier, 0f)
-            );
-
-    }
-
-    /// <summary>
     ///     Shoot lightning bolts depensing on accumulated power.
     /// </summary>
     private void SupermatterZap(EntityUid uid, SupermatterComponent sm)
@@ -295,7 +242,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         // This isn't DRY but erm whatever. Alternatively I can surface this. And add a few params or some weird struct.
         // (Also I can't cleanly run it on top level anyways since damage is independent
 
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
+        var mix = Atmosphere.GetContainingMixture(uid, true, true);
 
         if (mix is not { })
             return;
@@ -306,7 +253,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (!(moles > 0f))
             return;
 
-        var (_, zapModifier, _, _, _) = GetGasModifiers(gas);
+        var (_, zapModifier, _, _, _) = gas.GetGasModifiers();
 
         #endregion
 
@@ -327,7 +274,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         #region Get gas info
 
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
+        var mix = Atmosphere.GetContainingMixture(uid, true, true);
 
         // We're in space or there is no gas to process
         if (mix is not { } || mix.TotalMoles == 0f)
@@ -337,9 +284,9 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         }
 
         // Absorbed gas from surrounding area
-        var gas = mix.Clone();
-        var moles = gas.TotalMoles;
-        var (_, _, _, _, heatResistModifier) = GetGasModifiers(gas);
+        using var surrounding = new GasWrapper(mix, sm.GasEfficiency);
+        var moles = surrounding.Gas.TotalMoles;
+        var (_, _, _, _, heatResistModifier) = SupermatterComponent.GetGasModifiers(surrounding.Gas);
 
         #endregion
 
@@ -348,7 +295,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         var tempThreshold = (Atmospherics.T0C + sm.HeatPenaltyThreshold) * heatResistModifier;
 
         // Temperature start to have a positive effect on damage after 350
-        var tempDamage = Math.Max(Math.Clamp(moles / 200f, .5f, 1f) * gas.Temperature - tempThreshold, 0f) * sm.MoleHeatThreshold / 150f * sm.DamageIncreaseMultiplier;
+        var tempDamage = Math.Max(Math.Clamp(moles / 200f, .5f, 1f) * surrounding.Gas.Temperature - tempThreshold, 0f) * sm.MoleHeatThreshold / 150f * sm.DamageIncreaseMultiplier;
         totalDamage += tempDamage;
 
         // Power only starts affecting damage when it is above 5000
@@ -363,7 +310,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         if (moles < sm.MolePenaltyThreshold)
         {
             // left there a very small float value so that it doesn't eventually divide by 0.
-            var healHeatDamage = Math.Min(gas.Temperature - tempThreshold, 0.001f) / 150;
+            var healHeatDamage = Math.Min(surrounding.Gas.Temperature - tempThreshold, 0.001f) / 150;
             totalDamage += healHeatDamage;
         }
 
@@ -491,7 +438,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     /// </summary>
     public DelamType ChooseDelamType(EntityUid uid, SupermatterComponent sm)
     {
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
+        var mix = Atmosphere.GetContainingMixture(uid, true, true);
 
         if (mix is { })
         {
@@ -692,4 +639,89 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
     }
 
     #endregion
+
+    /// <summary>
+    /// <para>Simple <see cref="IDisposable"/> wrapper around <see cref="GasMixture"/></para>
+    /// <para>Splits off a part of gas, and merges them together later</para>
+    /// <para><see cref="AtmosphereSystem.Merge(GasMixture, GasMixture)"/> is automatically called at the end -
+    /// use <see cref="GasMixture"/> instead if you want to handle it manually</para>
+    /// </summary>
+    private readonly struct GasWrapper(GasMixture surroundingMix, float ratio) : IDisposable
+    {
+        private readonly GasMixture _surrounding = surroundingMix;
+
+        /// <summary>
+        /// The split off part of your gas. 
+        /// </summary>
+        public readonly GasMixture Gas = surroundingMix.RemoveRatio(ratio);
+
+        public void Dispose()
+        {
+            Atmosphere.Merge(_surrounding, Gas);
+        }
+    }
+
+    private bool GetGasmix(EntityUid uid, [NotNullWhen(true)] out GasWrapper? gasWrapper, float? ratio = null)
+    {
+        var mix = Atmosphere.GetContainingMixture(uid, true, true);
+        gasWrapper = null;
+
+        if (mix is not { } || !(mix.TotalMoles > 0f))
+            return false;
+
+        gasWrapper = new GasWrapper(mix, ratio??0);
+        return true;
+    }
+}
+
+public static class SmExtensions
+{
+    /// <summary>
+    /// Get SM related data about a provided gas mix.
+    /// </summary>
+    /// <param name="absorbedGas">Mix to be parsed</param>
+    /// <returns>A selection of values, check <see cref="SupermatterComponent.GasDataFields(Gas)"/></returns>
+    public static (float radModifier, float zapModifier, float moleModifier, float heatModifier, float heatResistModifier) GetGasModifiers(this GasMixture absorbedGas)
+    {
+        var totalMoles = absorbedGas.TotalMoles;
+
+        // Safety check: Prevent a divide-by-zero NaN cascade if the mix is completely empty
+        if (totalMoles <= 0f)
+        {
+            return (1f, 1f, 1f, 1f, 1f);
+        }
+
+        var radModifier = 1f;
+        var zapModifier = 1f;
+        var moleModifier = 1f;
+        var heatModifier = 1f;
+        var heatResistModifier = 1f;
+
+        // Safely iterate through the actual enum values, regardless of their integer backing
+        foreach (Gas gas in Enum.GetValues<Gas>())
+        {
+            // Note: Assuming absorbedGas indexer accepts an int. If it takes the enum directly, just use [gas]
+            var proportion = absorbedGas[(int)gas] / totalMoles;
+
+            // Optional: Skip doing math if there's none of this gas in the mix
+            if (proportion <= 0f) continue;
+
+            var facts = SupermatterComponent.GasDataFields(gas);
+
+            radModifier += proportion * facts.RadMod;
+            zapModifier += proportion * facts.ZapMod;
+            moleModifier += proportion * facts.MoleMod;
+            heatModifier += proportion * facts.HeatMod;
+            heatResistModifier += proportion * facts.HeatResistMod;
+        }
+
+        // Ensure we don't do something stupid later
+        return (
+            Math.Max(radModifier, 0f),
+            Math.Max(zapModifier, 0f),
+            Math.Max(moleModifier, 0f),
+            Math.Max(heatModifier, 0f),
+            Math.Max(heatResistModifier, 0f)
+        );
+    }
 }

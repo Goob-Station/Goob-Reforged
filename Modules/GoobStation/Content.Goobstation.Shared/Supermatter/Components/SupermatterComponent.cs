@@ -384,7 +384,7 @@ public sealed partial class SupermatterComponent : Component
     /// <para>HeatResistMod = "Heat Resistance" on /tg/ wiki. Should never be so high as to shield from a trit fire.</para>
     /// <para>These values are for a 100% mix of such gas. These are additive, not multiplicative (so, 100%+mod)</para>
     /// </remarks>
-    public static (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod) GasDataFields(Gas? gas = null) => gas switch
+    public static (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod) GasDataFields(Gas gas) => gas switch
     {
         // /tg/ values are an ok start, but definitely don't have to be adhered to.
         // Some values might seem extreme - completely intentional to encourage mixes.
