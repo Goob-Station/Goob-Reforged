@@ -29,14 +29,13 @@ using Robust.Shared.Maths;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Timing;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
 public sealed class SupermatterSystem : SharedSupermatterSystem
 {
-    [Dependency] private static readonly AtmosphereSystem Atmosphere = default!;
+    [Dependency] private static readonly AtmosphereSystem Atmosphere = default!; // Static since enum uses it to implement IDisposable
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly ExplosionSystem _explosion = default!;
@@ -158,40 +157,43 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
 
         #endregion
 
-        var (radModifier, zapModifier, moleModifier, heatModifier, heatResistModifier) = SupermatterComponent.GetGasModifiers(absorbed.Gas);
+        var (radModifier, zapModifier, moleModifier, heatModifier, heatResistModifier) = absorbed.Gas.GetGasModifiers();
 
         #region Calculate CO2 powerloss inhibition effect
 
-        //var co2Ratio = absorbed.Gas.GetMoles(Gas.CarbonDioxide) / moles;
+        var co2Ratio = absorbed.Gas.GetGasMolarPercentage(Gas.CarbonDioxide);
+        var underThresholdScaler = Math.Min(
+            Math.Clamp(co2Ratio / sm.PowerlossInhibitionGasThreshold, 0, 1),
+            Math.Clamp(moles / sm.PowerlossInhibitionMoleThreshold, 0, 1)
+            );
 
-        //// Instantly apply CO2 ratio if thresholds are met, otherwise 0
-        //sm.PowerlossDynamicScaling = (moles > sm.PowerlossInhibitionMoleThreshold && co2Ratio > sm.PowerlossInhibitionGasThreshold)
-        //    ? co2Ratio
-        //    : 0f;
+        // Apply CO2 ratio if thresholds are met, otherwise limit the ratio according to how far away we are from thresholds
+        sm.PowerlossDynamicScaling = co2Ratio * underThresholdScaler;
 
-        //var moleBoost = Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f);
-        //var powerlossInhibitor = Math.Clamp(1f - sm.PowerlossDynamicScaling * moleBoost, 0f, 1f);
+        // 
+        var moleBoost = Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f);
+        var powerlossInhibitor = Math.Clamp(1f - sm.PowerlossDynamicScaling * moleBoost, 0f, 1f);
 
         #endregion
 
         #region Add power to crystal
 
-        //// Transfer matter power to power
-        //if (sm.MatterPower != 0)
-        //{
-        //    // Get how much matter power to transfer
-        //    var removedMatter = Math.Clamp(sm.MatterPower, 0f, 1f * sm.MatterPowerConversion);
+        // Transfer matter power to power
+        if (sm.MatterPower != 0)
+        {
+            // Get how much matter power to transfer
+            var removedMatter = Math.Clamp(sm.MatterPower, 0f, 1f * sm.MatterPowerConversion);
 
-        //    sm.Power = Math.Max(sm.Power + removedMatter, 0);
-        //    sm.MatterPower = Math.Max(sm.MatterPower - removedMatter, 0);
-        //}
+            sm.Power = Math.Max(sm.Power + removedMatter, 0);
+            sm.MatterPower = Math.Max(sm.MatterPower - removedMatter, 0);
+        }
 
         // Increase power from temperature
         sm.Power = Math.Max(absorbed.Gas.Temperature * heatModifier / Atmospherics.T0C + sm.Power, 0);
 
-        //// Yeah, it consumes all ammonia in one tick cuz it's funny af
-        //sm.Power = Math.Max(absorbed.Gas.GetMoles(Gas.Ammonia) * sm.AmmoniaEnergyPerMole + sm.Power, 0);
-        //absorbed.Gas.SetMoles(Gas.Ammonia, 0f);
+        // Yeah, it consumes all ammonia in one tick cuz it's funny af
+        sm.Power = Math.Max(absorbed.Gas.GetMoles(Gas.Ammonia) * sm.AmmoniaEnergyPerMole + sm.Power, 0);
+        absorbed.Gas.SetMoles(Gas.Ammonia, 0f);
 
         #endregion
 
@@ -286,7 +288,7 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
         // Absorbed gas from surrounding area
         using var surrounding = new GasWrapper(mix, sm.GasEfficiency);
         var moles = surrounding.Gas.TotalMoles;
-        var (_, _, _, _, heatResistModifier) = SupermatterComponent.GetGasModifiers(surrounding.Gas);
+        var (_, _, _, _, heatResistModifier) = surrounding.Gas.GetGasModifiers();
 
         #endregion
 
@@ -660,18 +662,6 @@ public sealed class SupermatterSystem : SharedSupermatterSystem
             Atmosphere.Merge(_surrounding, Gas);
         }
     }
-
-    private bool GetGasmix(EntityUid uid, [NotNullWhen(true)] out GasWrapper? gasWrapper, float? ratio = null)
-    {
-        var mix = Atmosphere.GetContainingMixture(uid, true, true);
-        gasWrapper = null;
-
-        if (mix is not { } || !(mix.TotalMoles > 0f))
-            return false;
-
-        gasWrapper = new GasWrapper(mix, ratio??0);
-        return true;
-    }
 }
 
 public static class SmExtensions
@@ -700,10 +690,9 @@ public static class SmExtensions
         // Safely iterate through the actual enum values, regardless of their integer backing
         foreach (Gas gas in Enum.GetValues<Gas>())
         {
-            // Note: Assuming absorbedGas indexer accepts an int. If it takes the enum directly, just use [gas]
-            var proportion = absorbedGas[(int)gas] / totalMoles;
+            var proportion = absorbedGas.GetGasMolarPercentage(gas);
 
-            // Optional: Skip doing math if there's none of this gas in the mix
+            // Skip doing math if there's none of this gas in the mix
             if (proportion <= 0f) continue;
 
             var facts = SupermatterComponent.GasDataFields(gas);
@@ -723,5 +712,19 @@ public static class SmExtensions
             Math.Max(heatModifier, 0f),
             Math.Max(heatResistModifier, 0f)
         );
+    }
+
+    public static float GetGasMolarPercentage(this GasMixture gasMix, Gas gas)
+    {
+        if (!(gasMix.TotalMoles > 0f))
+            return 0f;
+        return gasMix.GetMoles(gas) / gasMix.TotalMoles;
+    }
+
+    public static float GetGasMolarPercentage(this GasMixture gasMix, int gas)
+    {
+        if (!(gasMix.TotalMoles > 0f))
+            return 0f;
+        return gasMix.GetMoles(gas) / gasMix.TotalMoles;
     }
 }
