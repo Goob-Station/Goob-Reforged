@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Robust.Shared.Serialization;
 
 namespace Content.Goobstation.Shared.Supermatter.Systems;
 

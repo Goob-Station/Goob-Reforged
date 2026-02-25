@@ -12,6 +12,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
+using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
@@ -344,6 +345,9 @@ public sealed partial class SupermatterComponent : Component
     [DataField("detonationRads")]
     public float DetonationRads = 200f;
 
+    [ViewVariables(VVAccess.ReadOnly)]
+    public DelamType DelamType = DelamType.Explosion;
+
     #endregion SM Delamm
 
     #region SM Gas
@@ -402,6 +406,17 @@ public sealed partial class SupermatterComponent : Component
 
     #endregion SM Gas
     public float AmmoniaEnergyPerMole;
+
+    /// <summary>
+    ///     Returns the integrity rounded to hundreds, e.g. 100.00%
+    /// </summary>
+    public float GetIntegrity()
+    {
+        var integrity = Damage / DelaminationPoint;
+        integrity = (float)Math.Round(100 - integrity * 100, 2);
+        integrity = integrity < 0 ? 0 : integrity;
+        return integrity;
+    }
 }
 
 [Serializable, NetSerializable]
