@@ -20,7 +20,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     private void HandleZap(EntityUid uid, SupermatterComponent sm)
     {
         // This isn't DRY but erm whatever. Alternatively I can surface this. And add a few params or some weird struct.
-        // (Also I can't cleanly run it on top level anyways since damage is independent
+        // (Also I can't cleanly run it on top level anyways since damage is independent)
 
         var mix = _atmosphere.GetContainingMixture(uid, true, true);
 

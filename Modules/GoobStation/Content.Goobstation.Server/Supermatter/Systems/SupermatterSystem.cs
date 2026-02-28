@@ -60,6 +60,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         comp.YellAccumulator++;
 
         ProcessAtmos(ent, comp);
+        HandleDamage(ent, comp);
 
         if (comp.Damage >= comp.DelaminationPoint || comp.Delamming)
         {

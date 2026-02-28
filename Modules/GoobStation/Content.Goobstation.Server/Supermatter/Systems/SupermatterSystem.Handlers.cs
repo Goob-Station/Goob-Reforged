@@ -4,9 +4,7 @@
 
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Goobstation.Shared.Supermatter.Systems;
-using Content.Server.Atmos.EntitySystems;
 using Content.Server.Audio;
-using Content.Server.Chat.Systems;
 using Content.Server.DoAfter;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Atmos;
@@ -88,7 +86,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
         sm.MatterPower += 10;
 
-        EntityManager.SpawnEntity("Ash", Transform(target).Coordinates);
+        EntityManager.SpawnEntity(sm.AshPrototypeId, Transform(target).Coordinates);
         _audio.PlayPvs(sm.DustSound, uid);
         EntityManager.QueueDeleteEntity(target);
     }
