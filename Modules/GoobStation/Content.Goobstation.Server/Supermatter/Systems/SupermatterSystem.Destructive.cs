@@ -1,28 +1,19 @@
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Server.Atmos.EntitySystems;
+using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Lightning;
-using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed class SupermatterDestructiveSystem : EntitySystem
+public sealed partial class SupermatterSystem : SharedSupermatterSystem
 {
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly LightningSystem _lightning = default!;
     [Dependency] private readonly ExplosionSystem _explosion = default!;
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        SubscribeLocalEvent<SupermatterComponent, SupermatterZapEvent>(HandleZap);
-        SubscribeLocalEvent<SupermatterComponent, SupermatterDelamEvent>(HandleDelam);
-    }
 
     /// <summary>
     ///     Shoot lightning bolts depensing on accumulated power.
     /// </summary>
-    private void HandleZap(EntityUid uid, SupermatterComponent sm, SupermatterZapEvent ev)
+    private void HandleZap(EntityUid uid, SupermatterComponent sm)
     {
         // This isn't DRY but erm whatever. Alternatively I can surface this. And add a few params or some weird struct.
         // (Also I can't cleanly run it on top level anyways since damage is independent
@@ -73,7 +64,7 @@ public sealed class SupermatterDestructiveSystem : EntitySystem
     /// <summary>
     ///     Handle the end of the station.
     /// </summary>
-    private void HandleDelam(EntityUid uid, SupermatterComponent sm, SupermatterDelamEvent ev)
+    private void HandleDelam(EntityUid uid, SupermatterComponent sm)
     {
         var xform = Transform(uid);
 
@@ -82,14 +73,12 @@ public sealed class SupermatterDestructiveSystem : EntitySystem
         if (!sm.Delamming)
         {
             sm.Delamming = true;
-            var evYap = new SupermatterYapEvent(sm);
-            RaiseLocalEvent<SupermatterYapEvent>(ref evYap);
+            HandleAnnouncements(uid, sm);
         }
         if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
         {
             sm.Delamming = false;
-            var evYap = new SupermatterYapEvent(sm);
-            RaiseLocalEvent<SupermatterYapEvent>(ref evYap);
+            HandleAnnouncements(uid, sm);
         }
 
         sm.DelamTimerAccumulator++;

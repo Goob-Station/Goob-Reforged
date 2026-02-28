@@ -1,31 +1,23 @@
 
 using Content.Goobstation.Shared.Supermatter.Components;
+using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Server.AlertLevel;
-using Content.Server.Atmos.EntitySystems;
 using Content.Server.Chat.Systems;
 using Content.Server.Station.Systems;
 using System.Text;
-using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed class SupermatterYapSystem : EntitySystem
+public sealed partial class SupermatterSystem : SharedSupermatterSystem
 {
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly AlertLevelSystem _alert = default!;
     [Dependency] private readonly StationSystem _station = default!;
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        SubscribeLocalEvent<SupermatterComponent, SupermatterYapEvent>(HandleAnnouncements);
-    }
 
     /// <summary>
     ///     Handles announcements.
     /// </summary>
-    private void HandleAnnouncements(EntityUid uid, SupermatterComponent sm, SupermatterYapEvent ev)
+    private void HandleAnnouncements(EntityUid uid, SupermatterComponent sm)
     {
         var message = string.Empty;
         var global = false;

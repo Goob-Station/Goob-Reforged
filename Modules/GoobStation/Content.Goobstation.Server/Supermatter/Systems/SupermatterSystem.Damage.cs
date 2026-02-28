@@ -1,23 +1,15 @@
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Server.Atmos.EntitySystems;
+using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Shared.Atmos;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed class SupermatterDamageSystem : EntitySystem
+public sealed partial class SupermatterSystem : SharedSupermatterSystem
 {
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        SubscribeLocalEvent<SupermatterComponent, SupermatterTickEvent>(HandleDamage);
-    }
-
     /// <summary>
     ///     Handles environmental damage.
     /// </summary>
-    private void HandleDamage(EntityUid uid, SupermatterComponent sm, SupermatterTickEvent ev)
+    private void HandleDamage(EntityUid uid, SupermatterComponent sm)
     {
         var damageArchived = sm.Damage;
 

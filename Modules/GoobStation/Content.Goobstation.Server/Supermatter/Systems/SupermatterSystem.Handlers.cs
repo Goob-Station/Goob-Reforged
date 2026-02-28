@@ -27,8 +27,6 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLog = default!;
     [Dependency] private readonly ISharedChatManager _sharedChat = default!;
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
 
     private void OnCollideEvent(EntityUid uid, SupermatterComponent sm, ref StartCollideEvent args)

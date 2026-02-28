@@ -1,24 +1,19 @@
 using Content.Goobstation.Shared.Supermatter.Components;
+using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Radiation.Components;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed class SupermatterAtmosSystem : EntitySystem
+public sealed partial class SupermatterSystem : SharedSupermatterSystem
 {
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        SubscribeLocalEvent<SupermatterComponent, SupermatterTickEvent>(ProcessAtmos);
-    }
 
     /// <summary>
     ///     Handle power and radiation output depending on atmospheric things.
     /// </summary>
-    private void ProcessAtmos(EntityUid uid, SupermatterComponent sm, SupermatterTickEvent ev)
+    private void ProcessAtmos(EntityUid uid, SupermatterComponent sm)
     {
         #region Get gas mix
 

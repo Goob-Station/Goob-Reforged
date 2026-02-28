@@ -59,15 +59,11 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         comp.ZapAccumulator++;
         comp.YellAccumulator++;
 
-        {
-            var ev = new SupermatterTickEvent(comp);
-            RaiseLocalEvent<SupermatterTickEvent>(ref ev);
-        }
+        ProcessAtmos(ent, comp);
 
         if (comp.Damage >= comp.DelaminationPoint || comp.Delamming)
         {
-            var ev = new SupermatterDelamEvent(comp);
-            RaiseLocalEvent<SupermatterDelamEvent>(ref ev);
+            HandleDelam(ent, comp);
         }
 
         HandleSoundLoop(comp);
@@ -75,15 +71,13 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (comp.ZapAccumulator >= comp.ZapTimer)
         {
             comp.ZapAccumulator -= comp.ZapTimer;
-            var ev = new SupermatterZapEvent(comp);
-            RaiseLocalEvent<SupermatterZapEvent>(ref ev);
+            HandleZap(ent, comp);
         }
 
         if (comp.YellAccumulator >= comp.YellTimer)
         {
             comp.YellAccumulator -= comp.YellTimer;
-            var ev = new SupermatterYapEvent(comp);
-            RaiseLocalEvent<SupermatterYapEvent>(ref ev);
+            HandleAnnouncements(ent, comp);
         }
     }
 

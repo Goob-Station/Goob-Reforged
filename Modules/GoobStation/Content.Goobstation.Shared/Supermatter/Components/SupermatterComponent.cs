@@ -5,13 +5,11 @@
 using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.DoAfter;
-using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Shared.Supermatter.Components;

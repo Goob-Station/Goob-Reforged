@@ -107,16 +107,3 @@ public static class SmExtensions
         chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, hideChat: false, checkRadioPrefix: true);
     }
 }
-
-
-[ByRefEvent]
-public record struct SupermatterTickEvent(SupermatterComponent Component);
-
-[ByRefEvent]
-public record struct SupermatterYapEvent(SupermatterComponent Component);
-
-[ByRefEvent]
-public record struct SupermatterZapEvent(SupermatterComponent Component);
-
-[ByRefEvent]
-public record struct SupermatterDelamEvent(SupermatterComponent Component);
