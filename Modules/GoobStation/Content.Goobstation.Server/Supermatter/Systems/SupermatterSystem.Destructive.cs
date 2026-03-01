@@ -4,8 +4,10 @@
 
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Goobstation.Shared.Supermatter.Systems;
+using Content.Server.Atmos.EntitySystems;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Lightning;
+using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
@@ -43,36 +45,14 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         _lightning.ShootRandomLightnings(uid, 3.5f, sm.Power > sm.PowerPenaltyThreshold ? 3 : 1, sm.LightningPrototypes[zapPowerNorm]);
     }
 
-
-    /// <summary>
-    ///     Decide on how to delaminate.
-    /// </summary>
-    public DelamType ChooseDelamType(EntityUid uid, SupermatterComponent sm)
-    {
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
-
-        if (mix is { })
-        {
-            var moles = mix.TotalMoles;
-
-            if (moles >= sm.MolePenaltyThreshold)
-                return DelamType.Singulo;
-        }
-
-        if (sm.Power >= sm.PowerPenaltyThreshold)
-            return DelamType.Tesla;
-
-        return DelamType.Explosion;
-    }
-
     /// <summary>
     ///     Handle the end of the station.
     /// </summary>
-    private void HandleDelam(EntityUid uid, SupermatterComponent sm)
+    private void HandleDelam(Entity<SupermatterComponent> ent)
     {
-        var xform = Transform(uid);
+        var xform = Transform(ent.Owner);
 
-        sm.DelamType = ChooseDelamType(uid, sm);
+        var delamType = ent.ChooseDelamType(_atmosphere);
 
         if (!sm.Delamming)
         {
@@ -90,7 +70,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (sm.DelamTimer > sm.DelamTimerAccumulator)
             return;
 
-        switch (sm.DelamType)
+        switch (delamType)
         {
             case DelamType.Explosion:
             default:

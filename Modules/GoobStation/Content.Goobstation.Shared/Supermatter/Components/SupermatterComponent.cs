@@ -281,9 +281,6 @@ public sealed partial class SupermatterComponent : Component
     [ViewVariables(VVAccess.ReadOnly)]
     public float DetonationRads = 200f;
 
-    [ViewVariables(VVAccess.ReadOnly)]
-    public DelamType DelamType = DelamType.Explosion;
-
     #endregion SM Delamm
 
     #region SM Gas
