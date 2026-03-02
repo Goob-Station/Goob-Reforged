@@ -5,7 +5,7 @@
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
-using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
+using System.Diagnostics.CodeAnalysis;
 namespace Content.Goobstation.Server.Supermatter;
 
 /// <summary>
@@ -19,7 +19,7 @@ internal readonly struct GasWrapper(GasMixture surroundingMix, float ratio, Atmo
     private readonly GasMixture _surrounding = surroundingMix;
 
     /// <summary>
-    /// The split off part of your gas. 
+    /// The split off part of your gas.
     /// </summary>
     public readonly GasMixture Gas = surroundingMix.RemoveRatio(ratio);
 
@@ -29,7 +29,7 @@ internal readonly struct GasWrapper(GasMixture surroundingMix, float ratio, Atmo
     }
 }
 
-internal static partial class SupermatterExtensions
+internal static class SupermatterExtensions
 {
     extension(GasMixture gasMix)
     {
@@ -54,12 +54,13 @@ internal static partial class SupermatterExtensions
             var heatResistModifier = 1f;
 
             // Safely iterate through the actual enum values, regardless of their integer backing
-            foreach (Gas gas in Enum.GetValues<Gas>())
+            foreach (var gas in Enum.GetValues<Gas>())
             {
                 var proportion = gasMix.GetGasMolarPercentage(gas);
 
                 // Skip doing math if there's none of this gas in the mix
-                if (proportion <= 0f) continue;
+                if (proportion <= 0f)
+                    continue;
 
                 var facts = SupermatterComponent.GasDataFields(gas);
 
@@ -95,27 +96,29 @@ internal static partial class SupermatterExtensions
         }
     }
 
-    extension(Entity<SupermatterComponent> ent)
+    extension(AtmosphereSystem atmosContext)
     {
         /// <summary>
-        ///     Decide on how to delaminate.
+        /// Opinionated "Try" wrapper around <see cref="AtmosphereSystem.GetContainingMixture(Entity{TransformComponent?}, bool, bool)"/>,
+        /// with different defaults and some unusual behavior to cover edge cases
         /// </summary>
-        public DelamType ChooseDelamType(AtmosphereSystem atmosphereContext)
+        /// <param name="mix">A <see cref="GasMixture"/> if one could be found, null otherwise.</param>
+        /// <param name="ent">The entity to get the mixture for.</param>
+        /// <param name="ignoreExposed">If true, will ignore mixtures that the entity is contained in
+        /// (ex. lockers and cryopods) and just get the tile mixture.</param>
+        /// <param name="excite">If true, will mark the tile as active for atmosphere processing.</param>
+        /// <returns>True when a mix has been found, false otherwise</returns>
+        /// <remarks>Non-obvious behavior - it'll also return false when mix is <= 0 moles</remarks>
+        public bool TryGetContainingMixture([NotNullWhen(true)] out GasMixture? mix, EntityUid ent, bool ignoreExposed = true, bool excite = true)
         {
-            var mix = atmosphereContext.GetContainingMixture(ent.Owner, true, true);
+            mix = atmosContext.GetContainingMixture(ent, ignoreExposed, excite);
 
-            if (mix is { })
-            {
-                var moles = mix.TotalMoles;
+            if (mix is not { })
+                return false;
 
-                if (moles >= ent.Comp.MolePenaltyThreshold)
-                    return DelamType.Singulo;
-            }
-
-            if (ent.Comp.Power >= ent.Comp.PowerPenaltyThreshold)
-                return DelamType.Tesla;
-
-            return DelamType.Explosion;
+            if (!(mix.TotalMoles > 0f))
+                return false;
+            return false;
         }
     }
 }

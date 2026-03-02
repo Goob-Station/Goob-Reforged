@@ -3,12 +3,11 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Shared.Atmos;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed partial class SupermatterSystem : SharedSupermatterSystem
+public sealed partial class SupermatterSystem
 {
     /// <summary>
     ///     Handles environmental damage.
@@ -16,13 +15,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     private void HandleDamage(EntityUid uid, SupermatterComponent sm)
     {
         var damageArchived = sm.Damage;
-
-        #region Get gas info
-
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
-
-        // We're in space or there is no gas to process
-        if (mix is not { } || mix.TotalMoles == 0f)
+        if (!_atmosphere.TryGetContainingMixture(out var mix, uid))
         {
             sm.Damage += Math.Max(sm.Power / 1000 * sm.DamageIncreaseMultiplier, 0.1f);
             return;
@@ -32,8 +25,6 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         using var surrounding = new GasWrapper(mix, sm.GasEfficiency, _atmosphere);
         var moles = surrounding.Gas.TotalMoles;
         var (_, _, _, _, heatResistModifier) = surrounding.Gas.GetGasModifiers();
-
-        #endregion
 
         var totalDamage = 0f;
 

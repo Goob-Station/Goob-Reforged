@@ -3,17 +3,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Goobstation.Shared.Supermatter.Systems;
-using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Radiation.Components;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed partial class SupermatterSystem : SharedSupermatterSystem
+public sealed partial class SupermatterSystem
 {
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
-
     /// <summary>
     ///     Handle power and radiation output depending on atmospheric things.
     /// </summary>
@@ -21,17 +17,14 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     {
         #region Get gas mix
 
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
-
-        if (mix is not { })
+        if (!_atmosphere.TryGetContainingMixture(out var mix, uid))
+        {
             return;
+        }
 
         using var absorbed = new GasWrapper(mix, sm.GasEfficiency, _atmosphere);
 
         var moles = absorbed.Gas.TotalMoles;
-
-        if (!(moles > 0f))
-            return;
 
         #endregion
 
@@ -48,7 +41,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         // Apply CO2 ratio if thresholds are met, otherwise limit the ratio according to how far away we are from thresholds
         sm.PowerlossDynamicScaling = co2Ratio * underThresholdScaler;
 
-        // 
+        //
         var moleBoost = Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f);
         var powerlossInhibitor = Math.Clamp(1f - sm.PowerlossDynamicScaling * moleBoost, 0f, 1f);
 
@@ -100,7 +93,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         // I'd recommend plotting these two if you want to get it
         // but in general this lets it need less input to stay under 10 power than above
         // Below 10 power it substracts very little, and above it substracts 1/10
-        // 10f (and 0.9f) hardcoded to discourage yaml majors messing with it since it impacts a lot
+        // 10f (and 0.9f) hardcoded to discourage YAML majors messing with it since it impacts a lot
         // (And would require massive structural changes, all to minuscule benefit)
         var powerReduction = (float)Math.Pow(sm.Power / 5f, 3f);
 

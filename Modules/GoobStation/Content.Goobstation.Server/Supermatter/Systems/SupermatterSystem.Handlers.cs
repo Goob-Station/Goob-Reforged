@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Server.Audio;
 using Content.Server.DoAfter;
 using Content.Shared.Administration.Logs;
@@ -22,15 +21,8 @@ using Robust.Shared.Physics.Events;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed partial class SupermatterSystem : SharedSupermatterSystem
+public sealed partial class SupermatterSystem
 {
-    [Dependency] private readonly AmbientSoundSystem _ambient = default!;
-    [Dependency] private readonly DoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly ISharedAdminLogManager _adminLog = default!;
-    [Dependency] private readonly ISharedChatManager _sharedChat = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-
     private void OnCollideEvent(EntityUid uid, SupermatterComponent sm, ref StartCollideEvent args)
     {
         var target = args.OtherEntity;
@@ -49,7 +41,8 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
             _sharedChat.SendAdminAlert($"Supermatter activated by {activator} at {Transform(uid).Coordinates}");
 
-            _adminLog.Add(LogType.Action, LogImpact.High,
+            _adminLog.Add(LogType.Action,
+                LogImpact.High,
                 $"Supermatter activated by {activator} at {Transform(uid).Coordinates}");
 
             sm.Activated = true;
@@ -157,9 +150,11 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         // Set the Sound
         _ambient.SetAmbience(uid, true);
 
-        //Add Air to the initialized SM in the Map so it doesnt delam on default
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
-        mix?.AdjustMoles(Gas.Oxygen, Atmospherics.OxygenMolesStandard);
-        mix?.AdjustMoles(Gas.Nitrogen, Atmospherics.NitrogenMolesStandard);
+        // Add Air to the initialized SM in the Map so it doesn't delam on default
+        if (_atmosphere.TryGetContainingMixture(out var mix, uid))
+        {
+            mix.AdjustMoles(Gas.Oxygen, Atmospherics.OxygenMolesStandard);
+            mix.AdjustMoles(Gas.Nitrogen, Atmospherics.NitrogenMolesStandard);
+        }
     }
 }

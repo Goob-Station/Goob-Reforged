@@ -4,7 +4,6 @@
 
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Server.AlertLevel;
 using Content.Server.Chat.Systems;
 using Content.Server.Station.Systems;
@@ -14,32 +13,27 @@ using System.Text;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed partial class SupermatterSystem : SharedSupermatterSystem
+public sealed partial class SupermatterSystem
 {
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly AlertLevelSystem _alert = default!;
-    [Dependency] private readonly StationSystem _station = default!;
-
     /// <summary>
     ///     Handles announcements.
     /// </summary>
-    private void HandleAnnouncements(EntityUid uid, SupermatterComponent sm)
+    private void HandleAnnouncements(Entity<SupermatterComponent> ent)
     {
         var message = string.Empty;
         var global = false;
 
-        var integrity = sm.GetIntegrity().ToString("0.00");
+        var integrity = ent.Comp.GetIntegrity().ToString("0.00");
 
         // Delam is happening
-        if (sm.Delamming && !sm.DelamAnnounced)
+        if (ent.Comp is { Delamming: true, DelamAnnounced: false })
         {
             var sb = new StringBuilder();
             var alertLevel = "yellow";
 
             string? loc;
-            switch (sm.DelamType)
+            switch (GetDelamType(ent))
             {
-                case DelamType.Explosion:
                 default:
                     loc = "supermatter-delam-explosion";
                     break;
@@ -60,37 +54,37 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
                     break;
             }
 
-            var station = _station.GetOwningStation(uid);
+            var station = _station.GetOwningStation(ent);
             if (station != null)
-                _alert.SetLevel((EntityUid)station, alertLevel, true, true, true, false);
+                _alert.SetLevel((EntityUid)station, alertLevel, true, true, true);
 
             sb.AppendLine(Loc.GetString(loc));
-            sb.AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", sm.DelamTimer)));
+            sb.AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", ent.Comp.DelamTimer)));
 
             message = sb.ToString();
             global = true;
-            sm.DelamAnnounced = true;
+            ent.Comp.DelamAnnounced = true;
 
-            _chat.SupermatterAnnouncement(uid, message, global);
+            _chat.SupermatterAnnouncement(ent, message, global);
             return;
         }
 
         // Delam stopped, let everyone know.
-        if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
+        if (ent.Comp.Damage < ent.Comp.DelaminationPoint && ent.Comp.Delamming)
         {
             message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
-            sm.DelamAnnounced = false;
+            ent.Comp.DelamAnnounced = false;
             global = true;
-            _chat.SupermatterAnnouncement(uid, message, global);
+            _chat.SupermatterAnnouncement(ent, message, global);
             return;
         }
 
         // We are not taking consistent damage. Engis/warn not needed.
-        if (sm.DamageDelta >= 0)
+        if (ent.Comp.DamageDelta >= 0)
             return;
 
         // Check if we need to warn anyone
-        switch (sm.Damage)
+        switch (ent.Comp.Damage)
         {
             case >= SupermatterComponent.EmergencyPoint:
                 message = Loc.GetString("supermatter-emergency", ("integrity", integrity));
@@ -101,17 +95,20 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
                 break;
         }
 
-        _chat.SupermatterAnnouncement(uid, message, global);
+        _chat.SupermatterAnnouncement(ent, message, global);
     }
 }
 
-internal static partial class SupermatterExtensions
+internal static class SupermatterExtensions
 {
     /// <summary>
     ///     Help the SM announce something.
     /// </summary>
+    /// <param name="message"></param>
     /// <param name="global">If true, does the station announcement.</param>
     /// <param name="customSender">If true, sends the announcement from Central Command.</param>
+    /// <param name="chat"></param>
+    /// <param name="uid"></param>
     public static void SupermatterAnnouncement(this ChatSystem chat, EntityUid uid, string message, bool global = false, string? customSender = null)
     {
         if (global)

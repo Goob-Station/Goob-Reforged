@@ -3,41 +3,28 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Goobstation.Shared.Supermatter.Systems;
-using Content.Server.Atmos.EntitySystems;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Lightning;
-using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
-public sealed partial class SupermatterSystem : SharedSupermatterSystem
+public sealed partial class SupermatterSystem
 {
-    [Dependency] private readonly LightningSystem _lightning = default!;
-    [Dependency] private readonly ExplosionSystem _explosion = default!;
-
     /// <summary>
     ///     Shoot lightning bolts depensing on accumulated power.
     /// </summary>
     private void HandleZap(EntityUid uid, SupermatterComponent sm)
     {
         // This isn't DRY but erm whatever. Alternatively I can surface this. And add a few params or some weird struct.
-        // (Also I can't cleanly run it on top level anyways since damage is independent)
-
-        var mix = _atmosphere.GetContainingMixture(uid, true, true);
-
-        if (mix is not { })
+        // (Also I can't cleanly run it on top level anyway since damage is independent)
+        if (!_atmosphere.TryGetContainingMixture(out var mix, uid))
+        {
             return;
+        }
 
-        var gas = mix.Clone();
-        var moles = gas.TotalMoles;
+        var (_, zapModifier, _, _, _) = mix.GetGasModifiers();
 
-        if (!(moles > 0f))
-            return;
-
-        var (_, zapModifier, _, _, _) = gas.GetGasModifiers();
-
-        // Divide power by it's threshold to get a value from 0 to 1, then multiply by the amount of possible lightnings
+        // Divide power by its threshold to get a value from 0 to 1, then multiply by the amount of possible lightnings
         // Makes it pretty obvious that if SM is shooting out red lightnings something is wrong.
         // And if it shoots too weak lightnings it means that it's underfed. Feed the SM :godo:
         var zapPower = sm.Power * zapModifier / sm.PowerPenaltyThreshold * sm.LightningPrototypes.Length;
@@ -52,42 +39,58 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     {
         var xform = Transform(ent.Owner);
 
-        var delamType = ent.ChooseDelamType(_atmosphere);
+        var delamType = GetDelamType(ent);
 
-        if (!sm.Delamming)
+        if (!ent.Comp.Delamming)
         {
-            sm.Delamming = true;
-            HandleAnnouncements(uid, sm);
+            ent.Comp.Delamming = true;
+            HandleAnnouncements(ent);
         }
-        if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
+        if (ent.Comp.Damage < ent.Comp.DelaminationPoint && ent.Comp.Delamming)
         {
-            sm.Delamming = false;
-            HandleAnnouncements(uid, sm);
+            ent.Comp.Delamming = false;
+            HandleAnnouncements(ent);
         }
 
-        sm.DelamTimerAccumulator++;
+        ent.Comp.DelamTimerAccumulator++;
 
-        if (sm.DelamTimer > sm.DelamTimerAccumulator)
+        if (ent.Comp.DelamTimer > ent.Comp.DelamTimerAccumulator)
             return;
 
         switch (delamType)
         {
             case DelamType.Explosion:
             default:
-                _explosion.TriggerExplosive(uid);
+                _explosion.TriggerExplosive(ent.Owner);
                 break;
 
             case DelamType.Singulo:
-                Spawn(sm.SingularityPrototypeId, xform.Coordinates);
+                Spawn(ent.Comp.SingularityPrototypeId, xform.Coordinates);
                 break;
 
             case DelamType.Tesla:
-                Spawn(sm.TeslaPrototypeId, xform.Coordinates);
+                Spawn(ent.Comp.TeslaPrototypeId, xform.Coordinates);
                 break;
 
             case DelamType.Cascade:
-                Spawn(sm.SupermatterKudzuPrototypeId, xform.Coordinates);
+                Spawn(ent.Comp.SupermatterKudzuPrototypeId, xform.Coordinates);
                 break;
         }
+    }
+
+    /// <summary>
+    ///     Decide on how to delaminate.
+    /// </summary>
+    public DelamType GetDelamType(Entity<SupermatterComponent> ent)
+    {
+        if(_atmosphere.TryGetContainingMixture(out var mix, ent.Owner))
+        {
+            if (mix.TotalMoles >= ent.Comp.MolePenaltyThreshold)
+                return DelamType.Singulo;
+        }
+        if (ent.Comp.Power >= ent.Comp.PowerPenaltyThreshold)
+            return DelamType.Tesla;
+
+        return DelamType.Explosion;
     }
 }
