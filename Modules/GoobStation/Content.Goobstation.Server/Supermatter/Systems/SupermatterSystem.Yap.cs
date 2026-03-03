@@ -4,11 +4,6 @@
 
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Server.AlertLevel;
-using Content.Server.Chat.Systems;
-using Content.Server.Station.Systems;
-using Content.Shared.Chat;
-using Robust.Shared.Maths;
 using System.Text;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
@@ -65,7 +60,7 @@ public sealed partial class SupermatterSystem
             global = true;
             ent.Comp.DelamAnnounced = true;
 
-            _chat.SupermatterAnnouncement(ent, message, global);
+            _chat.DispatchSupermatterAnnouncement(ent, message, global);
             return;
         }
 
@@ -75,7 +70,7 @@ public sealed partial class SupermatterSystem
             message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
             ent.Comp.DelamAnnounced = false;
             global = true;
-            _chat.SupermatterAnnouncement(ent, message, global);
+            _chat.DispatchSupermatterAnnouncement(ent, message, global);
             return;
         }
 
@@ -95,29 +90,6 @@ public sealed partial class SupermatterSystem
                 break;
         }
 
-        _chat.SupermatterAnnouncement(ent, message, global);
+        _chat.DispatchSupermatterAnnouncement(ent, message, global);
     }
-}
-
-internal static class SupermatterExtensions
-{
-    /// <summary>
-    ///     Help the SM announce something.
-    /// </summary>
-    /// <param name="message"></param>
-    /// <param name="global">If true, does the station announcement.</param>
-    /// <param name="customSender">If true, sends the announcement from Central Command.</param>
-    /// <param name="chat"></param>
-    /// <param name="uid"></param>
-    public static void SupermatterAnnouncement(this ChatSystem chat, EntityUid uid, string message, bool global = false, string? customSender = null)
-    {
-        if (global)
-        {
-            var sender = customSender ?? Loc.GetString("supermatter-announcer");
-            chat.DispatchStationAnnouncement(uid, message, sender, colorOverride: Color.Yellow);
-            return;
-        }
-        chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, hideChat: false, checkRadioPrefix: true);
-    }
-
 }

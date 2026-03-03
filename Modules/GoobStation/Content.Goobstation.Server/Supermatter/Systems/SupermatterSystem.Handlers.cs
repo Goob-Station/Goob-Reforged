@@ -15,7 +15,6 @@ using Content.Shared.Interaction;
 using Content.Shared.Kitchen.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Projectiles;
-using Robust.Shared.Containers;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Events;
 
@@ -61,7 +60,7 @@ public sealed partial class SupermatterSystem
         {
             _adminLog.Add(LogType.EntityDelete, LogImpact.Medium, $"Supermatter {ToPrettyString(uid)} has consumed {ToPrettyString(target)}");
             EntityManager.SpawnAttachedTo(sm.AshPrototypeId, Transform(target).Coordinates);
-            _audio.PlayPvs(sm.DustSound, uid);
+            _audio.PlayPvs(sm.Audio.DustSound, uid);
         }
 
         EntityManager.QueueDeleteEntity(target);
@@ -121,7 +120,7 @@ public sealed partial class SupermatterSystem
         sm.DamageDelta += sm.DelaminationPoint / 10;
 
         var integrity = sm.GetIntegrity().ToString("0.00");
-        _chat.SupermatterAnnouncement(uid, Loc.GetString("supermatter-announcement-cc-tamper", ("integrity", integrity)), true, "Central Command");
+        _chat.DispatchSupermatterAnnouncement(uid, Loc.GetString("supermatter-announcement-cc-tamper", ("integrity", integrity)), true, "Central Command");
 
         Spawn(sm.SliverPrototypeId, _transform.GetMapCoordinates(args.User));
 

@@ -87,7 +87,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
         if (ent.Comp.Damage >= ent.Comp.DelaminationPoint || ent.Comp.Delamming)
         {
-            HandleDelam(ent);
+            Delam(ent);
         }
 
         HandleSoundLoop(ent.Comp);
@@ -95,7 +95,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (ent.Comp.ZapAccumulator >= ent.Comp.ZapTimer)
         {
             ent.Comp.ZapAccumulator -= ent.Comp.ZapTimer;
-            HandleZap(ent.Owner, ent.Comp);
+            Zap(ent);
         }
 
         if (ent.Comp.YellAccumulator >= ent.Comp.YellTimer)

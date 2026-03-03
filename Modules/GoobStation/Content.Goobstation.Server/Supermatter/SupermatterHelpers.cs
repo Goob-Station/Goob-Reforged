@@ -4,7 +4,10 @@
 
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Server.Atmos.EntitySystems;
+using Content.Server.Chat.Systems;
 using Content.Shared.Atmos;
+using Content.Shared.Chat;
+using Robust.Shared.Maths;
 using System.Diagnostics.CodeAnalysis;
 namespace Content.Goobstation.Server.Supermatter;
 
@@ -99,14 +102,14 @@ internal static class SupermatterExtensions
     extension(AtmosphereSystem atmosContext)
     {
         /// <summary>
-        /// Opinionated "Try" wrapper around <see cref="AtmosphereSystem.GetContainingMixture(Entity{TransformComponent?}, bool, bool)"/>,
-        /// with different defaults and some unusual behavior to cover edge cases
+        ///     Opinionated "Try" wrapper around <see cref="AtmosphereSystem.GetContainingMixture(Entity{TransformComponent?}, bool, bool)"/>,
+        ///     with different defaults and some implicit behavior to cover edge cases
         /// </summary>
         /// <param name="mix">A <see cref="GasMixture"/> if one could be found, null otherwise.</param>
         /// <param name="ent">The entity to get the mixture for.</param>
         /// <param name="ignoreExposed">If true, will ignore mixtures that the entity is contained in
-        /// (ex. lockers and cryopods) and just get the tile mixture.</param>
-        /// <param name="excite">If true, will mark the tile as active for atmosphere processing.</param>
+        /// (ex. lockers and cryopods) and just get the tile mixture. True by default!</param>
+        /// <param name="excite">If true, will mark the tile as active for atmosphere processing. True by default!</param>
         /// <returns>True when a mix has been found, false otherwise</returns>
         /// <remarks>Non-obvious behavior - it'll also return false when mix is <= 0 moles</remarks>
         public bool TryGetContainingMixture([NotNullWhen(true)] out GasMixture? mix, EntityUid ent, bool ignoreExposed = true, bool excite = true)
@@ -119,6 +122,27 @@ internal static class SupermatterExtensions
             if (!(mix.TotalMoles > 0f))
                 return false;
             return false;
+        }
+    }
+
+    extension(ChatSystem chatContext)
+    {
+        /// <summary>
+        ///     Help the SM announce something.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="global">If true, does the station announcement.</param>
+        /// <param name="customSender">Sender for when global is true.</param>
+        /// <param name="uid">Supermatter to say the announcement from.</param>
+        public void DispatchSupermatterAnnouncement(EntityUid uid, string message, bool global = false, string? customSender = null)
+        {
+            if (global)
+            {
+                var sender = customSender ?? Loc.GetString("supermatter-announcer");
+                chatContext.DispatchStationAnnouncement(uid, message, sender, colorOverride: Color.Yellow);
+                return;
+            }
+            chatContext.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, hideChat: false, checkRadioPrefix: true);
         }
     }
 }

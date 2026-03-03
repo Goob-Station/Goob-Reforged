@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Server.Explosion.EntitySystems;
-using Content.Server.Lightning;
+using Robust.Shared.Maths;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
@@ -13,11 +12,9 @@ public sealed partial class SupermatterSystem
     /// <summary>
     ///     Shoot lightning bolts depensing on accumulated power.
     /// </summary>
-    private void HandleZap(EntityUid uid, SupermatterComponent sm)
+    private void Zap(Entity<SupermatterComponent> ent)
     {
-        // This isn't DRY but erm whatever. Alternatively I can surface this. And add a few params or some weird struct.
-        // (Also I can't cleanly run it on top level anyway since damage is independent)
-        if (!_atmosphere.TryGetContainingMixture(out var mix, uid))
+        if (!_atmosphere.TryGetContainingMixture(out var mix, ent))
         {
             return;
         }
@@ -27,15 +24,14 @@ public sealed partial class SupermatterSystem
         // Divide power by its threshold to get a value from 0 to 1, then multiply by the amount of possible lightnings
         // Makes it pretty obvious that if SM is shooting out red lightnings something is wrong.
         // And if it shoots too weak lightnings it means that it's underfed. Feed the SM :godo:
-        var zapPower = sm.Power * zapModifier / sm.PowerPenaltyThreshold * sm.LightningPrototypes.Length;
-        var zapPowerNorm = (int)Math.Clamp(zapPower, 0, sm.LightningPrototypes.Length - 1);
-        _lightning.ShootRandomLightnings(uid, 3.5f, sm.Power > sm.PowerPenaltyThreshold ? 3 : 1, sm.LightningPrototypes[zapPowerNorm]);
+        var zapPowerNorm = (int)(ent.Comp.LightningPrototypes.Length * MathHelper.Clamp01(ent.Comp.Power * zapModifier / ent.Comp.PowerPenaltyThreshold));
+        _lightning.ShootRandomLightnings(ent, 3.5f, ent.Comp.Power > ent.Comp.PowerPenaltyThreshold ? 3 : 1, ent.Comp.LightningPrototypes[zapPowerNorm - 1]);
     }
 
     /// <summary>
     ///     Handle the end of the station.
     /// </summary>
-    private void HandleDelam(Entity<SupermatterComponent> ent)
+    private void Delam(Entity<SupermatterComponent> ent)
     {
         var xform = Transform(ent.Owner);
 
@@ -83,7 +79,7 @@ public sealed partial class SupermatterSystem
     /// </summary>
     public DelamType GetDelamType(Entity<SupermatterComponent> ent)
     {
-        if(_atmosphere.TryGetContainingMixture(out var mix, ent.Owner))
+        if (_atmosphere.TryGetContainingMixture(out var mix, ent.Owner))
         {
             if (mix.TotalMoles >= ent.Comp.MolePenaltyThreshold)
                 return DelamType.Singulo;
