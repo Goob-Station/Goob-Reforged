@@ -11,6 +11,8 @@ public sealed class ModuleManifest
     public string Version { get; set; } = string.Empty;
     public List<ProjectInfo> Projects { get; set; } = new();
 
+    public bool Disabled { get; set; }
+
     public string ManifestPath { get; set; } = string.Empty;
 
     public string ModuleDirectory { get; set; } = string.Empty;

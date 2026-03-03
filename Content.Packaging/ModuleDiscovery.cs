@@ -10,6 +10,15 @@ public static class ModuleDiscovery
 {
     public record ModuleInfo(string Name, string ProjectPath, ModuleRole Type);
 
+    public static string GetModuleOutputDir(string projectPath)
+    {
+        var projectDir = Path.GetDirectoryName(projectPath)!;
+        var withTfm = Path.Combine(projectDir, "bin", "Debug", "net10.0");
+        if (Directory.Exists(withTfm))
+            return withTfm;
+        return Path.Combine(projectDir, "bin", "Debug");
+    }
+
     /// <summary>
     /// Discovers all modules by scanning for module.yml files in the Modules/ directory
     /// </summary>
@@ -34,6 +43,9 @@ public static class ModuleDiscovery
                 Console.WriteLine($"Warning: Failed to load module manifest {manifestPath}: {ex.Message}");
                 continue;
             }
+
+            if (manifest.Disabled)
+                continue;
 
             foreach (var project in manifest.Projects)
             {

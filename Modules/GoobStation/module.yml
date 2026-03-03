@@ -1,11 +1,12 @@
-﻿name: GoobStation
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
+name: GoobStation
 id: goobstation
 version: 1.0.0
 
 projects:
-  - path: Content.Goobstation.Maths
-    role: Common
-
   - path: Content.Goobstation.Common
     role: Common
 
@@ -13,6 +14,9 @@ projects:
     role: Shared
 
   - path: Content.Goobstation.Server
+    role: Server
+
+  - path: Content.Goobstation.Server.Database
     role: Server
 
   - path: Content.Goobstation.Client
