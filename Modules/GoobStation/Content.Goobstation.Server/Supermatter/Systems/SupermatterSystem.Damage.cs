@@ -12,10 +12,13 @@ public sealed partial class SupermatterSystem
     /// <summary>
     ///     Handles environmental damage.
     /// </summary>
-    private void HandleDamage(EntityUid uid, SupermatterComponent sm)
+    private void HandleDamage(Entity<SupermatterComponent> ent)
     {
+        var sm = ent.Comp;
         var damageArchived = sm.Damage;
-        if (!_atmosphere.TryGetContainingMixture(out var mix, uid))
+
+        // Vacuum bypass
+        if (!_atmosphere.TryGetContainingMixture(out var mix, ent.Owner))
         {
             sm.Damage += Math.Max(sm.Power / 1000 * sm.DamageIncreaseMultiplier, 0.1f);
             return;
@@ -30,27 +33,25 @@ public sealed partial class SupermatterSystem
 
         var tempThreshold = (Atmospherics.T0C + sm.HeatPenaltyThreshold) * heatResistModifier;
 
-        // Temperature start to have a positive effect on damage after 350
-        var tempDamage = Math.Max(Math.Clamp(moles / 200f, .5f, 1f) * surrounding.Gas.Temperature - tempThreshold, 0f) * sm.MoleHeatThreshold / 150f * sm.DamageIncreaseMultiplier;
-        totalDamage += tempDamage;
+        // Scale down the hot gas damage for low molar counts
+        totalDamage += Math.Max(Math.Clamp(moles / 200f, .5f, 1f) * surrounding.Gas.Temperature - tempThreshold, 0f) * sm.MoleHeatPenalty / 150f;
 
-        // Power only starts affecting damage when it is above 5000
-        var powerDamage = Math.Max(sm.Power - sm.PowerPenaltyThreshold, 0f) / 500f * sm.DamageIncreaseMultiplier;
-        totalDamage += powerDamage;
+        totalDamage += Math.Max(sm.Power - sm.PowerPenaltyThreshold, 0f) / 500f;
 
-        // Molar count only starts affecting damage when it is above 1800
-        var moleDamage = Math.Max(moles - sm.MolePenaltyThreshold, 0) / 80 * sm.DamageIncreaseMultiplier;
-        totalDamage += moleDamage;
+        totalDamage += Math.Max(moles - sm.MolePenaltyThreshold, 0) / 80f;
+
+        totalDamage *= sm.DamageIncreaseMultiplier;
 
         // Healing damage
         if (moles < sm.MolePenaltyThreshold)
         {
-            // left there a very small float value so that it doesn't eventually divide by 0.
-            var healHeatDamage = Math.Min(surrounding.Gas.Temperature - tempThreshold, 0.001f) / 150;
+            var healHeatDamage = Math.Min(surrounding.Gas.Temperature - tempThreshold, 0f) / 150;
             totalDamage += healHeatDamage;
         }
 
-        sm.Damage = Math.Min(damageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage);
+        // Cap damage per cycle
+        sm.Damage = Math.Min(damageArchived + sm.DamageHardcapPercentage * sm.DelaminationPoint, totalDamage);
+
         sm.DamageDelta = sm.Damage - damageArchived;
     }
 }
