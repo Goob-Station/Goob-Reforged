@@ -321,21 +321,24 @@ public sealed partial class SupermatterComponent : Component
     /// <para>HeatResistMod = "Heat Resistance" on /tg/ wiki. Should never be so high as to shield from a trit fire.</para>
     /// <para>These values are for a 100% mix of such gas. These are additive, not multiplicative (so, 100%+mod)</para>
     /// </remarks>
-    public static (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod) GasDataFields(Gas gas) => gas switch
+    public static (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod) GasDataFields(Gas gas)
     {
-        // /tg/ values are an ok start, but definitely don't have to be adhered to.
-        // Some values might seem extreme - completely intentional to encourage mixes.
-        Gas.Oxygen => (0.8f, 0.4f, 1f, 0f, 0f), // Baby's first performance booster.
-        Gas.Nitrogen => (0f, 0f, -1f, -2.5f, 0f), // Baseline. If SM doesn't work safely with 100% N2 something is wrong.
-        Gas.CarbonDioxide => (0f, 0f, 1f, 1f, 0f), // Only useful for its special effect, decreasing power decay.
-        Gas.Plasma => (2f, 1.5f, 1f, 19f, 0f), // Gives more power, and a lot more gases. 
-        Gas.Tritium => (4f, 3f, 1f, 9f, 0f), // Go-to for massive power gains :)
-        Gas.WaterVapor => (-0.25f, -0.25f, 1f, 11f, 0.25f), // Dangerous and useless. Or useless and dangerous?
-        Gas.Frezon => (-3f, -3f, -1f, -9f, -0.5f), // Quick cooling, but won't save you at the last second due to heat mod. It's your fault ngl.
-        Gas.Ammonia => (0f, 0f, .3f, 0f, 0f), // Another special effect, it's being consumed to give more power to the crystal.
-        Gas.NitrousOxide => (0f, 0f, 0f, 0f, 5f), // Just gives heat resist
-        _ => (0f, 0f, 0f, 0f, 0f)
-    };
+        return gas switch
+        {
+            // /tg/ values are an ok start, but definitely don't have to be adhered to.
+            // Some values might seem extreme - completely intentional to encourage mixes.
+            Gas.Oxygen => (0.8f, 0.4f, 1f, 0f, 0f), // Baby's first performance booster.
+            Gas.Nitrogen => (0f, 0f, -1f, -2.5f, 0f), // Baseline. If SM doesn't work safely with 100% N2 something is wrong.
+            Gas.CarbonDioxide => (0f, 0f, 1f, 1f, 0f), // Only useful for its special effect, decreasing power decay.
+            Gas.Plasma => (2f, 1.5f, 1f, 19f, 0f), // Gives more power, and a lot more gases. 
+            Gas.Tritium => (4f, 3f, 1f, 9f, 0f), // Go-to for massive power gains :)
+            Gas.WaterVapor => (-0.25f, -0.25f, 1f, 11f, 0.25f), // Dangerous and useless. Or useless and dangerous?
+            Gas.Frezon => (-3f, -3f, -1f, -9f, -0.5f), // Quick cooling, but won't save you at the last second due to heat mod. It's your fault ngl.
+            Gas.Ammonia => (0f, 0f, .3f, 0f, 0f), // Another special effect, it's being consumed to give more power to the crystal.
+            Gas.NitrousOxide => (0f, 0f, 0f, 0f, 5f), // Just gives heat resist
+            _ => (0f, 0f, 0f, 0f, 0f)
+        };
+    }
 
     #endregion SM Gas
 

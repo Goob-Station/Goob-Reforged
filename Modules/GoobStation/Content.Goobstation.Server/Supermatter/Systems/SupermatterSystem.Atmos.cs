@@ -28,7 +28,7 @@ public sealed partial class SupermatterSystem
 
         #endregion
 
-        var (radModifier, zapModifier, moleModifier, heatModifier, heatResistModifier) = absorbed.Gas.GetGasModifiers();
+        var (radModifier, _, moleModifier, heatModifier, _) = absorbed.Gas.GetGasModifiers();
 
         #region Calculate CO2 powerloss inhibition effect
 
@@ -41,7 +41,6 @@ public sealed partial class SupermatterSystem
         // Apply CO2 ratio if thresholds are met, otherwise limit the ratio according to how far away we are from thresholds
         sm.PowerlossDynamicScaling = co2Ratio * underThresholdScaler;
 
-        //
         var moleBoost = Math.Clamp(moles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f);
         var powerlossInhibitor = Math.Clamp(1f - sm.PowerlossDynamicScaling * moleBoost, 0f, 1f);
 
@@ -50,7 +49,7 @@ public sealed partial class SupermatterSystem
         #region Add power to crystal
 
         // Transfer matter power to power
-        if (sm.MatterPower != 0)
+        if (sm.MatterPower > 0)
         {
             // Get how much matter power to transfer
             var removedMatter = Math.Clamp(sm.MatterPower, 0f, 1f * sm.MatterPowerConversion);

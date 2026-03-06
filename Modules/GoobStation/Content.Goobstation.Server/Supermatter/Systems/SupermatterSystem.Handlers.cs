@@ -31,7 +31,9 @@ public sealed partial class SupermatterSystem
             || HasComp<SupermatterImmuneComponent>(target)
             || MetaData(target).EntityPrototype?.ID == sm.AshPrototypeId
             || _container.IsEntityInContainer(uid))
+        {
             return;
+        }
 
         if (!sm.Activated)
         {
@@ -60,7 +62,7 @@ public sealed partial class SupermatterSystem
         {
             _adminLog.Add(LogType.EntityDelete, LogImpact.Medium, $"Supermatter {ToPrettyString(uid)} has consumed {ToPrettyString(target)}");
             EntityManager.SpawnAttachedTo(sm.AshPrototypeId, Transform(target).Coordinates);
-            _audio.PlayPvs(sm.Audio.DustSound, uid);
+            _audio.PlayPvs(sm.DustSound, uid);
         }
 
         EntityManager.QueueDeleteEntity(target);

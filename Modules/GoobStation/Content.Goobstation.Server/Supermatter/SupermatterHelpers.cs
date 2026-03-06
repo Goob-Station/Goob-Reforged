@@ -17,18 +17,18 @@ namespace Content.Goobstation.Server.Supermatter;
 /// <para><see cref="AtmosphereSystem.Merge(GasMixture, GasMixture)"/> is automatically called at the end -
 /// use <see cref="GasMixture"/> instead if you want to handle it manually</para>
 /// </summary>
-internal readonly struct GasWrapper(GasMixture surroundingMix, float ratio, AtmosphereSystem atmosphere) : IDisposable
+internal readonly struct GasWrapper(GasMixture mix, float ratio, AtmosphereSystem atmosphereContext) : IDisposable
 {
-    private readonly GasMixture _surrounding = surroundingMix;
+    private readonly GasMixture _surrounding = mix;
 
     /// <summary>
     /// The split off part of your gas.
     /// </summary>
-    public readonly GasMixture Gas = surroundingMix.RemoveRatio(ratio);
+    public readonly GasMixture Gas = mix.RemoveRatio(ratio);
 
     public void Dispose()
     {
-        atmosphere.Merge(_surrounding, Gas);
+        atmosphereContext.Merge(_surrounding, Gas);
     }
 }
 
@@ -65,13 +65,13 @@ internal static class SupermatterExtensions
                 if (proportion <= 0f)
                     continue;
 
-                var facts = SupermatterComponent.GasDataFields(gas);
+                var (radMod, zapMod, heatMod, moleMod, heatResistMod) = SupermatterComponent.GasDataFields(gas);
 
-                radModifier += proportion * facts.RadMod;
-                zapModifier += proportion * facts.ZapMod;
-                moleModifier += proportion * facts.MoleMod;
-                heatModifier += proportion * facts.HeatMod;
-                heatResistModifier += proportion * facts.HeatResistMod;
+                radModifier += proportion * radMod;
+                zapModifier += proportion * zapMod;
+                moleModifier += proportion * moleMod;
+                heatModifier += proportion * heatMod;
+                heatResistModifier += proportion * heatResistMod;
             }
 
             // Ensure we don't do something stupid later
@@ -86,14 +86,14 @@ internal static class SupermatterExtensions
 
         public float GetGasMolarPercentage(Gas gas)
         {
-            if (!(gasMix.TotalMoles > 0f))
+            if (gasMix.TotalMoles <= 0f)
                 return 0f;
             return gasMix.GetMoles(gas) / gasMix.TotalMoles;
         }
 
         public float GetGasMolarPercentage(int gas)
         {
-            if (!(gasMix.TotalMoles > 0f))
+            if (gasMix.TotalMoles <= 0f)
                 return 0f;
             return gasMix.GetMoles(gas) / gasMix.TotalMoles;
         }
@@ -109,7 +109,7 @@ internal static class SupermatterExtensions
         /// <param name="ent">The entity to get the mixture for.</param>
         /// <param name="ignoreExposed">If true, will ignore mixtures that the entity is contained in
         /// (ex. lockers and cryopods) and just get the tile mixture. True by default!</param>
-        /// <param name="excite">If true, will mark the tile as active for atmosphere processing. True by default!</param>
+        /// <param name="excite">If true, will mark the tile as active for atmosphereContext processing. True by default!</param>
         /// <returns>True when a mix has been found, false otherwise</returns>
         /// <remarks>Non-obvious behavior - it'll also return false when mix is <= 0 moles</remarks>
         public bool TryGetContainingMixture([NotNullWhen(true)] out GasMixture? mix, EntityUid ent, bool ignoreExposed = true, bool excite = true)
@@ -119,7 +119,7 @@ internal static class SupermatterExtensions
             if (mix is not { })
                 return false;
 
-            if (!(mix.TotalMoles > 0f))
+            if (mix.TotalMoles <= 0f)
                 return false;
             return false;
         }
@@ -130,10 +130,10 @@ internal static class SupermatterExtensions
         /// <summary>
         ///     Help the SM announce something.
         /// </summary>
+        /// <param name="uid">Supermatter to say the announcement from.</param>
         /// <param name="message"></param>
         /// <param name="global">If true, does the station announcement.</param>
         /// <param name="customSender">Sender for when global is true.</param>
-        /// <param name="uid">Supermatter to say the announcement from.</param>
         public void DispatchSupermatterAnnouncement(EntityUid uid, string message, bool global = false, string? customSender = null)
         {
             if (global)

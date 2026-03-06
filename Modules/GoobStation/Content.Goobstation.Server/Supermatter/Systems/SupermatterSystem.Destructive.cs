@@ -14,18 +14,21 @@ public sealed partial class SupermatterSystem
     /// </summary>
     private void Zap(Entity<SupermatterComponent> ent)
     {
-        if (!_atmosphere.TryGetContainingMixture(out var mix, ent))
+        var zapModifier = 1f;
+        if (_atmosphere.TryGetContainingMixture(out var mix, ent))
         {
-            return;
+            (_, zapModifier, _, _, _) = mix.GetGasModifiers();
         }
-
-        var (_, zapModifier, _, _, _) = mix.GetGasModifiers();
 
         // Divide power by its threshold to get a value from 0 to 1, then multiply by the amount of possible lightnings
         // Makes it pretty obvious that if SM is shooting out red lightnings something is wrong.
         // And if it shoots too weak lightnings it means that it's underfed. Feed the SM :godo:
-        var zapPowerNorm = (int)(ent.Comp.LightningPrototypes.Length * MathHelper.Clamp01(ent.Comp.Power * zapModifier / ent.Comp.PowerPenaltyThreshold));
-        _lightning.ShootRandomLightnings(ent, 3.5f, ent.Comp.Power > ent.Comp.PowerPenaltyThreshold ? 3 : 1, ent.Comp.LightningPrototypes[zapPowerNorm - 1]);
+        var comp = ent.Comp;
+        var powerRatio = comp.Power * zapModifier / comp.PowerPenaltyThreshold;
+        var clampedRatio = MathHelper.Clamp01(powerRatio);
+        var zapPowerNorm = (int)((comp.LightningPrototypes.Length - 1) * clampedRatio);
+
+        _lightning.ShootRandomLightnings(ent, 3.5f, comp.Power > comp.PowerPenaltyThreshold ? 3 : 1, comp.LightningPrototypes[zapPowerNorm]);
     }
 
     /// <summary>
@@ -33,44 +36,41 @@ public sealed partial class SupermatterSystem
     /// </summary>
     private void Delam(Entity<SupermatterComponent> ent)
     {
-        var xform = Transform(ent.Owner);
+        var comp = ent.Comp;
 
-        var delamType = GetDelamType(ent);
+        // If not delamming, then start. If delamming and under delam point, cancel.
+        comp.Delamming = !comp.Delamming || comp.Damage >= comp.DelaminationPoint;
 
-        if (!ent.Comp.Delamming)
+        // In both cases let everyone know
+        if (!comp.Delamming || comp.Damage < comp.DelaminationPoint)
         {
-            ent.Comp.Delamming = true;
-            HandleAnnouncements(ent);
-        }
-        if (ent.Comp.Damage < ent.Comp.DelaminationPoint && ent.Comp.Delamming)
-        {
-            ent.Comp.Delamming = false;
             HandleAnnouncements(ent);
         }
 
-        ent.Comp.DelamTimerAccumulator++;
+        comp.DelamTimerAccumulator++;
 
-        if (ent.Comp.DelamTimer > ent.Comp.DelamTimerAccumulator)
-            return;
-
-        switch (delamType)
+        if (comp.DelamTimerAccumulator >= comp.DelamTimer)
         {
-            case DelamType.Explosion:
-            default:
-                _explosion.TriggerExplosive(ent.Owner);
-                break;
+            var coords = Transform(ent).Coordinates;
+            switch (GetDelamType(ent))
+            {
+                // Also catches DelamType.Explosion
+                default:
+                    _explosion.TriggerExplosive(ent);
+                    break;
 
-            case DelamType.Singulo:
-                Spawn(ent.Comp.SingularityPrototypeId, xform.Coordinates);
-                break;
+                case DelamType.Singulo:
+                    Spawn(comp.SingularityPrototypeId, coords);
+                    break;
 
-            case DelamType.Tesla:
-                Spawn(ent.Comp.TeslaPrototypeId, xform.Coordinates);
-                break;
+                case DelamType.Tesla:
+                    Spawn(comp.TeslaPrototypeId, coords);
+                    break;
 
-            case DelamType.Cascade:
-                Spawn(ent.Comp.SupermatterKudzuPrototypeId, xform.Coordinates);
-                break;
+                case DelamType.Cascade:
+                    Spawn(comp.SupermatterKudzuPrototypeId, coords);
+                    break;
+            }
         }
     }
 
@@ -79,12 +79,10 @@ public sealed partial class SupermatterSystem
     /// </summary>
     public DelamType GetDelamType(Entity<SupermatterComponent> ent)
     {
-        if (_atmosphere.TryGetContainingMixture(out var mix, ent.Owner))
-        {
-            if (mix.TotalMoles >= ent.Comp.MolePenaltyThreshold)
-                return DelamType.Singulo;
-        }
-        if (ent.Comp.Power >= ent.Comp.PowerPenaltyThreshold)
+        var comp = ent.Comp;
+        if (_atmosphere.TryGetContainingMixture(out var mix, ent.Owner) && mix.TotalMoles >= comp.MolePenaltyThreshold)
+            return DelamType.Singulo;
+        if (comp.Power >= comp.PowerPenaltyThreshold)
             return DelamType.Tesla;
 
         return DelamType.Explosion;
