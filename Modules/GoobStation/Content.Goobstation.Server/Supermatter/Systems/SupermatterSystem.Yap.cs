@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-
 using Content.Goobstation.Shared.Supermatter.Components;
 using System.Text;
 
@@ -15,71 +14,68 @@ public sealed partial class SupermatterSystem
     /// </summary>
     private void HandleAnnouncements(Entity<SupermatterComponent> ent)
     {
-        var message = string.Empty;
-        var global = false;
+        var sm = ent.Comp;
 
-        var integrity = ent.Comp.GetIntegrity().ToString("0.00");
-
-        // Delam is happening
-        if (ent.Comp is { Delamming: true, DelamAnnounced: false })
+        // Is a delamination actively starting?
+        if (sm is { Delamming: true, DelamAnnounced: false })
         {
-            var sb = new StringBuilder();
-            var alertLevel = "yellow";
-
-            string? loc;
-            switch (GetDelamType(ent))
-            {
-                default:
-                    loc = "supermatter-delam-explosion";
-                    break;
-
-                case DelamType.Singulo:
-                    loc = "supermatter-delam-overmass";
-                    alertLevel = "delta";
-                    break;
-
-                case DelamType.Tesla:
-                    loc = "supermatter-delam-tesla";
-                    alertLevel = "delta";
-                    break;
-
-                case DelamType.Cascade:
-                    loc = "supermatter-delam-cascade";
-                    alertLevel = "delta";
-                    break;
-            }
-
-            var station = _station.GetOwningStation(ent);
-            if (station != null)
-                _alert.SetLevel((EntityUid)station, alertLevel, true, true, true);
-
-            sb.AppendLine(Loc.GetString(loc));
-            sb.AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", ent.Comp.DelamTimer)));
-
-            message = sb.ToString();
-            global = true;
-            ent.Comp.DelamAnnounced = true;
-
-            _chat.DispatchSupermatterAnnouncement(ent, message, global);
+            AnnounceDelamStart(ent);
             return;
         }
 
-        // Delam stopped, let everyone know.
-        if (ent.Comp.Damage < ent.Comp.DelaminationPoint && ent.Comp.Delamming)
+        // Was a delamination just averted?
+        if (sm is { Delamming: true } && sm.Damage < sm.DelaminationPoint)
         {
-            message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
-            ent.Comp.DelamAnnounced = false;
-            global = true;
-            _chat.DispatchSupermatterAnnouncement(ent, message, global);
+            AnnounceDelamStop(ent);
             return;
         }
 
-        // We are not taking consistent damage. Engis/warn not needed.
-        if (ent.Comp.DamageDelta >= 0)
+        // If we are not actively taking damage, skip routine warnings.
+        if (sm.DamageDelta >= 0)
             return;
 
-        // Check if we need to warn anyone
-        switch (ent.Comp.Damage)
+        // Handle routine damage thresholds.
+        HandleDamageWarnings(ent);
+    }
+
+    private void AnnounceDelamStart(Entity<SupermatterComponent> ent)
+    {
+        var sm = ent.Comp;
+        var (locId, alertLevel) = GetDelamAlertDetails(ent);
+
+        // Alert the station
+        var station = _station.GetOwningStation(ent);
+        if (station != null)
+            _alert.SetLevel((EntityUid)station, alertLevel, true, true, true);
+
+        // Build and dispatch the announcement
+        var sb = new StringBuilder();
+        sb.AppendLine(Loc.GetString(locId));
+        sb.AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", sm.DelamTimer)));
+
+        sm.DelamAnnounced = true;
+        _chat.DispatchSupermatterAnnouncement(ent, sb.ToString(), global: true);
+    }
+
+    private void AnnounceDelamStop(Entity<SupermatterComponent> ent)
+    {
+        var sm = ent.Comp;
+        var integrity = sm.GetIntegrityString();
+        var message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
+
+        sm.DelamAnnounced = false;
+        _chat.DispatchSupermatterAnnouncement(ent, message, global: true);
+    }
+
+    private void HandleDamageWarnings(Entity<SupermatterComponent> ent)
+    {
+        var sm = ent.Comp;
+        var integrity = sm.GetIntegrityString();
+
+        string message;
+        bool global = false;
+
+        switch (sm.Damage)
         {
             case >= SupermatterComponent.EmergencyPoint:
                 message = Loc.GetString("supermatter-emergency", ("integrity", integrity));
@@ -88,8 +84,24 @@ public sealed partial class SupermatterSystem
             case >= SupermatterComponent.WarningPoint:
                 message = Loc.GetString("supermatter-warning", ("integrity", integrity));
                 break;
+            default:
+                return; // No warning threshold met
         }
 
         _chat.DispatchSupermatterAnnouncement(ent, message, global);
+    }
+
+    /// <summary>
+    ///     Maps a delamination type to its localization ID and alert level.
+    /// </summary>
+    private (string LocId, string AlertLevel) GetDelamAlertDetails(Entity<SupermatterComponent> ent)
+    {
+        return GetDelamType(ent) switch
+        {
+            DelamType.Singulo => ("supermatter-delam-overmass", "delta"),
+            DelamType.Tesla => ("supermatter-delam-tesla", "delta"),
+            DelamType.Cascade => ("supermatter-delam-cascade", "delta"),
+            _ => ("supermatter-delam-explosion", "yellow")
+        };
     }
 }

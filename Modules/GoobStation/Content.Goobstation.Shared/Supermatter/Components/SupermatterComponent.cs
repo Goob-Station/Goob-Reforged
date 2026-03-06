@@ -396,6 +396,11 @@ public sealed partial class SupermatterComponent : Component
         integrity = integrity < 0 ? 0 : integrity;
         return integrity;
     }
+
+    public string GetIntegrityString(string? format = "0.00")
+    {
+        return GetIntegrity().ToString(format);
+    }
 }
 
 [Serializable, NetSerializable]

@@ -3,11 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using Content.Goobstation.Shared.Supermatter.Components;
-using Content.Server.Audio;
-using Content.Server.DoAfter;
-using Content.Shared.Administration.Logs;
 using Content.Shared.Atmos;
-using Content.Shared.Chat;
 using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
@@ -121,7 +117,7 @@ public sealed partial class SupermatterSystem
         sm.Damage += sm.DelaminationPoint / 10;
         sm.DamageDelta += sm.DelaminationPoint / 10;
 
-        var integrity = sm.GetIntegrity().ToString("0.00");
+        var integrity = sm.GetIntegrityString();
         _chat.DispatchSupermatterAnnouncement(uid, Loc.GetString("supermatter-announcement-cc-tamper", ("integrity", integrity)), true, "Central Command");
 
         Spawn(sm.SliverPrototypeId, _transform.GetMapCoordinates(args.User));
@@ -135,7 +131,7 @@ public sealed partial class SupermatterSystem
         // get all close and personal to it
         if (args.IsInDetailsRange)
         {
-            args.PushMarkup(Loc.GetString("supermatter-examine-integrity", ("integrity", sm.GetIntegrity().ToString("0.00"))));
+            args.PushMarkup(Loc.GetString("supermatter-examine-integrity", ("integrity", sm.GetIntegrityString())));
         }
     }
 
