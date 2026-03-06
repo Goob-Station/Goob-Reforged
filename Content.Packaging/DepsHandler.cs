@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Content.Packaging;
@@ -55,6 +59,30 @@ public sealed class DepsHandler
         {
             RecursiveAddLibraries(dep, set);
         }
+    }
+
+    public static HashSet<string> GetModuleUniqueAssemblies(string coreDepsPath, string moduleDepsPath)
+    {
+        var core = Load(coreDepsPath);
+        var module = Load(moduleDepsPath);
+
+        var unique = new HashSet<string>(module.Libraries.Keys);
+        unique.ExceptWith(core.Libraries.Keys);
+
+        return unique;
+    }
+
+    public static IEnumerable<string> GetModuleUniqueDlls(string coreDepsPath, string moduleDepsPath)
+    {
+        var core = Load(coreDepsPath);
+        var module = Load(moduleDepsPath);
+
+        var uniqueLibs = new HashSet<string>(module.Libraries.Keys);
+        uniqueLibs.ExceptWith(core.Libraries.Keys);
+
+        return uniqueLibs
+            .Where(lib => module.Libraries.ContainsKey(lib))
+            .SelectMany(lib => module.Libraries[lib].GetDllNames());
     }
 
     public sealed class DepsData

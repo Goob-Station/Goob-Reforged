@@ -3,7 +3,6 @@
       <TargetFramework>$(TargetFramework)</TargetFramework>
       <IsPackable>false</IsPackable>
       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-      <OutputPath>..\..\..\bin\Content.Client\</OutputPath>
       <OutputType Condition="'$(FullRelease)' != 'True'">Exe</OutputType>
       <WarningsAsErrors>nullable</WarningsAsErrors>
       <Nullable>enable</Nullable>

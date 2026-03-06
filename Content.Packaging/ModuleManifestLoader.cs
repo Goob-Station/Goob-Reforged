@@ -35,6 +35,7 @@ public static class ModuleManifestLoader
             Name = GetRequiredString(root, "name", manifestPath),
             Id = GetRequiredString(root, "id", manifestPath),
             Version = GetRequiredString(root, "version", manifestPath),
+            Disabled = root.TryGet("disabled", out var disabledNode) && disabledNode is ValueDataNode disabledVal && bool.TryParse(disabledVal.Value, out var disabled) && disabled,
         };
 
         if (!IsValidId(manifest.Id))
