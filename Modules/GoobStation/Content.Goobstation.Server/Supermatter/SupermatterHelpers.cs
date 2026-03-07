@@ -131,7 +131,7 @@ internal static class SupermatterExtensions
         ///     Help the SM announce something.
         /// </summary>
         /// <param name="uid">Supermatter to say the announcement from.</param>
-        /// <param name="message"></param>
+        /// <param name="message">Message to be sent</param>
         /// <param name="global">If true, does the station announcement.</param>
         /// <param name="customSender">Sender for when global is true.</param>
         public void DispatchSupermatterAnnouncement(EntityUid uid, string message, bool global = false, string? customSender = null)

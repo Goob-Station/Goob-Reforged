@@ -404,7 +404,4 @@ public sealed partial class SupermatterComponent : Component
 }
 
 [Serializable, NetSerializable]
-public sealed partial class SupermatterDoAfterEvent : SimpleDoAfterEvent
-{
-
-}
+public sealed class SupermatterDoAfterEvent : SimpleDoAfterEvent;

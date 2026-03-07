@@ -73,7 +73,7 @@ public sealed partial class SupermatterSystem
         var integrity = sm.GetIntegrityString();
 
         string message;
-        bool global = false;
+        var global = false;
 
         switch (sm.Damage)
         {
