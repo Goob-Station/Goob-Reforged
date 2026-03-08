@@ -17,18 +17,37 @@ namespace Content.Goobstation.Server.Supermatter;
 /// <para><see cref="AtmosphereSystem.Merge(GasMixture, GasMixture)"/> is automatically called at the end -
 /// use <see cref="GasMixture"/> instead if you want to handle it manually</para>
 /// </summary>
-internal readonly struct GasWrapper(GasMixture mix, float ratio, AtmosphereSystem atmosphereContext) : IDisposable
+/// <param name="mix">Mix to use.</param>
+/// <param name="ratio">How much do you want split off.</param>
+/// <param name="atmosphereContext">Atmosphere system to use for re-merging</param>
+internal readonly struct GasWrapper(GasMixture mix, float ratio, AtmosphereSystem atmosphereContext) : IDisposable, IEquatable<GasWrapper>
 {
     private readonly GasMixture _surrounding = mix;
 
     /// <summary>
     /// The split off part of your gas.
     /// </summary>
-    public readonly GasMixture Gas = mix.RemoveRatio(ratio);
+    internal readonly GasMixture Gas = mix.RemoveRatio(ratio);
 
     public void Dispose()
     {
         atmosphereContext.Merge(_surrounding, Gas);
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is GasWrapper wrapper && Equals(wrapper);
+    }
+
+    public bool Equals(GasWrapper other)
+    {
+        return EqualityComparer<GasMixture>.Default.Equals(_surrounding, other._surrounding) &&
+               EqualityComparer<GasMixture>.Default.Equals(Gas, other.Gas);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_surrounding, Gas);
     }
 }
 
@@ -36,11 +55,9 @@ internal static class SupermatterExtensions
 {
     extension(GasMixture gasMix)
     {
-        /// <summary>
-        /// Get SM related data about a provided gas mix.
-        /// </summary>
+        /// <summary>Get SM related data about a provided gas mix.</summary>
         /// <returns>A selection of values, check <see cref="SupermatterComponent.GasDataFields(Gas)"/></returns>
-        public (float radModifier, float zapModifier, float moleModifier, float heatModifier, float heatResistModifier) GetGasModifiers()
+        internal (float radModifier, float zapModifier, float moleModifier, float heatModifier, float heatResistModifier) GetGasModifiers()
         {
             var totalMoles = gasMix.TotalMoles;
 
@@ -63,7 +80,9 @@ internal static class SupermatterExtensions
 
                 // Skip doing math if there's none of this gas in the mix
                 if (proportion <= 0f)
+                {
                     continue;
+                }
 
                 var (radMod, zapMod, heatMod, moleMod, heatResistMod) = SupermatterComponent.GasDataFields(gas);
 
@@ -84,18 +103,14 @@ internal static class SupermatterExtensions
             );
         }
 
-        public float GetGasMolarPercentage(Gas gas)
+        internal float GetGasMolarPercentage(Gas gas)
         {
-            if (gasMix.TotalMoles <= 0f)
-                return 0f;
-            return gasMix.GetMoles(gas) / gasMix.TotalMoles;
+            return gasMix.TotalMoles <= 0f ? 0f : gasMix.GetMoles(gas) / gasMix.TotalMoles;
         }
 
-        public float GetGasMolarPercentage(int gas)
+        internal float GetGasMolarPercentage(int gas)
         {
-            if (gasMix.TotalMoles <= 0f)
-                return 0f;
-            return gasMix.GetMoles(gas) / gasMix.TotalMoles;
+            return gasMix.TotalMoles <= 0f ? 0f : gasMix.GetMoles(gas) / gasMix.TotalMoles;
         }
     }
 
@@ -112,29 +127,22 @@ internal static class SupermatterExtensions
         /// <param name="excite">If true, will mark the tile as active for atmosphereContext processing. True by default!</param>
         /// <returns>True when a mix has been found, false otherwise</returns>
         /// <remarks>Non-obvious behavior - it'll also return false when mix is <= 0 moles</remarks>
-        public bool TryGetContainingMixture([NotNullWhen(true)] out GasMixture? mix, EntityUid ent, bool ignoreExposed = true, bool excite = true)
+        internal bool TryGetContainingMixture([NotNullWhen(true)] out GasMixture? mix, in EntityUid ent, bool ignoreExposed = true, bool excite = true)
         {
             mix = atmosContext.GetContainingMixture(ent, ignoreExposed, excite);
 
-            if (mix is not { })
-                return false;
-
-            if (mix.TotalMoles <= 0f)
-                return false;
-            return false;
+            return mix?.TotalMoles > 0f;
         }
     }
 
     extension(ChatSystem chatContext)
     {
-        /// <summary>
-        ///     Help the SM announce something.
-        /// </summary>
+        /// <summary>Help the SM announce something.</summary>
         /// <param name="uid">Supermatter to say the announcement from.</param>
         /// <param name="message">Message to be sent</param>
         /// <param name="global">If true, does the station announcement.</param>
         /// <param name="customSender">Sender for when global is true.</param>
-        public void DispatchSupermatterAnnouncement(EntityUid uid, string message, bool global = false, string? customSender = null)
+        internal void DispatchSupermatterAnnouncement(in EntityUid uid, string message, bool global = false, string? customSender = null)
         {
             if (global)
             {
@@ -142,7 +150,7 @@ internal static class SupermatterExtensions
                 chatContext.DispatchStationAnnouncement(uid, message, sender, colorOverride: Color.Yellow);
                 return;
             }
-            chatContext.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, hideChat: false, checkRadioPrefix: true);
+            chatContext.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, hideChat: false);
         }
     }
 }

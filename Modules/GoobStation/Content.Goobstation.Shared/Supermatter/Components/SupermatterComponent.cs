@@ -256,11 +256,7 @@ public sealed class SupermatterComponent : Component
     /// </remarks>
     public static (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod) GasDataFields(Gas gas)
     {
-        if (GasFacts.TryGetValue(gas, out var value))
-        {
-            return value;
-        }
-        return (0f, 0f, 0f, 0f, 0f);
+        return GasFacts.TryGetValue(gas, out var value) ? value : (0f, 0f, 0f, 0f, 0f);
     }
 
     private static readonly Dictionary<Gas, (float RadMod, float ZapMod, float HeatMod, float MoleMod, float HeatResistMod)> GasFacts =
