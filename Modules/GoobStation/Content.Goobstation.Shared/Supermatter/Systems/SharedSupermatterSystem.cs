@@ -14,13 +14,13 @@ public abstract class SharedSupermatterSystem : EntitySystem
         SubscribeLocalEvent<SupermatterComponent, ComponentStartup>(OnSupermatterStartup);
     }
 
-    public enum SuperMatterSound : sbyte
+    public enum SuperMatterSound : System.Int32
     {
         Aggressive = 0,
         Delam = 1
     }
 
-    public enum DelamType : sbyte
+    public enum DelamType : System.Int32
     {
         Explosion = 0,
         Singulo = 1,

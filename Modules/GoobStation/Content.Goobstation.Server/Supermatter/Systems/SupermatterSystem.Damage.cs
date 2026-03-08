@@ -4,6 +4,7 @@
 
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Shared.Atmos;
+using System;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 

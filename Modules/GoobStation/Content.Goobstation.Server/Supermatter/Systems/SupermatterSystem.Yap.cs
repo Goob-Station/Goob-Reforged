@@ -60,7 +60,7 @@ public sealed partial class SupermatterSystem
     private void AnnounceDelamStop(Entity<SupermatterComponent> ent)
     {
         var sm = ent.Comp;
-        var integrity = sm.GetIntegrityString();
+        var integrity = sm.IntegrityString;
         var message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
 
         sm.DelamAnnounced = false;
@@ -70,7 +70,7 @@ public sealed partial class SupermatterSystem
     private void HandleDamageWarnings(Entity<SupermatterComponent> ent)
     {
         var sm = ent.Comp;
-        var integrity = sm.GetIntegrityString();
+        var integrity = sm.IntegrityString;
 
         string message;
         var global = false;
