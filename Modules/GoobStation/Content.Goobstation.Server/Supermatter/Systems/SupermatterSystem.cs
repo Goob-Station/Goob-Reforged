@@ -57,7 +57,9 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         base.Update(frameTime);
 
         if (!_gameTiming.IsFirstTimePredicted)
+        {
             return;
+        }
 
         var smEqe = EntityManager.EntityQueryEnumerator<SupermatterComponent>();
 
@@ -65,7 +67,9 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         {
             var ent = (entity, comp);
             if (!comp.Activated)
+            {
                 continue;
+            }
 
             comp.UpdateAccumulator += frameTime;
 
@@ -82,7 +86,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         ent.Comp.ZapAccumulator++;
         ent.Comp.YellAccumulator++;
 
-        ProcessAtmos(ent.Owner, ent.Comp);
+        ProcessAtmos(ent);
         HandleDamage(ent);
 
         if (ent.Comp.Damage >= ent.Comp.DelaminationPoint || ent.Comp.Delamming)
@@ -98,11 +102,12 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
             Zap(ent);
         }
 
-        if (ent.Comp.YellAccumulator >= ent.Comp.YellTimer)
+        if (ent.Comp.YellAccumulator < ent.Comp.YellTimer)
         {
-            ent.Comp.YellAccumulator -= ent.Comp.YellTimer;
-            HandleAnnouncements(ent);
+            return;
         }
+        ent.Comp.YellAccumulator -= ent.Comp.YellTimer;
+        HandleAnnouncements(ent);
     }
 
     private void HandleSoundLoop(SupermatterComponent sm)
@@ -119,7 +124,9 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         var smSound = isDelamming ? SuperMatterSound.Delam : SuperMatterSound.Aggressive;
 
         if (sm.SmSound == smSound)
+        {
             return;
+        }
 
         sm.AudioStream = _audio.Stop(sm.AudioStream);
         sm.SmSound = smSound;

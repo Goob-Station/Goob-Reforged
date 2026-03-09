@@ -126,7 +126,7 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>Time until delam</summary>
     [DataField]
-    public float DelamTimer { get; } = 120f;
+    public float DelamTimer { get; set; } = 120f;
 
     /// <summary>Timer for delam</summary>
     [ViewVariables(VVAccess.ReadOnly)]
@@ -288,7 +288,7 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>There has to be a way to serialize this properly</summary>
     [DataField]
-    public ICollection<string> LightningPrototypes { get; } =
+    public IReadOnlyList<string> LightningPrototypes { get; } =
     [
         "Lightning",
         "ChargedLightning",

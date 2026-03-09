@@ -4,15 +4,13 @@
 
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Shared.Atmos;
-using System;
 
 namespace Content.Goobstation.Server.Supermatter.Systems;
 
 public sealed partial class SupermatterSystem
 {
-    /// <summary>
-    ///     Handles environmental damage.
-    /// </summary>
+    /// <summary>Handles environmental damage.</summary>
+    /// <param name="ent">Entity to process receiving damage for</param>
     private void HandleDamage(Entity<SupermatterComponent> ent)
     {
         var sm = ent.Comp;

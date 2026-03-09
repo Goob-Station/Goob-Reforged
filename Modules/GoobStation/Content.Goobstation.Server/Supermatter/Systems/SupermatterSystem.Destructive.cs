@@ -9,9 +9,8 @@ namespace Content.Goobstation.Server.Supermatter.Systems;
 
 public sealed partial class SupermatterSystem
 {
-    /// <summary>
-    ///     Shoot lightning bolts depensing on accumulated power.
-    /// </summary>
+    /// <summary>Shoot lightning bolts depensing on accumulated power.</summary>
+    /// <param name="ent">Entity to shoot lightning from.</param>
     private void Zap(Entity<SupermatterComponent> ent)
     {
         var zapModifier = 1f;
@@ -26,14 +25,13 @@ public sealed partial class SupermatterSystem
         var comp = ent.Comp;
         var powerRatio = comp.Power * zapModifier / comp.PowerPenaltyThreshold;
         var clampedRatio = MathHelper.Clamp01(powerRatio);
-        var zapPowerNorm = (int)((comp.LightningPrototypes.Length - 1) * clampedRatio);
+        var zapPowerNorm = Convert.ToInt32((comp.LightningPrototypes.Count - 1) * clampedRatio);
 
         _lightning.ShootRandomLightnings(ent, 3.5f, comp.Power > comp.PowerPenaltyThreshold ? 3 : 1, comp.LightningPrototypes[zapPowerNorm]);
     }
 
-    /// <summary>
-    ///     Handle the end of the station.
-    /// </summary>
+    /// <summary>Handle the end of the station.</summary>
+    /// <param name="ent">Entity to use as basis.</param>
     private void Delam(Entity<SupermatterComponent> ent)
     {
         var comp = ent.Comp;
@@ -49,42 +47,42 @@ public sealed partial class SupermatterSystem
 
         comp.DelamTimerAccumulator++;
 
-        if (comp.DelamTimerAccumulator >= comp.DelamTimer)
+        if (comp.DelamTimerAccumulator < comp.DelamTimer)
         {
-            var coords = Transform(ent).Coordinates;
-            switch (GetDelamType(ent))
-            {
-                // Also catches DelamType.Explosion
-                default:
-                    _explosion.TriggerExplosive(ent);
-                    break;
+            return;
+        }
+        var coords = Transform(ent).Coordinates;
+        switch (GetDelamType(ent))
+        {
+            // Also catches DelamType.Explosion
+            default:
+                _explosion.TriggerExplosive(ent);
+                break;
 
-                case DelamType.Singulo:
-                    Spawn(comp.SingularityPrototypeId, coords);
-                    break;
+            case DelamType.Singulo:
+                Spawn(comp.SingularityPrototypeId, coords);
+                break;
 
-                case DelamType.Tesla:
-                    Spawn(comp.TeslaPrototypeId, coords);
-                    break;
+            case DelamType.Tesla:
+                Spawn(comp.TeslaPrototypeId, coords);
+                break;
 
-                case DelamType.Cascade:
-                    Spawn(comp.SupermatterKudzuPrototypeId, coords);
-                    break;
-            }
+            case DelamType.Cascade:
+                Spawn(comp.SupermatterKudzuPrototypeId, coords);
+                break;
         }
     }
 
-    /// <summary>
-    ///     Decide on how to delaminate.
-    /// </summary>
-    public DelamType GetDelamType(Entity<SupermatterComponent> ent)
+    /// <summary>Decide on how to delaminate.</summary>
+    /// <param name="ent">Entity to retrieve the delam type for.</param>
+    internal DelamType GetDelamType(Entity<SupermatterComponent> ent)
     {
         var comp = ent.Comp;
         if (_atmosphere.TryGetContainingMixture(out var mix, ent.Owner) && mix.TotalMoles >= comp.MolePenaltyThreshold)
+        {
             return DelamType.Singulo;
-        if (comp.Power >= comp.PowerPenaltyThreshold)
-            return DelamType.Tesla;
+        }
 
-        return DelamType.Explosion;
+        return comp.Power >= comp.PowerPenaltyThreshold ? DelamType.Tesla : DelamType.Explosion;
     }
 }

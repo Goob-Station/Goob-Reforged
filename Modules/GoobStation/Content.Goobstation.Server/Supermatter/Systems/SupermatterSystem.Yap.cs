@@ -9,9 +9,8 @@ namespace Content.Goobstation.Server.Supermatter.Systems;
 
 public sealed partial class SupermatterSystem
 {
-    /// <summary>
-    ///     Handles announcements.
-    /// </summary>
+    /// <summary>Handles announcements.</summary>
+    /// <param name="ent">Entity to parse announcements for</param>
     private void HandleAnnouncements(Entity<SupermatterComponent> ent)
     {
         var sm = ent.Comp;
@@ -32,7 +31,9 @@ public sealed partial class SupermatterSystem
 
         // If we are not actively taking damage, skip routine warnings.
         if (sm.DamageDelta >= 0)
+        {
             return;
+        }
 
         // Handle routine damage thresholds.
         HandleDamageWarnings(ent);
@@ -44,14 +45,15 @@ public sealed partial class SupermatterSystem
         var (locId, alertLevel) = GetDelamAlertDetails(ent);
 
         // Alert the station
-        var station = _station.GetOwningStation(ent);
-        if (station != null)
-            _alert.SetLevel((EntityUid)station, alertLevel, true, true, true);
+        if (_station.GetOwningStation(ent) is { } station)
+        {
+            _alert.SetLevel(station, alertLevel, playSound: true, announce: true, force: true);
+        }
 
         // Build and dispatch the announcement
         var sb = new StringBuilder();
-        sb.AppendLine(Loc.GetString(locId));
-        sb.AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", sm.DelamTimer)));
+        sb.AppendLine(Loc.GetString(locId))
+            .AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", sm.DelamTimer)));
 
         sm.DelamAnnounced = true;
         _chat.DispatchSupermatterAnnouncement(ent, sb.ToString(), global: true);
@@ -90,10 +92,6 @@ public sealed partial class SupermatterSystem
 
         _chat.DispatchSupermatterAnnouncement(ent, message, global);
     }
-
-    /// <summary>
-    ///     Maps a delamination type to its localization ID and alert level.
-    /// </summary>
     private (string LocId, string AlertLevel) GetDelamAlertDetails(Entity<SupermatterComponent> ent)
     {
         return GetDelamType(ent) switch
