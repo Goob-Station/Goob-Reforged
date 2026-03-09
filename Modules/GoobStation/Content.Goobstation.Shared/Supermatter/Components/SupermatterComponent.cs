@@ -46,7 +46,11 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>Ratio of matter power to power conversion rate. 1 mob = 10 matter power</summary>
     [DataField]
-    public float MatterPowerConversion { get; set; } = 1f;
+    public float MatterPowerConversion { get; } = 1f;
+
+    /// <summary>How much matter power is conusmed per cycle.</summary>
+    [DataField]
+    public float MatterPowerConsumedPerCycle { get; } = 1f;
 
     /// <summary>The portion of the gasmix we're on. Relevant for gas processing but not for plain checks.</summary>
     [DataField]
@@ -59,13 +63,6 @@ public sealed class SupermatterComponent : Component
     #endregion SM Base
 
     #region SM Calculation
-
-    /// <summary>
-    /// Based on co2 percentage, slowly moves between
-    /// 0 and 1. We use it to calc the powerloss_inhibitor
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    public float PowerlossDynamicScaling { get; }
 
     /// <summary>
     /// Multiplier on damage the core takes from absorbing hot gas
@@ -97,6 +94,10 @@ public sealed class SupermatterComponent : Component
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
     public float OxygenReleaseEfficiencyModifier { get; } = 0.0031f;
+
+    /// <summary>Amount of energy a mole of ammonia gives.</summary>
+    [ViewVariables(VVAccess.ReadOnly)]
+    public float AmmoniaEnergyPerMole { get; } = 1f;
 
     #endregion SM Calculation
 
