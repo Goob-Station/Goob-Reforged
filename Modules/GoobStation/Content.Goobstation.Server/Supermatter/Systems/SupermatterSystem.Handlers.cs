@@ -155,18 +155,8 @@ public sealed partial class SupermatterSystem
         args.PushMarkup(Loc.GetString("supermatter-examine-integrity", ("integrity", ent.Comp.IntegrityString)));
     }
 
-    private void OnComponentRemove(Entity<SupermatterComponent> ent, ref ComponentRemove args)
-    {
-        // turn off any ambient if component is removed (ex. entity deleted)
-        _ambient.SetAmbience(ent, value: false);
-        ent.Comp.AudioStream = _audio.Stop(ent.Comp.AudioStream);
-    }
-
     private void OnMapInit(Entity<SupermatterComponent> ent, ref MapInitEvent args)
     {
-        // Set the Sound
-        _ambient.SetAmbience(ent, value: true);
-
         // Add Air to the initialized SM in the Map so it doesn't delam on default
         if (!_atmosphere.TryGetContainingMixture(out var mix, ent))
         {

@@ -9,7 +9,6 @@ using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
-using static Content.Goobstation.Shared.Supermatter.Systems.SharedSupermatterSystem;
 
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
@@ -319,20 +318,8 @@ public sealed class SupermatterComponent : Component
 
     #endregion SM Prototypes
 
-    #region SM Sound
-
-    /// <summary>Current stream of SM audio.</summary>
-    public EntityUid? AudioStream { get; set; }
-
-    public SuperMatterSound? SmSound { get; set; }
-
     [DataField]
     public SoundSpecifier DustSound { get; } = new SoundPathSpecifier("/Audio/Supermatter/dust.ogg");
-
-    [DataField] // TODO: Why is this here???? It's unused.
-    public SoundSpecifier DelamSound { get; } = new SoundPathSpecifier("/Audio/Supermatter/delamming.ogg");
-
-    #endregion SM Sound
 
     #region Helper functions
 

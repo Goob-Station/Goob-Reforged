@@ -6,7 +6,6 @@ using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Goobstation.Shared.Supermatter.Systems;
 using Content.Server.AlertLevel;
 using Content.Server.Atmos.EntitySystems;
-using Content.Server.Audio;
 using Content.Server.Chat.Systems;
 using Content.Server.DoAfter;
 using Content.Server.Explosion.EntitySystems;
@@ -33,7 +32,6 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     [Dependency] private readonly AlertLevelSystem _alert = null!;
     [Dependency] private readonly StationSystem _station = null!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = null!;
-    [Dependency] private readonly AmbientSoundSystem _ambient = null!;
     [Dependency] private readonly DoAfterSystem _doAfter = null!;
     [Dependency] private readonly SharedTransformSystem _transform = null!;
     [Dependency] private readonly ISharedAdminLogManager _adminLog = null!;
@@ -43,7 +41,6 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SupermatterComponent, ComponentRemove>(OnComponentRemove);
         SubscribeLocalEvent<SupermatterComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<SupermatterComponent, StartCollideEvent>(OnCollideEvent);
         SubscribeLocalEvent<SupermatterComponent, InteractHandEvent>(OnHandInteract);
@@ -94,8 +91,6 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
             Delam(ent);
         }
 
-        HandleSoundLoop(ent.Comp);
-
         if (ent.Comp.ZapAccumulator >= ent.Comp.ZapPeriod)
         {
             ent.Comp.ZapAccumulator -= ent.Comp.ZapPeriod;
@@ -108,27 +103,5 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         }
         ent.Comp.YapTimer -= ent.Comp.YapPeriod;
         HandleAnnouncements(ent);
-    }
-
-    private void HandleSoundLoop(SupermatterComponent sm)
-    {
-        var isAggressive = sm.Damage > SupermatterComponent.WarningPoint;
-        var isDelamming = sm.Damage > sm.DelaminationPoint;
-
-        if (!isAggressive && !isDelamming)
-        {
-            sm.AudioStream = _audio.Stop(sm.AudioStream);
-            return;
-        }
-
-        var smSound = isDelamming ? SuperMatterSound.Delam : SuperMatterSound.Aggressive;
-
-        if (sm.SmSound == smSound)
-        {
-            return;
-        }
-
-        sm.AudioStream = _audio.Stop(sm.AudioStream);
-        sm.SmSound = smSound;
     }
 }
