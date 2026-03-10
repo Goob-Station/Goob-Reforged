@@ -45,9 +45,9 @@ public sealed partial class SupermatterSystem
             HandleAnnouncements(ent);
         }
 
-        comp.DelamTimerAccumulator++;
+        comp.DelamTimer++;
 
-        if (comp.DelamTimerAccumulator < comp.DelamTimer)
+        if (comp.DelamTimer < comp.DelamDuration)
         {
             return;
         }

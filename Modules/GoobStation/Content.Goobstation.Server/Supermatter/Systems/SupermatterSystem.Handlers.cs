@@ -122,11 +122,12 @@ public sealed partial class SupermatterSystem
 
     private void OnGetSliver(Entity<SupermatterComponent> ent, ref SupermatterDoAfterEvent args)
     {
-        if (args.Cancelled)
+        var sm = ent.Comp;
+
+        if (args.Cancelled || sm.SliverRemoved)
         {
             return;
         }
-        var sm = ent.Comp;
 
         sm.SliverRemoved = true;
         // 10% of total durability
@@ -137,11 +138,11 @@ public sealed partial class SupermatterSystem
 
         Spawn(sm.SliverPrototypeId, _transform.GetMapCoordinates(args.User));
 
-        if (sm.DelamTimer <= 30f)
+        if (sm.DelamDuration <= 30f)
         {
             return;
         }
-        sm.DelamTimer -= 10f;
+        sm.DelamDuration -= 10f;
     }
 
     private void OnExamine(Entity<SupermatterComponent> ent, ref ExaminedEvent args)

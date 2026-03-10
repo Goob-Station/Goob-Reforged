@@ -73,9 +73,9 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
             comp.UpdateAccumulator += frameTime;
 
-            if (comp.UpdateAccumulator >= comp.UpdateTimer)
+            if (comp.UpdateAccumulator >= comp.UpdatePeriod)
             {
-                comp.UpdateAccumulator -= comp.UpdateTimer;
+                comp.UpdateAccumulator -= comp.UpdatePeriod;
                 Cycle(ent);
             }
         }
@@ -84,7 +84,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     public void Cycle(Entity<SupermatterComponent> ent)
     {
         ent.Comp.ZapAccumulator++;
-        ent.Comp.YellAccumulator++;
+        ent.Comp.YapTimer++;
 
         ProcessAtmos(ent);
         HandleDamage(ent);
@@ -96,17 +96,17 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
         HandleSoundLoop(ent.Comp);
 
-        if (ent.Comp.ZapAccumulator >= ent.Comp.ZapTimer)
+        if (ent.Comp.ZapAccumulator >= ent.Comp.ZapPeriod)
         {
-            ent.Comp.ZapAccumulator -= ent.Comp.ZapTimer;
+            ent.Comp.ZapAccumulator -= ent.Comp.ZapPeriod;
             Zap(ent);
         }
 
-        if (ent.Comp.YellAccumulator < ent.Comp.YellTimer)
+        if (ent.Comp.YapTimer < ent.Comp.YapPeriod)
         {
             return;
         }
-        ent.Comp.YellAccumulator -= ent.Comp.YellTimer;
+        ent.Comp.YapTimer -= ent.Comp.YapPeriod;
         HandleAnnouncements(ent);
     }
 
