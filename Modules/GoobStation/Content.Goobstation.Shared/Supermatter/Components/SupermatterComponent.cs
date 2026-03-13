@@ -47,10 +47,10 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>
     /// Multiplier on damage the core takes from absorbing hot gas
-    /// Default is ~1/350
+    /// Default is ~3/7
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float MoleHeatPenalty { get; } = 0.00286f;
+    public float MoleHeatPenalty { get; } = 0.4286f;
 
     /// <summary>
     /// The point at which we should start sending messeges
@@ -85,6 +85,11 @@ public sealed class SupermatterComponent : Component
     /// <summary>How much matter power is consumed and converted to power per cycle.</summary>
     [DataField]
     public float MatterPowerConsumedPerCycle { get; } = 1f;
+
+
+    /// <summary>How much we can lose in a single cycle at most; safeguard more than anything.</summary>
+    [DataField]
+    public float MaxPowerLossFraction { get; } = 0.83f;
 
     #endregion Generic Knobs
 
@@ -167,7 +172,7 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>Multiply outgoing rads by this.</summary>
     [DataField]
-    public float RadiationOutputFactor { get; set; } = 1f;
+    public float RadiationOutputFactor { get; set; } = 0.03f;
 
     #endregion Output Knobs
 

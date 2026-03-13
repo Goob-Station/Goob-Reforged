@@ -69,7 +69,7 @@ public sealed partial class SupermatterSystem
         var powerReduction = float.Pow(sm.Power / powerReductionScaler, 3f);
 
         // Atp power is lowered
-        sm.Power = Math.Max(sm.Power - Math.Min(powerReduction, sm.Power * (1 - 1 / powerReductionScaler)) * co2Modifier, 0f);
+        sm.Power = Math.Max(sm.Power - Math.Min(powerReduction, sm.Power * sm.MaxPowerLossFraction) * co2Modifier, 0f);
 
         #endregion Scale down power
     }
