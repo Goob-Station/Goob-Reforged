@@ -6,10 +6,4 @@ using Content.Goobstation.Shared.Supermatter.Systems;
 
 namespace Content.Goobstation.Client.Supermatter.Systems;
 
-public sealed class SupermatterSystem : SharedSupermatterSystem
-{
-    public override void Initialize()
-    {
-        base.Initialize();
-    }
-}
+public sealed class SupermatterSystem : SharedSupermatterSystem;

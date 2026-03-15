@@ -5,7 +5,7 @@
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
 [RegisterComponent]
-public sealed partial class SupermatterFoodComponent : Component
+public sealed class SupermatterFoodComponent : Component
 {
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("energy")]

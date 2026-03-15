@@ -181,15 +181,20 @@ public sealed class SupermatterComponent : Component
     #region SM Base
 
     /// <summary>This is what you're here for</summary>
+    [ViewVariables(VVAccess.ReadWrite)]
+
     public float Power { get; set; }
 
     /// <summary>The amount of damage we have currently</summary>
+    [ViewVariables(VVAccess.ReadWrite)]
     public float Damage { get; set; }
 
     /// <summary>Damage change since last cycle</summary>
+    [ViewVariables(VVAccess.ReadOnly)]
     public float DamageDelta { get; set; }
 
     /// <summary>Temporary power gained from mob consumption. Purely to not instaspike power to 2000.</summary>
+    [ViewVariables(VVAccess.ReadOnly)]
     public float MatterPower { get; set; }
 
     #endregion SM Base
