@@ -56,11 +56,9 @@ public sealed class SupermatterComponent : Component
     /// The point at which we should start sending messages
     /// about the damage to the engi channels.
     /// </summary>
-    [DataField]
     public const float WarningPoint = 50;
 
     /// <summary>The point at which we start sending messages to the common channel</summary>
-    [DataField]
     public const float EmergencyPoint = 500;
 
     /// <summary>
@@ -89,7 +87,7 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>
     /// <para>How much we lose in a single cycle; <c>(1-0.023)^30~=0.5 => </c> 30 second half life (the exponent).</para>
-    /// <para>Emitter fires 3 bolts per (on avg) 14 seconds <c>(2+2+2+avg(6,10))</c> so 1 bolt every <c>4.(6)</c> secoonds.</para>
+    /// <para>Emitter fires 3 bolts per (on avg) 14 seconds <c>(2+2+2+avg(6,10))</c> so 1 bolt every <c>4.(6)</c> seconds.</para>
     /// <para>2 emitters is the base, and should result in rads ~= t3 singulo. 4 should be >= T4.</para>
     /// <para>Since 1 dmg = 1 pwr, it's <c>14/4.(6)=3</c> pwr per second per emitter</para>
     /// <para>Solving for x in <c>x*0.023=3*e</c> (how much power we need to achieve equlibrium) we get:</para>
@@ -97,20 +95,15 @@ public sealed class SupermatterComponent : Component
     /// <para>To get power after 1 cycle for stuff betwween softcap and hardcap start points, plot <c>y=x(0.977-((x-200)*0.0002))</c>
     /// or check <see cref="PowerToRemove"/></para>
     /// </summary>
-    [DataField]
     private const float PowerlossPerCycle = 0.023f;
 
-    [DataField]
     private const float SoftcapStartPoint = 200f;
 
-    [DataField]
     private const float SoftcapScaler = 0.0002f;
 
     /// <summary>Hardcoded since we want to lower the power to the cap value, not to 0</summary>
-    [DataField]
     private const float HardcapStartPoint = 2500f;
 
-    [DataField]
     private const float HardcapTargetPoint = 1292.5f;
 
     #endregion Generic Knobs

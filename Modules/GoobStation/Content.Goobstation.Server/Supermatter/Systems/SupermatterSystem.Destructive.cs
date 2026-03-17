@@ -9,7 +9,7 @@ namespace Content.Goobstation.Server.Supermatter.Systems;
 
 public sealed partial class SupermatterSystem
 {
-    /// <summary>Shoot lightning bolts depensing on accumulated power.</summary>
+    /// <summary>Shoot lightning bolts depending on accumulated power.</summary>
     /// <param name="ent">Entity to shoot lightning from.</param>
     private void Zap(Entity<SupermatterComponent> ent)
     {
