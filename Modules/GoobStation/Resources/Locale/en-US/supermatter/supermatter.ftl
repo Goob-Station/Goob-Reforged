@@ -39,7 +39,7 @@ supermatter-tamper-begin =
     You begin carefully cutting a piece off the supermatter crystal...
 
 supermatter-tamper-end =
-    You feel the power of a thousand suns laying on your palms. Or is it all the radiation?
+    You feel the power of a thousand suns lying on your palms. Or is it all the radiation?
 
 supermatter-announcement-cc-tamper =
     Our automatic casualty system has detected that the supermatter crystal structural integrity was compromised by an external force.

@@ -140,10 +140,6 @@ public sealed partial class SupermatterSystem
 
         Spawn(sm.SliverPrototypeId, _transform.GetMapCoordinates(args.User));
 
-        if (sm.DelamDuration <= sm.DelamDuration / 2f)
-        {
-            return;
-        }
         sm.DelamDuration /= 2f;
     }
 

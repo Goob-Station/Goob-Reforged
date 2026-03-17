@@ -373,7 +373,7 @@ public sealed class SupermatterComponent : Component
     {
         return Power switch
         {
-            > HardcapStartPoint => HardcapTargetPoint,
+            > HardcapStartPoint => Power - HardcapTargetPoint,
             > SoftcapStartPoint => Power * (PowerlossPerCycle + SoftcapScaler * (Power - SoftcapStartPoint)),
             _ => Power * PowerlossPerCycle,
         };

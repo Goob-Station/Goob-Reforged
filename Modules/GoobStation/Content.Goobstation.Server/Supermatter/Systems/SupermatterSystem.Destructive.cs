@@ -68,14 +68,17 @@ public sealed partial class SupermatterSystem
 
             case DelamType.Singulo:
                 Spawn(comp.SingularityPrototypeId, coords);
+                QueueDel(ent);
                 break;
 
             case DelamType.Tesla:
                 Spawn(comp.TeslaPrototypeId, coords);
+                QueueDel(ent);
                 break;
 
             case DelamType.Cascade:
                 Spawn(comp.SupermatterKudzuPrototypeId, coords);
+                QueueDel(ent);
                 break;
         }
     }
