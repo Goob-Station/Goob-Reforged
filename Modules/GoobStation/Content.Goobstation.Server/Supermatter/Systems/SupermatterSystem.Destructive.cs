@@ -36,13 +36,20 @@ public sealed partial class SupermatterSystem
     {
         var comp = ent.Comp;
 
-        // If not delamming, then start. If delamming and under delam point, cancel.
-        comp.Delamming = !comp.Delamming || comp.Damage >= comp.DelaminationPoint;
-
-        // In both cases let everyone know
+        // If delam just started, or if delam stops, announce.
         if (!comp.Delamming || comp.Damage < comp.DelaminationPoint)
         {
             HandleAnnouncements(ent);
+        }
+
+        // If not delamming, then start. If delamming and under delam point, cancel.
+        comp.Delamming = !comp.Delamming || comp.Damage >= comp.DelaminationPoint;
+
+        if (!comp.Delamming)
+        {
+            comp.DelamTimer = 0;
+            comp.DelamAnnounced = false;
+            return;
         }
 
         comp.DelamTimer++;

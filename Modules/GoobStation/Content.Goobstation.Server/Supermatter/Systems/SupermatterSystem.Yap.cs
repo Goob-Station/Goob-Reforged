@@ -30,7 +30,7 @@ public sealed partial class SupermatterSystem
         }
 
         // If we are not actively taking damage, skip routine warnings.
-        if (sm.DamageDelta >= 0)
+        if (sm.DamageDelta <= 0)
         {
             return;
         }
@@ -53,7 +53,7 @@ public sealed partial class SupermatterSystem
         // Build and dispatch the announcement
         var sb = new StringBuilder();
         sb.AppendLine(Loc.GetString(locId))
-            .AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", sm.DelamDuration)));
+            .AppendLine(Loc.GetString("supermatter-seconds-before-delam", ("seconds", MathF.Floor(sm.DelamDuration))));
 
         sm.DelamAnnounced = true;
         _chat.DispatchSupermatterAnnouncement(ent, sb.ToString(), global: true);

@@ -9,7 +9,7 @@
 supermatter-announcer = Automatic Supermatter Engine
 
 supermatter-examine-integrity =
-    It's integrity is [color=yellow]{$integrity}%[/color].
+    Its integrity is [color=yellow]{$integrity}%[/color].
 
 supermatter-warning =
     Warning! Crystal hyperstructure integrity faltering! Integrity: {$integrity}%.
@@ -27,7 +27,7 @@ supermatter-delam-tesla =
     CRYSTAL DELAMINATION IMMINENT! Crystal hyperstructure integrity has reached critical power surge failure! Energy ball formation imminent!
 
 supermatter-delam-cascade =
-    CRYSTAL DELAMINATION IMMINENT! Harmonic frequency limits exceeded, casualty destabilization field could not be engaged!
+    CRYSTAL DELAMINATION IMMINENT! Harmonic frequency limits exceeded, causality destabilization field could not be engaged!
 
 supermatter-delam-cancel =
     Crystalline hyperstructure returning to safe operating parameters. Failsafe has been Disengaged. Integrity: {$integrity}%.

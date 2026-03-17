@@ -53,7 +53,7 @@ public sealed class SupermatterComponent : Component
     public float HeatDamageMult { get; } = 0.4286f;
 
     /// <summary>
-    /// The point at which we should start sending messeges
+    /// The point at which we should start sending messages
     /// about the damage to the engi channels.
     /// </summary>
     [DataField]

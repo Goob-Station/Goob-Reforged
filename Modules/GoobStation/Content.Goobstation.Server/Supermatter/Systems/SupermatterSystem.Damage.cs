@@ -20,6 +20,7 @@ public sealed partial class SupermatterSystem
         if (!_atmosphere.TryGetContainingMixture(out var mix, ent.Owner))
         {
             sm.Damage += Math.Max(sm.Power / 100 * sm.DamageIncreaseMultiplier, 0.1f);
+            sm.DamageDelta = sm.Damage - damageArchived;
             return;
         }
 

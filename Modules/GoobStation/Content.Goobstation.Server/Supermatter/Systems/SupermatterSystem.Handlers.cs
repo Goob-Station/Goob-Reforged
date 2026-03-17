@@ -47,7 +47,7 @@ public sealed partial class SupermatterSystem
         }
 
         // Gain power
-        sm.Power += GetPowerFromEntity(ent);
+        sm.Power += GetPowerFromEntity(target);
 
         sm.MatterPower += HasComp<MobStateComponent>(target) ? 10 : 0;
 
@@ -118,6 +118,7 @@ public sealed partial class SupermatterSystem
         };
 
         _doAfter.TryStartDoAfter(dae);
+        args.Handled = true;
     }
 
     private void OnGetSliver(Entity<SupermatterComponent> ent, ref SupermatterDoAfterEvent args)
@@ -134,7 +135,7 @@ public sealed partial class SupermatterSystem
         sm.Damage += sm.DelaminationPoint / 10f;
         sm.DamageDelta += sm.DelaminationPoint / 10f;
 
-        _chat.DispatchSupermatterAnnouncement(ent, Loc.GetString("supermatter-announcement-cc-tamper", ("integrity", sm.IntegrityString)), global: true, "Central Command");
+        _chat.DispatchSupermatterAnnouncement(ent, Loc.GetString("supermatter-announcement-cc-tamper", ("integrity", sm.IntegrityString)), global: true, customSender: "Central Command");
 
         Spawn(sm.SliverPrototypeId, _transform.GetMapCoordinates(args.User));
 
