@@ -57,20 +57,19 @@ internal static class SupermatterExtensions
     {
         /// <summary>Get SM related data about a provided gas mix.</summary>
         /// <returns>A selection of values, check <see cref="SupermatterComponent.GasDataFields(Gas)"/></returns>
-        internal (float radModifier, float zapModifier, float moleModifier, float heatModifier, float heatResistModifier) GetGasModifiers()
+        internal (float exergy, float heatModifier, float wasteModifier, float heatResistModifier) GetGasModifiers()
         {
             var totalMoles = gasMix.TotalMoles;
 
             // Safety check: Prevent a divide-by-zero NaN cascade if the mix is completely empty
             if (totalMoles <= 0f)
             {
-                return (1f, 1f, 1f, 1f, 1f);
+                return (1f, 1f, 1f, 1f);
             }
 
-            var radModifier = 1f;
-            var zapModifier = 1f;
-            var moleModifier = 1f;
+            var exergyModifier = 1f;
             var heatModifier = 1f;
+            var wasteModifier = 1f;
             var heatResistModifier = 1f;
 
             // Safely iterate through the actual enum values, regardless of their integer backing
@@ -84,22 +83,20 @@ internal static class SupermatterExtensions
                     continue;
                 }
 
-                var (radMod, zapMod, heatMod, moleMod, heatResistMod) = SupermatterComponent.GasDataFields(gas);
+                var (exergyMod, heatMod, wasteMod, heatResistMod) = SupermatterComponent.GasDataFields(gas);
 
-                radModifier += proportion * radMod;
-                zapModifier += proportion * zapMod;
-                moleModifier += proportion * moleMod;
+                exergyModifier += proportion * exergyMod;
                 heatModifier += proportion * heatMod;
+                wasteModifier += proportion * wasteMod;
                 heatResistModifier += proportion * heatResistMod;
             }
 
             // Ensure we don't do something stupid later
             return (
-                Math.Max(radModifier, 0f),
-                Math.Max(zapModifier, 0f),
-                Math.Max(moleModifier, 0f),
+                Math.Max(exergyModifier, 0f),
                 Math.Max(heatModifier, 0f),
-                Math.Max(heatResistModifier, 0f)
+                Math.Max(wasteModifier, 0.5f), // At least *some* gases to always have that risk.
+                Math.Max(heatResistModifier, 0.5f) // Even with some crazy gases you are safe if cold.
             );
         }
 

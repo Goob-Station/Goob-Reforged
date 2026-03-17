@@ -25,7 +25,7 @@ public sealed partial class SupermatterSystem
 
         using var absorbed = new GasWrapper(mix, sm.GasEfficiency, _atmosphere);
 
-        var (radModifier, _, moleModifier, heatModifier, _) = absorbed.Gas.GetGasModifiers();
+        var (exergyModifier, heatModifier, wasteModifier, _) = absorbed.Gas.GetGasModifiers();
 
         var co2Modifier = GetCo2Modifier(sm, absorbed);
 
@@ -37,7 +37,8 @@ public sealed partial class SupermatterSystem
         ConsumeAmmonia(sm, absorbed);
 
         // Increase power from temperature (Since it can be <0, do the simple check)
-        sm.Power = Math.Max(absorbed.Gas.Temperature * heatModifier / Atmospherics.T0C + sm.Power, 0);
+        // Negligible unless heatmod is high (one emitter = 3 power per second, for comparison)
+        sm.Power += Math.Max(absorbed.Gas.Temperature * heatModifier / Atmospherics.T0C, 0);
 
         #endregion Add power to crystal
 
@@ -46,32 +47,24 @@ public sealed partial class SupermatterSystem
         // Radiate stuff
         if (TryComp<RadiationSourceComponent>(ent, out var rad))
         {
-            rad.Intensity = sm.Power * radModifier * sm.RadiationOutputFactor;
+            rad.Intensity = sm.Power * exergyModifier * sm.RadiationOutputFactor;
         }
 
         // Convert power to energy
         var energy = sm.Power * sm.ReactionPowerModifier;
-
+        var exhaustGases = new GasMixture();
         // Release the waste. Both are scaled by modifier and energy, but o2 also scales with temperatures.
-        absorbed.Gas.AdjustMoles(Gas.Oxygen, Math.Max(moleModifier * (energy + absorbed.Gas.Temperature - Atmospherics.T0C) * sm.OxygenReleaseEfficiencyModifier, 0f));
-        absorbed.Gas.AdjustMoles(Gas.Plasma, Math.Max(moleModifier * sm.PlasmaReleaseModifier * energy, 0f));
-
+        exhaustGases.AdjustMoles(Gas.Oxygen, Math.Max(wasteModifier * (energy + absorbed.Gas.Temperature - Atmospherics.T0C) * sm.OxygenReleaseEfficiencyModifier, 0f));
+        exhaustGases.AdjustMoles(Gas.Plasma, Math.Max(wasteModifier * sm.PlasmaReleaseModifier * energy, 0f));
         // Increase temperature
-        absorbed.Gas.Temperature += energy * sm.ThermalReleaseModifier;
+        exhaustGases.Temperature = absorbed.Gas.Temperature + energy * sm.ThermalReleaseModifier;
+        // Add exhausts back to the mix
+        _atmosphere.Merge(absorbed.Gas, exhaustGases);
 
         #endregion Generate outputs
 
-        #region Scale down power
-
-        // I'd recommend plotting these two if you want to get it but in general this lets it need less input to stay under power threshold/scaler than above
-        // Hardcoded to discourage YAML majors
-        const float powerReductionScaler = 5f;
-        var powerReduction = float.Pow(sm.Power / powerReductionScaler, 3f);
-
-        // Atp power is lowered
-        sm.Power = Math.Max(sm.Power - Math.Min(powerReduction, sm.Power * sm.MaxPowerLossFraction) * co2Modifier, 0f);
-
-        #endregion Scale down power
+        // Scale down pwr
+        sm.Power -= sm.PowerToRemove() * co2Modifier;
     }
 
     private static void ConsumeMatterPower(SupermatterComponent sm)
@@ -89,7 +82,7 @@ public sealed partial class SupermatterSystem
 
     private static void ConsumeAmmonia(SupermatterComponent sm, in GasWrapper gas)
     {
-        // Yeah, it consumes all ammonia in one tick cuz it's funny af
+        // Yeah, it consumes all ammonia in one tick since we have the percentage anyways.
         var ammoniaGasMoles = gas.Gas.GetMoles(Gas.Ammonia);
         gas.Gas.SetMoles(Gas.Ammonia, 0f);
         sm.Power += ammoniaGasMoles * sm.AmmoniaEnergyPerMole;
@@ -99,10 +92,10 @@ public sealed partial class SupermatterSystem
     {
         var co2Ratio = absorbed.Gas.GetGasMolarPercentage(Gas.CarbonDioxide);
         var underThresholdScaler = Math.Min(
-            Math.Clamp(co2Ratio / sm.PowerlossInhibitionGasThreshold, 0, 1),
-            Math.Clamp(absorbed.Gas.TotalMoles / sm.PowerlossInhibitionMoleThreshold, 0, 1)
+            Math.Clamp(co2Ratio / sm.Co2PercentageForPowerInhibition, 0, 1),
+            Math.Clamp(absorbed.Gas.TotalMoles / sm.MoleCountForPowerInhibition, 0, 1)
             );
-        var moleBoost = Math.Clamp(absorbed.Gas.TotalMoles / sm.PowerlossInhibitionMoleBoostThreshold, 1f, 1.5f);
+        var moleBoost = Math.Clamp(absorbed.Gas.TotalMoles / sm.MoleCountForPowerInhibitionBoost, 1f, 1.5f);
 
         // Apply CO2 ratio if thresholds are met, otherwise limit the ratio according to how far away we are from thresholds
         var powerlossDynamicScaling = co2Ratio * underThresholdScaler;

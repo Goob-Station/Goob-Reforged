@@ -13,21 +13,21 @@ public sealed partial class SupermatterSystem
     /// <param name="ent">Entity to shoot lightning from.</param>
     private void Zap(Entity<SupermatterComponent> ent)
     {
-        var zapModifier = 1f;
+        var exergyModifier = 1f;
         if (_atmosphere.TryGetContainingMixture(out var mix, ent))
         {
-            (_, zapModifier, _, _, _) = mix.GetGasModifiers();
+            (exergyModifier, _, _, _) = mix.GetGasModifiers();
         }
 
         // Divide power by its threshold to get a value from 0 to 1, then multiply by the amount of possible lightnings
         // Makes it pretty obvious that if SM is shooting out red lightnings something is wrong.
         // And if it shoots too weak lightnings it means that it's underfed. Feed the SM :godo:
         var comp = ent.Comp;
-        var powerRatio = comp.Power * zapModifier / comp.PowerPenaltyThreshold;
+        var powerRatio = comp.Power * exergyModifier / comp.PowerDamageThreshold;
         var clampedRatio = MathHelper.Clamp01(powerRatio);
         var zapPowerNorm = Convert.ToInt32((comp.LightningPrototypes.Count - 1) * clampedRatio);
 
-        _lightning.ShootRandomLightnings(ent, 3.5f, comp.Power > comp.PowerPenaltyThreshold ? 3 : 1, comp.LightningPrototypes[zapPowerNorm]);
+        _lightning.ShootRandomLightnings(ent, 3.5f, comp.Power > comp.PowerDamageThreshold ? 3 : 1, comp.LightningPrototypes[zapPowerNorm]);
     }
 
     /// <summary>Handle the end of the station.</summary>
@@ -78,11 +78,11 @@ public sealed partial class SupermatterSystem
     internal DelamType GetDelamType(Entity<SupermatterComponent> ent)
     {
         var comp = ent.Comp;
-        if (_atmosphere.TryGetContainingMixture(out var mix, ent.Owner) && mix.TotalMoles >= comp.MolePenaltyThreshold)
+        if (_atmosphere.TryGetContainingMixture(out var mix, ent.Owner) && mix.TotalMoles >= comp.MoleDamageThreshold)
         {
             return DelamType.Singulo;
         }
 
-        return comp.Power >= comp.PowerPenaltyThreshold ? DelamType.Tesla : DelamType.Explosion;
+        return comp.Power >= comp.PowerDamageThreshold ? DelamType.Tesla : DelamType.Explosion;
     }
 }
