@@ -90,6 +90,7 @@ public sealed partial class SupermatterSystem
         EntityManager.SpawnEntity(sm.AshPrototypeId, Transform(target).Coordinates);
         _audio.PlayPvs(sm.DustSound, ent);
         EntityManager.QueueDeleteEntity(target);
+        args.Handled = true;
     }
 
     private void OnItemInteract(Entity<SupermatterComponent> ent, ref InteractUsingEvent args)
@@ -139,11 +140,11 @@ public sealed partial class SupermatterSystem
 
         Spawn(sm.SliverPrototypeId, _transform.GetMapCoordinates(args.User));
 
-        if (sm.DelamDuration <= 30f)
+        if (sm.DelamDuration <= sm.DelamDuration / 2f)
         {
             return;
         }
-        sm.DelamDuration -= 10f;
+        sm.DelamDuration /= 2f;
     }
 
     private void OnExamine(Entity<SupermatterComponent> ent, ref ExaminedEvent args)
