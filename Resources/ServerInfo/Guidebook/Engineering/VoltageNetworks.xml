@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-WIZARDS
 
 <Document>
   # Voltage Networks
-  In Space Station 14, power distribution is divided into three separate voltage networks.
+  In Quiet Station 34, power distribution is divided into three separate voltage networks.
   These networks are the [color=green]Low Voltage[/color] Network, the [color=Yellow]Medium Voltage[/color] Network, and the [color=orange]High Voltage[/color] Network.
 
   These networks power different types of machinery on the station.

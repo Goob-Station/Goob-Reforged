@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-WIZARDS
 
 <Document>
 # Speech and Text Channels
-Talking is a key part of Space Station 14. You can press [color=yellow][bold][keybind="FocusChatInputWindow"/][/bold][/color] to jump to the text box.
+Talking is a key part of Quiet Station 34. You can press [color=yellow][bold][keybind="FocusChatInputWindow"/][/bold][/color] to jump to the text box.
 
 The word next to the text box is the [color=#a4885c]text channel[/color] you're about to send the message to, or rather how you're about to say what you've typed.
 

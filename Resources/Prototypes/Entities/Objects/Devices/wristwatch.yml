@@ -6,7 +6,7 @@
   id: Wristwatch
   parent: BaseItem
   name: wristwatch
-  description: A cheap watch for telling time. How much did you waste playing Space Station 14?
+  description: A cheap watch for telling time. How much did you waste playing Quiet Station 34?
   components:
   - type: Sprite
     sprite: Objects/Devices/wristwatch.rsi

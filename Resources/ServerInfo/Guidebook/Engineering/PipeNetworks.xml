@@ -22,7 +22,7 @@ SPDX-License-Identifier: MIT-WIZARDS
   Great examples are the station's Distro or Wastenet, which deliver breathable air and remove waste gas, respectively.
 
   ## How Pipenets Work
-  In Space Station 14, pipenets behave as a whole, defined volume, with input/output points at the ends of the network.
+  In Quiet Station 34, pipenets behave as a whole, defined volume, with input/output points at the ends of the network.
   Forcing or vacuuming gas in or out using a [textlink="pump" link="Pumps"] will affect the entire network, not just the pipe it's connected to.
 
   Pipenets are only separated by devices capable of interrupting flow, or by certain devices.

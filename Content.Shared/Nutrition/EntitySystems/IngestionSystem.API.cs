@@ -32,7 +32,7 @@ public sealed partial class IngestionSystem
     #region Ingestion
 
     /// <summary>
-    /// An entity is trying to ingest another entity in Space Station 14!!!
+    /// An entity is trying to ingest another entity in Quiet Station 34!!!
     /// </summary>
     /// <param name="user">The entity who is eating.</param>
     /// <param name="ingested">The entity that is trying to be ingested.</param>
