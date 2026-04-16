@@ -763,3 +763,5 @@ SpawnPointBoxer: null
 FigureSpawner: MechFigurineSpawner50
 ToySpawner: PlushieSpawner50
 SpacemenFigureSpawner: SpacemenFigurineSpawner90
+
+PosterLegitNoERP: null # TODO: Big Boss is watching poster

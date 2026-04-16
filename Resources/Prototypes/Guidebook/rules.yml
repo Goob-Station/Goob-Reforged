@@ -81,12 +81,6 @@
   text: "/ServerInfo/Guidebook/ServerRules/CoreRules/RuleC3NoHate.xml"
 
 - type: guideEntry
-  id: RuleC4
-  name: guide-entry-rules-c4
-  ruleEntry: true
-  text: "/ServerInfo/Guidebook/ServerRules/CoreRules/RuleC4NoERP.xml"
-
-- type: guideEntry
   id: RuleC5
   name: guide-entry-rules-c5
   ruleEntry: true
