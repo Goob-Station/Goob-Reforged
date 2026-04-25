@@ -79,21 +79,27 @@ public static class ClientPackaging
 
     private static List<string> FindAllModules(string path = ".")
     {
-        // Correct pathing to be in local folder if contentDir is empty.
         if (string.IsNullOrEmpty(path))
             path = ".";
 
         var modules = new List<string> { "Content.Client", "Content.Shared", "Content.Shared.Database", "Content.ModuleManager" };
 
-        // Modules - Add modules from Modules/ directory
-        modules.AddRange(
-            ModuleDiscovery.DiscoverModules(path)
-                .Where(m => m.Type != ModuleRole.Server)
-                .Select(m => m.Name)
-                .Distinct()
-        );
+        var coreDepsPath = Path.Combine(path, "bin", "Content.Client", "Content.Client.deps.json");
 
-        return modules;
+        foreach (var mod in ModuleDiscovery.DiscoverModules(path).Where(m => m.Type != ModuleRole.Server).DistinctBy(m => m.Name))
+        {
+            modules.Add(mod.Name);
+
+            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(mod.ProjectPath);
+            var moduleDepsPath = Path.Combine(moduleOutputDir, $"{mod.Name}.deps.json");
+
+            if (File.Exists(coreDepsPath) && File.Exists(moduleDepsPath))
+            {
+                modules.AddRange(DepsHandler.GetModuleUniqueAssemblies(coreDepsPath, moduleDepsPath));
+            }
+        }
+
+        return modules.Distinct().ToList();
     }
 
     public static async Task WriteResources(
@@ -168,18 +174,26 @@ public static class ClientPackaging
     {
         var mainBinDir = Path.Combine(contentDir, "bin", "Content.Client");
 
-        var moduleAssemblyPaths = ModuleDiscovery.DiscoverModules(contentDir)
-            .Where(m => m.Type == ModuleRole.Client)
-            .ToDictionary(
-                m => m.Name,
-                m => Path.Combine(GetModuleRoot(m.ProjectPath), "bin", "Content.Client")
-            );
+        var moduleOutputDirs = new Dictionary<string, string>();
+
+        // Discover all non-Server modules
+        var allModules = ModuleDiscovery.DiscoverModules(contentDir)
+            .Where(m => m.Type != ModuleRole.Server)
+            .ToList();
+
+        // Map each module to its own build output directory
+        foreach (var module in allModules)
+        {
+            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(module.ProjectPath);
+            moduleOutputDirs[module.Name] = moduleOutputDir;
+        }
 
         foreach (var asm in contentAssemblies)
         {
             cancel.ThrowIfCancellationRequested();
 
-            var sourceDir = moduleAssemblyPaths.GetValueOrDefault(asm) ?? mainBinDir;
+            // Check module output dirs first, fall back to mainBinDir
+            var sourceDir = moduleOutputDirs.GetValueOrDefault(asm) ?? mainBinDir;
 
             var dllPath = Path.Combine(sourceDir, $"{asm}.dll");
             if (File.Exists(dllPath))
@@ -191,14 +205,5 @@ public static class ClientPackaging
         }
 
         return Task.CompletedTask;
-    }
-
-    private static string GetModuleRoot(string projectPath)
-    {
-        // Extracts the module root from the project path
-        // e.g., "Modules/GoobStation/Content.Goobstation.Client/Content.Goobstation.Client.csproj"
-        // -> "Modules/GoobStation"
-        var projectDir = Path.GetDirectoryName(projectPath);
-        return Path.GetDirectoryName(projectDir)!;
     }
 }

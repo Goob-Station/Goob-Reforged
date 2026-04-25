@@ -1,13 +1,8 @@
-// SPDX-FileCopyrightText: 2026 Goob Station Contributors
-//
-// SPDX-License-Identifier: MPL-2.0
-
-using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Content.Goobstation.Server.Database.Migrations.Postgres
+namespace Content.Goobstation.Server.Database.Migrations.Sqlite
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -19,10 +14,10 @@ namespace Content.Goobstation.Server.Database.Migrations.Postgres
                 name: "netspeak_words",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Keyword = table.Column<string>(type: "text", nullable: false),
-                    Username = table.Column<string>(type: "text", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Keyword = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

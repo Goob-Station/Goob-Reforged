@@ -20,6 +20,7 @@ namespace Content.Goobstation.Server.Database.Migrations.Postgres
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("goobstation")
                 .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -43,7 +44,7 @@ namespace Content.Goobstation.Server.Database.Migrations.Postgres
 
                     b.HasKey("Id");
 
-                    b.ToTable("netspeak_words");
+                    b.ToTable("netspeak_words", "goobstation");
                 });
 #pragma warning restore 612, 618
         }

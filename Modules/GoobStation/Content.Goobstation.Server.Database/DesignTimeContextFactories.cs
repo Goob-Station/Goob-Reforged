@@ -15,7 +15,8 @@ public sealed class GoobstationDesignTimeContextFactoryPostgres : IDesignTimeDbC
     public GoobstationPostgresServerDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<GoobstationPostgresServerDbContext>();
-        optionsBuilder.UseNpgsql("Server=localhost");
+        optionsBuilder.UseNpgsql("Server=localhost", npgsqlOptions =>
+            npgsqlOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory", "goobstation"));
         return new GoobstationPostgresServerDbContext(optionsBuilder.Options);
     }
 }
@@ -29,7 +30,8 @@ public sealed class GoobstationDesignTimeContextFactorySqlite : IDesignTimeDbCon
 #endif
 
         var optionsBuilder = new DbContextOptionsBuilder<GoobstationSqliteServerDbContext>();
-        optionsBuilder.UseSqlite("Data Source=:memory:");
+        optionsBuilder.UseSqlite("Data Source=:memory:", sqliteOptions =>
+            sqliteOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory"));
         return new GoobstationSqliteServerDbContext(optionsBuilder.Options);
     }
 }

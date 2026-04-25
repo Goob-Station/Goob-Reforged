@@ -30,4 +30,10 @@ public sealed class GoobstationPostgresServerDbContext : GoobstationServerDbCont
         : base(options)
     {
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.HasDefaultSchema("goobstation");
+    }
 }

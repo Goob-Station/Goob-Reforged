@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$(TargetFramework)</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
+  <Import Project="..\..\..\MSBuild\Content.props"/>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">

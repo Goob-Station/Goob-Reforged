@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <OutputPath>..\..\..\bin\Content.Shared\</OutputPath>
-      <Nullable>enable</Nullable>
+      <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+      <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
     </PropertyGroup>
 
+    <Import Project="..\..\..\MSBuild\Content.props"/>
+
+    <Import Project="..\..\..\RobustToolbox\Imports\Lidgren.props" />
+    <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
+
     <ItemGroup>
-      <ProjectReference Include="..\..\..\RobustToolbox\Robust.Shared\Robust.Shared.csproj" />
       <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />
+      <ProjectReference Include="..\..\..\Content.Shared\Content.Shared.csproj" />
     </ItemGroup>
 
+    <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+    <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
 </Project>

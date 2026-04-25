@@ -5,6 +5,6 @@ REM SPDX-License-Identifier: MPL-2.0
 @echo off
 cd ../../
 
-call dotnet run --project Content.Goobstation.Server --no-build %*
+call dotnet run --project Modules\Goobstation\Content.Goobstation.Server --no-build %*
 
 pause

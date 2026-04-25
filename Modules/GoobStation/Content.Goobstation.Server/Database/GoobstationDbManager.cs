@@ -4,7 +4,7 @@
 
 using System.IO
 ;using System.Threading.Tasks
-;using Content.Goobstation.Common.CCVar
+;using Content.Shared.CCVar
 ;using Microsoft.EntityFrameworkCore
 ;using Npgsql
 ;using Robust.Shared.Configuration
@@ -38,10 +38,10 @@ public sealed class GoobstationDbManager : IGoobstationDbManager
 
     public void Init()
     {   _sawmill = _logMgr.GetSawmill("goob.db")
-    ;   var _ = _cfg.GetCVar(GoobCVars.GoobDatabaseEngine).ToLower() switch
+    ;   var _ = _cfg.GetCVar(CCVars.DatabaseEngine).ToLower() switch
         {   "sqlite" => SetupSqlite()
         ,   "postgres" => SetupPostgres()
-        ,   var engine => throw new InvalidDataException($"Unknown Goobstation database engine: {engine}")
+        ,   var engine => throw new InvalidDataException($"Unknown database engine: {engine}")
         }
     ;   using var ctx = CreateContext()
     ;   ctx.Database.Migrate()
@@ -51,13 +51,14 @@ public sealed class GoobstationDbManager : IGoobstationDbManager
 
     private bool SetupSqlite()
     {   _isPostgres = false
-    ;   var path = _cfg.GetCVar(GoobCVars.GoobDatabaseSqlitePath)
+    ;   var path = _cfg.GetCVar(CCVars.DatabaseSqliteDbPath)
     ;   var finalPath = _res.UserData.RootDir is { } root
             ? Path.Combine(root, path)
             : ":memory:"
-    ;   _sawmill.Debug($"Using Goobstation SQLite DB: {finalPath}")
+    ;   _sawmill.Debug($"Goobstation DB running on {finalPath}")
     ;   var builder = new DbContextOptionsBuilder<GoobstationSqliteServerDbContext>()
-    ;   builder.UseSqlite($"Data Source={finalPath}")
+    ;   builder.UseSqlite($"Data Source={finalPath}", sqliteOptions =>
+            sqliteOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory"))
     ;   _options = builder.Options
     ;   return true
     ;}
@@ -65,11 +66,11 @@ public sealed class GoobstationDbManager : IGoobstationDbManager
     private bool SetupPostgres()
     {   _isPostgres = true
     ;   var (host, port, db, user, pass) =
-            ( _cfg.GetCVar(GoobCVars.GoobDatabasePgHost)
-            , _cfg.GetCVar(GoobCVars.GoobDatabasePgPort)
-            , _cfg.GetCVar(GoobCVars.GoobDatabasePgDatabase)
-            , _cfg.GetCVar(GoobCVars.GoobDatabasePgUsername)
-            , _cfg.GetCVar(GoobCVars.GoobDatabasePgPassword)
+            ( _cfg.GetCVar(CCVars.DatabasePgHost)
+            , _cfg.GetCVar(CCVars.DatabasePgPort)
+            , _cfg.GetCVar(CCVars.DatabasePgDatabase)
+            , _cfg.GetCVar(CCVars.DatabasePgUsername)
+            , _cfg.GetCVar(CCVars.DatabasePgPassword)
             )
     ;   var connString = new NpgsqlConnectionStringBuilder
             {   Host = host
@@ -78,9 +79,10 @@ public sealed class GoobstationDbManager : IGoobstationDbManager
             ,   Username = user
             ,   Password = pass
             }.ConnectionString
-    ;   _sawmill.Debug($"Using Goobstation Postgres: {host}:{port}/{db}")
+    ;   _sawmill.Debug($"Using Goobstation Postgres schema at {host}:{port}/{db}")
     ;   var builder = new DbContextOptionsBuilder<GoobstationPostgresServerDbContext>()
-    ;   builder.UseNpgsql(connString)
+    ;   builder.UseNpgsql(connString, npgsqlOptions =>
+            npgsqlOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory", "goobstation"))
     ;   _options = builder.Options
     ;   return true
     ;}
