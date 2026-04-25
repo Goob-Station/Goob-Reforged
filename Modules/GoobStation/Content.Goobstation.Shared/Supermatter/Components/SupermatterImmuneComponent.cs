@@ -7,7 +7,4 @@ using Robust.Shared.GameStates;
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
 [RegisterComponent, NetworkedComponent]
-public sealed class SupermatterImmuneComponent : Component
-{
-
-}
+public sealed partial class SupermatterImmuneComponent : Component;

@@ -2,12 +2,13 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
+using Robust.Shared.GameStates;
+
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
-[RegisterComponent]
-public sealed class SupermatterFoodComponent : Component
+[RegisterComponent, NetworkedComponent]
+public sealed partial class SupermatterFoodComponent : Component
 {
-    [ViewVariables(VVAccess.ReadWrite)]
-    [DataField("energy")]
-    public int Energy { get; set; } = 1;
+    [DataField]
+    public int Energy = 1;
 }

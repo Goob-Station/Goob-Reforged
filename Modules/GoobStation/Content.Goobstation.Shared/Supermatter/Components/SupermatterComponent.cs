@@ -13,27 +13,27 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototy
 namespace Content.Goobstation.Shared.Supermatter.Components;
 
 [RegisterComponent, NetworkedComponent]
-public sealed class SupermatterComponent : Component
+public sealed partial class SupermatterComponent : Component
 {
     #region SM Flags
 
     /// <summary>The SM will only cycle if activated.</summary>
     [ViewVariables(VVAccess.ReadWrite)]
-    public bool Activated { get; set; }
+    public bool Activated;
 
     /// <summary>
     /// Affects delamination timer. If removed - delamination timer is divided by 2.
     /// Also prevents spawning infinite slivers, or instadelamming.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
-    public bool SliverRemoved { get; set; }
+    public bool SliverRemoved;
 
     /// <summary>Are we delamming?</summary>
     [ViewVariables]
-    public bool Delamming { get; set; }
+    public bool Delamming;
 
     [ViewVariables]
-    public bool DelamAnnounced { get; set; }
+    public bool DelamAnnounced;
 
     #endregion SM Flags
 
@@ -43,14 +43,14 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>Received environmental damage is scaled by this</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float DamageIncreaseMultiplier { get; } = 0.25f;
+    public float DamageIncreaseMultiplier = 0.25f;
 
     /// <summary>
     /// Multiplier on damage the core takes from absorbing hot gas
     /// Default is ~3/7
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float HeatDamageMult { get; } = 0.4286f;
+    public float HeatDamageMult = 0.4286f;
 
     /// <summary>
     /// The point at which we should start sending messages
@@ -66,7 +66,7 @@ public sealed class SupermatterComponent : Component
     /// It's inverse of effectively a minimum number of seconds for SM to delam (+ delam timer).
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float DamageHardcapPercentage { get; } = 0.002f;
+    public float DamageHardcapPercentage = 0.002f;
 
     #endregion Health Knobs
 
@@ -74,15 +74,15 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>The portion of the gasmix we're on. Relevant for gas processing but not for plain checks.</summary>
     [DataField]
-    public float GasEfficiency { get; set; } = 0.15f;
+    public float GasEfficiency = 0.15f;
 
     /// <summary>Ratio of matter power to power conversion rate</summary>
     [DataField]
-    public float MatterPowerConversion { get; } = 1f;
+    public float MatterPowerConversion = 1f;
 
     /// <summary>How much matter power is consumed and converted to power per cycle.</summary>
     [DataField]
-    public float MatterPowerConsumedPerCycle { get; } = 1f;
+    public float MatterPowerConsumedPerCycle = 1f;
 
 
     /// <summary>
@@ -112,14 +112,14 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>Amount of energy a mole of ammonia gives.</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float AmmoniaEnergyPerMole { get; } = 1f;
+    public float AmmoniaEnergyPerMole = 1f;
 
     /// <summary>
     /// Higher == Higher percentage of inhibitor gas needed
     /// before the charge inertia chain reaction effect starts.
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float Co2PercentageForPowerInhibition { get; } = 0.20f;
+    public float Co2PercentageForPowerInhibition = 0.20f;
 
     /// <summary>
     /// Higher == More moles of the gas are needed before the charge
@@ -127,32 +127,32 @@ public sealed class SupermatterComponent : Component
     /// Scales powerloss inhibition down until this amount of moles is reached
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float MoleCountForPowerInhibition { get; } = 20f;
+    public float MoleCountForPowerInhibition = 20f;
 
     /// <summary>bonus powerloss inhibition boost if this amount of moles is reached</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float MoleCountForPowerInhibitionBoost { get; } = 500f;
+    public float MoleCountForPowerInhibitionBoost = 500f;
 
     /// <summary>
     /// Above this value we can get lord singulo and independent mol damage,
     /// below it we can heal damage
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float MoleDamageThreshold { get; } = 900f;
+    public float MoleDamageThreshold = 900f;
 
     /// <summary>
     /// The cutoff on power properly doing damage, pulling shit around,
     /// and delamming into a tesla. Low chance of pyro anomalies, +2 bolts of electricity
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float PowerDamageThreshold { get; } = 2500f;
+    public float PowerDamageThreshold = 2500f;
 
     /// <summary>
     /// Maximum safe operational temperature in degrees Celsius. Supermatter begins taking damage above this temperature.
     /// If you go above this you'll have plasma burn in your SM chamber anyways.
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float HeatDamageThreshold { get; } = 100f;
+    public float HeatDamageThreshold = 100f;
 
     #endregion Atmos Input Knobs
 
@@ -162,21 +162,21 @@ public sealed class SupermatterComponent : Component
     /// Acts as a multiplier on the amount that nuclear reactions increase the supermatter core temperature
     /// </summary>
     [DataField]
-    public float ThermalReleaseModifier { get; } = 0.2f;
+    public float ThermalReleaseModifier = 0.2f;
 
     /// <summary>
     /// Multiplier on how much plasma is released during supermatter reactions
     /// Default is ~1/750
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float PlasmaReleaseModifier { get; } = 0.001333f;
+    public float PlasmaReleaseModifier = 0.001333f;
 
     /// <summary>
     /// Multiplier on how much oxygen is released during supermatter reactions.
     /// Default is ~1/325
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float OxygenReleaseEfficiencyModifier { get; } = 0.0031f;
+    public float OxygenReleaseEfficiencyModifier = 0.0031f;
 
     #endregion Atmos Output Knobs
 
@@ -184,11 +184,11 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>Multiplier on power generated by nuclear reactions</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float ReactionPowerModifier { get; } = 0.55f;
+    public float ReactionPowerModifier = 0.55f;
 
     /// <summary>Multiply outgoing rads by this.</summary>
     [DataField]
-    public float RadiationOutputFactor { get; set; } = 0.03f;
+    public float RadiationOutputFactor = 0.03f;
 
     #endregion Output Knobs
 
@@ -199,19 +199,19 @@ public sealed class SupermatterComponent : Component
     /// <summary>This is what you're here for</summary>
     [ViewVariables(VVAccess.ReadWrite)]
 
-    public float Power { get; set; }
+    public float Power;
 
     /// <summary>The amount of damage we have currently</summary>
     [ViewVariables(VVAccess.ReadWrite)]
-    public float Damage { get; set; }
+    public float Damage;
 
     /// <summary>Damage change since last cycle</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float DamageDelta { get; set; }
+    public float DamageDelta;
 
     /// <summary>Temporary power gained from mob consumption. Purely to not instaspike power to 2000.</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float MatterPower { get; set; }
+    public float MatterPower;
 
     #endregion SM Base
 
@@ -219,38 +219,38 @@ public sealed class SupermatterComponent : Component
 
     /// <summary>we yell every YapPeriod Seconds</summary>
     [DataField]
-    public float YapPeriod { get; } = 60f;
+    public float YapPeriod = 60f;
 
     /// <summary>set to YapPeriod at first so it doesnt yell a minute after being hit</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float YapTimer { get; set; } = 60f;
+    public float YapTimer = 60f;
 
     /// <summary>Time until delam</summary>
     [DataField]
-    public float DelamDuration { get; set; } = 120f;
+    public float DelamDuration = 120f;
 
     /// <summary>Timer for delam</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public float DelamTimer { get; set; }
+    public float DelamTimer;
 
     [ViewVariables(VVAccess.ReadOnly)]
-    public float UpdateAccumulator { get; set; }
+    public float UpdateAccumulator;
 
     [DataField]
-    public float UpdatePeriod { get; } = 1f;
+    public float UpdatePeriod = 1f;
 
     [ViewVariables(VVAccess.ReadOnly)]
-    public float ZapAccumulator { get; set; }
+    public float ZapAccumulator;
 
     [DataField]
-    public float ZapPeriod { get; } = 10f;
+    public float ZapPeriod = 10f;
     #endregion SM Timer
 
     #region SM Delamm
 
     /// <summary>The point at which we delamm, effectively health</summary>
     [ViewVariables(VVAccess.ReadOnly)]
-    public int DelaminationPoint { get; } = 900;
+    public int DelaminationPoint = 900;
 
     #endregion SM Delamm
 
@@ -303,23 +303,22 @@ public sealed class SupermatterComponent : Component
             {Gas.Frezon, (-3f, -1f, -9f, -.5f)},
             {Gas.Ammonia, (0f, .3f, 0f, 0f)},
             {Gas.NitrousOxide, (0f, 0f, 0f, 5f)}
-        }
-        ;
+        };
 
     #endregion SM Gas Facts
 
     #region SM Prototypes
 
     [DataField("supermatterSliverPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string SliverPrototypeId { get; } = "SupermatterSliver";
+    public string SliverPrototypeId = "SupermatterSliver";
 
     /// <summary>What will be spawned when an entity that's not supermatter immune interacts with it.</summary>
     [DataField("ashPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string AshPrototypeId { get; } = "Ash";
+    public string AshPrototypeId = "Ash";
 
     /// <summary>There has to be a way to serialize this properly</summary>
     [DataField]
-    public IReadOnlyList<string> LightningPrototypes { get; } =
+    public IReadOnlyList<string> LightningPrototypes =
     [
         "Lightning",
         "ChargedLightning",
@@ -328,18 +327,18 @@ public sealed class SupermatterComponent : Component
     ];
 
     [DataField("singularitySpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string SingularityPrototypeId { get; } = "Singularity";
+    public string SingularityPrototypeId = "Singularity";
 
     [DataField("teslaSpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string TeslaPrototypeId { get; } = "TeslaEnergyBall";
+    public string TeslaPrototypeId = "TeslaEnergyBall";
 
     [DataField("supermatterKudzuSpawnPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string SupermatterKudzuPrototypeId { get; } = "SupermatterKudzu";
+    public string SupermatterKudzuPrototypeId = "SupermatterKudzu";
 
     #endregion SM Prototypes
 
     [DataField]
-    public SoundSpecifier DustSound { get; } = new SoundPathSpecifier("/Audio/Supermatter/dust.ogg");
+    public SoundSpecifier DustSound = new SoundPathSpecifier("/Audio/Supermatter/dust.ogg");
 
     #region Helper functions
 
@@ -376,4 +375,4 @@ public sealed class SupermatterComponent : Component
 }
 
 [Serializable, NetSerializable]
-public sealed class SupermatterDoAfterEvent : SimpleDoAfterEvent;
+public sealed partial class SupermatterDoAfterEvent : SimpleDoAfterEvent;
