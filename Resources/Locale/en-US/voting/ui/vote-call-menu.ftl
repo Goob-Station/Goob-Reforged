@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 ui-vote-type-restart = Restart round
 ui-vote-type-gamemode = Next gamemode
 ui-vote-type-map = Next map

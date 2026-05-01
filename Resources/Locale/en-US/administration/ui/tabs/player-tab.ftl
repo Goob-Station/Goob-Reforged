@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 player-tab-player-count = Players: { $count }
 player-tab-username = Username
 player-tab-character = Character

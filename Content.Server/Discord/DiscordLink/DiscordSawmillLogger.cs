@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using NetCord.Logging;
 using NLogLevel = NetCord.Logging.LogLevel;
 using LogLevel = Robust.Shared.Log.LogLevel;

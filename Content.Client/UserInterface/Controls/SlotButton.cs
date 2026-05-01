@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using static Content.Client.Inventory.ClientInventorySystem;
 
 namespace Content.Client.UserInterface.Controls

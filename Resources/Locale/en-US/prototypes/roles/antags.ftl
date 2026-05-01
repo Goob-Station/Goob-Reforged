@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 roles-antag-generic-solo-antagonist-name = Solo Antagonist
 
 roles-antag-generic-free-agent-name = Free Agent

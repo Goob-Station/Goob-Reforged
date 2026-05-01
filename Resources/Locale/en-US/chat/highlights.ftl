@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Command
 highlights-captain = Captain, "Cap", Bridge, Command
 highlights-head-of-personnel = Head Of Personnel, "HoP", Service, Bridge, Command

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 limited-charges-charges-remaining = {$charges ->
     [one] It has [color=fuchsia]{$charges}[/color] charge remaining.
     *[other] It has [color=fuchsia]{$charges}[/color] charges remaining.

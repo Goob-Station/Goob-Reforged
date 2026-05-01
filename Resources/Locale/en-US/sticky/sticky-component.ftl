@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Bomb planting strings
 
 comp-sticky-start-stick-bomb = You start planting the bomb...

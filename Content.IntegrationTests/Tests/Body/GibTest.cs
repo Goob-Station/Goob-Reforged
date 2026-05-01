@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 #nullable enable
 using Content.Server.Body.Systems;
 using Robust.Shared.GameObjects;

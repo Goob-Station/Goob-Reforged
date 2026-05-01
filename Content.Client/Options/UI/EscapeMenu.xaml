@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <ui1:EscapeMenu xmlns="https://spacestation14.io"
             xmlns:changelog="clr-namespace:Content.Client.Changelog"
             xmlns:ui="clr-namespace:Content.Client.Voting.UI"

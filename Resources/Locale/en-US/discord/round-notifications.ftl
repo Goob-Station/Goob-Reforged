@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 discord-round-notifications-new = A new round is starting!
 discord-round-notifications-started = Round #{$id} on map "{$map}" started.
 discord-round-notifications-end = Round #{$id} has ended. It lasted for {$hours} hours, {$minutes} minutes, and {$seconds} seconds.

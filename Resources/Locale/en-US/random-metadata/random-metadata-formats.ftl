@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 random-metadata-name-format-default = {$part0}
 random-metadata-description-format-default = {$part0}
 

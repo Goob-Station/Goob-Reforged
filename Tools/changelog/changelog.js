@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 Delta-V Contributors
-//
-// SPDX-License-Identifier: MPL-2.0
-
 // From https://github.com/DeltaV-Station/Delta-v/
 // Dependencies
 const fs = require("fs");

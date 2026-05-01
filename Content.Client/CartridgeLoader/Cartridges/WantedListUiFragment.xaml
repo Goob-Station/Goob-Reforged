@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <cartridges:WantedListUiFragment xmlns:cartridges="clr-namespace:Content.Client.CartridgeLoader.Cartridges"
         xmlns="https://spacestation14.io"
         xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"

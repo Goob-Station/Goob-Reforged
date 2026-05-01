@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # UI
 admin-notes-title = Notes for {$player}
 admin-notes-new-note = New note

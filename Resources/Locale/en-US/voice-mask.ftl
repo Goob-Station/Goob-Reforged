@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 voice-mask-default-name-override = Unknown
 
 voice-mask-name-change-window = Voice Mask Name Change

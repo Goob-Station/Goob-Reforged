@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 construction-graph-component-any-computer-circuit-board = any computer circuit board
 construction-graph-component-door-electronics-circuit-board = door electronics circuit board
 construction-graph-component-flash = flash

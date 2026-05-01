@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 names-ai-dataset-1 = 16-20
 names-ai-dataset-2 = 512k
 

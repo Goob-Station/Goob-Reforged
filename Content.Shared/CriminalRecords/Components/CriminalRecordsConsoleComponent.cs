@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.CriminalRecords.Systems;
 using Content.Shared.CriminalRecords.Components;
 using Content.Shared.CriminalRecords;

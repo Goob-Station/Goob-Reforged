@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 accent-pirate-prefix-1 = Arrgh
 accent-pirate-prefix-2 = Garr
 accent-pirate-prefix-3 = Yarr

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 shuttle-timer-eta = ETA
 shuttle-timer-etd = ETD
 shuttle-timer-shuttle-time = ShuttleTime

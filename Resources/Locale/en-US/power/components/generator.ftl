@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 generator-clogged = {CAPITALIZE(THE($generator))} shuts off abruptly!
 
 portable-generator-verb-start = Start generator

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 flatpack-unpack-no-room = No room to unpack!
 flatpack-examine = Use a [color=yellow]multitool[/color] to unpack this.
 flatpack-entity-name = {$name} flatpack

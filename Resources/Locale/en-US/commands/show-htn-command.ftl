@@ -1,6 +1,2 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cmd-showhtn-desc = Shows the current status for HTN NPCs.
 cmd-showhtn-help = Usage: showhtn

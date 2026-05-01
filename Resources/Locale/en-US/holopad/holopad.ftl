@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Window headers
 holopad-window-title = {CAPITALIZE($title)}
 holopad-window-subtitle = [color=white][bold]Holographic communication system[/bold][/color]

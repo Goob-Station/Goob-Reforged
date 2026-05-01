@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 admin-logs-title = Admin Logs Panel
 admin-logs-count = Showing {$showing}/{$total} of {$round}
 admin-logs-export = Export

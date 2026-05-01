@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Cargo.UI;
 using Content.Shared.Cargo.BUI;
 using Content.Shared.Cargo.Events;
