@@ -20,7 +20,7 @@ public static class BootstrapBuilder
         return "dotnet";
     }
 
-    private static string FindRepoRoot()
+    public static string FindRepoRoot()
     {
         var dir = AppContext.BaseDirectory;
         while (dir != null)
@@ -34,9 +34,6 @@ public static class BootstrapBuilder
 
     public static Task BuildAll()
     {
-        var repoRoot = FindRepoRoot();
-        Environment.CurrentDirectory = repoRoot;
-
         var modules = ModuleDiscovery.DiscoverModules().ToList();
 
         Console.WriteLine("Building core projects...");

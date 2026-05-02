@@ -1,40 +1,34 @@
 using System.Diagnostics;
 using Goobstation.Bootstrap;
 
-await BootstrapBuilder.BuildAll();
+var repoRoot = BootstrapBuilder.FindRepoRoot();
+Environment.CurrentDirectory = repoRoot;
 
-var command = args.Length > 0 ? args[0].ToLowerInvariant() : null;
+if (!CommandLineArgs.TryParse(args, out var parsed))
+    return 0;
 
-switch (command)
+// TODO if server/client argument is specified, we should build only server/client modules here
+if (!parsed.SkipBuild)
+    await BootstrapBuilder.BuildAll();
+
+if (parsed.Client && parsed.Server)
 {
-    case null:
-        var server = StartProject("Content.Server/Content.Server.csproj");
-        var client = StartProject("Content.Client/Content.Client.csproj");
-        if (server == null || client == null)
-            return 1;
-        server.WaitForExit();
-        client.WaitForExit();
-        return 0;
-
-    case "run-client":
-        return RunProject("Content.Client/Content.Client.csproj");
-
-    case "run-server":
-        return RunProject("Content.Server/Content.Server.csproj");
-
-    default:
-        PrintUsage();
+    var server = StartProject("Content.Server/Content.Server.csproj");
+    var client = StartProject("Content.Client/Content.Client.csproj");
+    if (server == null || client == null)
         return 1;
+    server.WaitForExit();
+    client.WaitForExit();
+    return 0;
 }
 
-static void PrintUsage()
-{
-    Console.WriteLine("Usage: Goobstation.Bootstrap [command]");
-    Console.WriteLine();
-    Console.WriteLine("  (no args)    - Build and run client + server");
-    Console.WriteLine("  run-client   - Build and run the client only");
-    Console.WriteLine("  run-server   - Build and run the server only");
-}
+if (parsed.Client)
+    return RunProject("Content.Client/Content.Client.csproj");
+
+if (parsed.Server)
+    return RunProject("Content.Server/Content.Server.csproj");
+
+return 1;
 
 static int RunProject(string projectPath)
 {
