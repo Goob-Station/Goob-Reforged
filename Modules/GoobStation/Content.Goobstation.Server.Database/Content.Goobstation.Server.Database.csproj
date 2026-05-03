@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>RA0003</NoWarn>
   </PropertyGroup>
   <Import Project="..\..\..\MSBuild\Content.props"/>
 
