@@ -7,7 +7,6 @@
 
   <Import Project="..\..\..\RobustToolbox\Imports\Lidgren.props" />
   <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
-  <Import Project="..\..\..\RobustToolbox\Imports\Packaging.props" />
 
   <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 </Project>
