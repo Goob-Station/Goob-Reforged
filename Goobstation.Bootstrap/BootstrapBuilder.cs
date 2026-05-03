@@ -69,6 +69,52 @@ public static class BootstrapBuilder
         return Task.CompletedTask;
     }
 
+    public static Task BuildClient()
+    {
+        var modules = ModuleDiscovery.DiscoverModules().Where(module => module.Type is not ModuleRole.Server).ToList();
+
+        Console.WriteLine("Building core projects...");
+        RunDotnetBuild("Content.Client/Content.Client.csproj");
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Building module {module.Name}...");
+            RunDotnetBuild(module.ProjectPath);
+        }
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Copying {module.Name} outputs...");
+            CopyModuleOutputs(module, "bin/Content.Client");
+        }
+
+        Console.WriteLine("Build complete.");
+        return Task.CompletedTask;
+    }
+
+    public static Task BuildServer()
+    {
+        var modules = ModuleDiscovery.DiscoverModules().Where(module => module.Type is not ModuleRole.Client).ToList();
+
+        Console.WriteLine("Building core projects...");
+        RunDotnetBuild("Content.Server/Content.Server.csproj");
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Building module {module.Name}...");
+            RunDotnetBuild(module.ProjectPath);
+        }
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Copying {module.Name} outputs...");
+            CopyModuleOutputs(module, "bin/Content.Server");
+        }
+
+        Console.WriteLine("Build complete.");
+        return Task.CompletedTask;
+    }
+
     private static void RunDotnetBuild(string projectPath)
     {
         var psi = new ProcessStartInfo

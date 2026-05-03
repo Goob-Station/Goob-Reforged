@@ -19,13 +19,19 @@ public sealed class CommandLineArgs
     /// </summary>
     public bool SkipBuild { get; set; }
 
+    /// <summary>
+    /// Should we open a new shell for the run project.
+    /// </summary>
+    public bool ShellExecute { get; set; }
+
     // CommandLineArgs, 3rd of her name.
     public static bool TryParse(IReadOnlyList<string> args, [NotNullWhen(true)] out CommandLineArgs? parsed)
     {
         parsed = null;
-        bool client = true;
-        bool server = true;
+        var client = true;
+        var server = true;
         var skipBuild = false;
+        var shellExecute = true;
 
         using var enumerator = args.GetEnumerator();
         var i = -1;
@@ -52,6 +58,9 @@ public sealed class CommandLineArgs
                 case "--skip-build":
                     skipBuild = true;
                     break;
+                case "--no-shell-execute":
+                    shellExecute = false;
+                    break;
                 case "--help":
                     PrintHelp();
                     return false;
@@ -61,7 +70,7 @@ public sealed class CommandLineArgs
             }
         }
 
-        parsed = new CommandLineArgs(client, server, skipBuild);
+        parsed = new CommandLineArgs(client, server, skipBuild, shellExecute);
         return true;
     }
 
@@ -71,17 +80,20 @@ public sealed class CommandLineArgs
 Usage: Goobstation.Bootstrap [client/server/(both)] [options]
 
 Options:
-  --skip-build          Should we skip building the project and use what's already there.
+  --skip-build          Skips building the project and uses what's already there.
+  --no-shell-execute    Doesn't open a new shell and instead uses the bootstrap shell for logs.
 ");
     }
 
     private CommandLineArgs(
         bool client,
         bool server,
-        bool skipBuild)
+        bool skipBuild,
+        bool shellExecute)
     {
         Client = client;
         Server = server;
         SkipBuild = skipBuild;
+        ShellExecute = shellExecute;
     }
 }

@@ -7,14 +7,11 @@ Environment.CurrentDirectory = repoRoot;
 if (!CommandLineArgs.TryParse(args, out var parsed))
     return 0;
 
-// TODO if server/client argument is specified, we should build only server/client modules here
-if (!parsed.SkipBuild)
-    await BootstrapBuilder.BuildAll();
-
 if (parsed.Client && parsed.Server)
 {
-    var server = StartProject("Content.Server/Content.Server.csproj");
-    var client = StartProject("Content.Client/Content.Client.csproj");
+    await BootstrapBuilder.BuildAll();
+    var server = StartProject("Content.Server/Content.Server.csproj", parsed.ShellExecute);
+    var client = StartProject("Content.Client/Content.Client.csproj", parsed.ShellExecute);
     if (server == null || client == null)
         return 1;
     server.WaitForExit();
@@ -23,29 +20,35 @@ if (parsed.Client && parsed.Server)
 }
 
 if (parsed.Client)
-    return RunProject("Content.Client/Content.Client.csproj");
+{
+    await BootstrapBuilder.BuildClient();
+    return RunProject("Content.Client/Content.Client.csproj", parsed.ShellExecute);
+}
 
 if (parsed.Server)
-    return RunProject("Content.Server/Content.Server.csproj");
+{
+    await BootstrapBuilder.BuildServer();
+    return RunProject("Content.Server/Content.Server.csproj", parsed.ShellExecute);
+}
 
 return 1;
 
-static int RunProject(string projectPath)
+static int RunProject(string projectPath, bool useShellExecute)
 {
-    using var process = StartProject(projectPath);
+    using var process = StartProject(projectPath, useShellExecute);
     if (process == null)
         return 1;
     process.WaitForExit();
     return process.ExitCode;
 }
 
-static Process? StartProject(string projectPath)
+static Process? StartProject(string projectPath, bool useShellExecute)
 {
     var process = Process.Start(new ProcessStartInfo
     {
         FileName = BootstrapBuilder.DotnetPath,
         Arguments = $"run --project {projectPath}",
-        UseShellExecute = false
+        UseShellExecute = useShellExecute,
     });
 
     if (process == null)
