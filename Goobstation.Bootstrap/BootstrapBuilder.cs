@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Content.Packaging;

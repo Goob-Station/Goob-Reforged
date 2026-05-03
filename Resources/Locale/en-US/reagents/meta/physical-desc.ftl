@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 reagent-physical-desc-soapy = soapy
 reagent-physical-desc-ferrous = ferrous
 reagent-physical-desc-nothing = nothing

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cmd-removeextracomponents-desc = Removes all components from all entities of the specified id if that component is not in its prototype.\nIf no id is specified, it matches all entities.
 cmd-removeextracomponents-help = removeextracomponents / removeextracomponents <entityId>
 cmd-removeextracomponents-invalid-prototype-id = Can't find entity prototype with id {$id}.

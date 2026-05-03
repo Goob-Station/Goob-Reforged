@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 ### UI
 
 # Shown when examining the window. Each entry represents the window's health condition

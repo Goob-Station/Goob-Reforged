@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 names-borer-dataset-1 = Alcyonium
 names-borer-dataset-2 = Anomia
 names-borer-dataset-3 = Aphrodita

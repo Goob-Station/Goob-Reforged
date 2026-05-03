@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using static Content.Shared.Arcade.SharedSpaceVillainArcadeComponent;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;

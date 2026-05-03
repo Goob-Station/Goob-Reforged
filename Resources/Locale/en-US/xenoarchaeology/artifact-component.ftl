@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 ### Verbs
 artifact-verb-make-always-active = Make artifact always active
 artifact-verb-activate = Activate artifact

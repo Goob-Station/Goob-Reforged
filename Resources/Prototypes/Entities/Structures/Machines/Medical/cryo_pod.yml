@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: [BaseStructure, ConstructibleMachine] # Not a BaseMachinePowered since we don't want the anchorable component
   id: CryoPod

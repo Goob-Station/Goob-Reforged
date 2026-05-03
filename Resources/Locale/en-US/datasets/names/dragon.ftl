@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 names-dragon-dataset-1 = Dayle
 names-dragon-dataset-2 = Phlogdor
 names-dragon-dataset-3 = Nidir

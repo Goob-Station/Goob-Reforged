@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <Document>
   # Atmospheric Alerts Computer
   The Atmospheric Alerts Computer is a computer that shows information on all air alarms and fire alarms across the station.

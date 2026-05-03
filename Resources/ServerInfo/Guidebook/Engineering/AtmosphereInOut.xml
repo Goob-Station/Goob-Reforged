@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <Document>
   #Atmosphere Input and Output
   Inserting and extracting gasses from a present (or non-present) atmosphere is an essential part of Atmos' job.

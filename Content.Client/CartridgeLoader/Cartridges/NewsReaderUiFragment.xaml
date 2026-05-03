@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <cartridges:NewsReaderUiFragment xmlns:cartridges="clr-namespace:Content.Client.CartridgeLoader.Cartridges"
                                xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
                                xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"

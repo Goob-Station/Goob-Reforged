@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cmd-forceghost-desc = Makes a player an observer.
 cmd-forceghost-help = Usage: forceghost <player>
 

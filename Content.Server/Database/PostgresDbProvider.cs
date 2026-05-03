@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MPL-2.0
-
 using System;
 using Robust.Shared.Utility;
 

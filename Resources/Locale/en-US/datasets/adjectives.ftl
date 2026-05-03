@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 adjectives-dataset-1 = adorable
 adjectives-dataset-2 = adventurous
 adjectives-dataset-3 = aggressive

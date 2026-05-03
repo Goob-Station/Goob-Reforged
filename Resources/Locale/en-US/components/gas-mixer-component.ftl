@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 comp-gas-mixer-ui-mixer-status = Status:
 comp-gas-mixer-ui-status-enabled = On
 comp-gas-mixer-ui-status-disabled = Off

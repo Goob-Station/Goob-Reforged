@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.SensorMonitoring;
 using Robust.Shared.Collections;
 using ConsoleUIState = Content.Shared.SensorMonitoring.SensorMonitoringConsoleBoundInterfaceState;

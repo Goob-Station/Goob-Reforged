@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Chasm;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;

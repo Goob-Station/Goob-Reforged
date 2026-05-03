@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MPL-2.0
-
 using Content.ModuleManager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Atmos.Monitor.Components;
 using Content.Server.Atmos.Monitor.Systems;
 using Content.Server.Atmos.Piping.Components;

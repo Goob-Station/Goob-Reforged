@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 names-hologram-dataset-1 = Apollo
 names-hologram-dataset-2 = Data
 names-hologram-dataset-3 = GLIMMER

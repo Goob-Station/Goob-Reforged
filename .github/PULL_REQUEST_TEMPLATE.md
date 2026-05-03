@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <!-- NOTE: All code submitted to this repository is licensed under the terms specified in each file’s license header.
 By default, files are licensed under the Mozilla Public License (MPL).
 Secondary licenses may be indicated in the header to facilitate integration with other projects.

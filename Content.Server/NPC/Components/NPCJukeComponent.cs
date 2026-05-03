@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.NPC.HTN.PrimitiveTasks.Operators.Combat;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 

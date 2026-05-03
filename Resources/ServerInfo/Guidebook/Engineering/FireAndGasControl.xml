@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <Document>
   # Fire and Gas Control
   Unfortunately, [textlink="fires" link="Fires"], [textlink="spacing" link="Spacing"], and other [textlink="atmospheric upsets" link="AtmosphericUpsets"] are a common occurrence on the station.

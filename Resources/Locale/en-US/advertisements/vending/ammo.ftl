@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 advertisement-ammo-1 = Liberation Station: Your one-stop shop for all things second amendment!
 advertisement-ammo-2 = Be a patriot today, pick up a gun!
 advertisement-ammo-3 = Quality weapons for cheap prices!

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Armor examines
 armor-examinable-verb-text = Armor
 armor-examinable-verb-message = Examine the armor values.

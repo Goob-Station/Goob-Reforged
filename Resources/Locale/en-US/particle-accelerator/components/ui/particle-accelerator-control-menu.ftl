@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 particle-accelerator-control-menu-on-button = On
 particle-accelerator-control-menu-off-button = Off
 particle-accelerator-control-menu-service-manual-reference = Refer to p.132 of service manual

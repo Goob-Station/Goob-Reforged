@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cmd-applyworldgenconfig-description = Applies the given worldgen configuration to a map, setting it up for chunk loading/etc.
 cmd-applyworldgenconfig-help = applyworldgenconfig <mapid> <prototype>
 cmd-applyworldgenconfig-prototype = worldgen config prototype
