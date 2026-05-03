@@ -60,7 +60,7 @@ public static class ClientPackaging
             await using var zip = new ZipArchive(zipFile, ZipArchiveMode.Update);
             var writer = new AssetPassZipWriter(zip);
 
-            await WriteResources("", writer, logger, default);
+            await WriteResources("", configuration, writer, logger, default);
             await writer.FinishedTask;
         }
 
@@ -81,7 +81,7 @@ public static class ClientPackaging
         return clientProjects;
     }
 
-    private static List<string> FindAllModules(string path = ".")
+    private static List<string> FindAllModules(string path = ".", string configuration = "Debug")
     {
         if (string.IsNullOrEmpty(path))
             path = ".";
@@ -94,7 +94,7 @@ public static class ClientPackaging
         {
             modules.Add(mod.Name);
 
-            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(mod.ProjectPath);
+            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(mod.ProjectPath, configuration);
             var moduleDepsPath = Path.Combine(moduleOutputDir, $"{mod.Name}.deps.json");
 
             if (File.Exists(coreDepsPath) && File.Exists(moduleDepsPath))
@@ -108,6 +108,7 @@ public static class ClientPackaging
 
     public static async Task WriteResources(
         string contentDir,
+        string configuration,
         AssetPass pass,
         IPackageLogger logger,
         CancellationToken cancel)
@@ -125,13 +126,14 @@ public static class ClientPackaging
 
         var inputPass = graph.Input;
 
-        var modules = FindAllModules(contentDir);
+        var modules = FindAllModules(contentDir, configuration);
 
         await WriteClientContentAssemblies(
             inputPass,
             contentDir,
             modules,
-            cancel);
+            cancel,
+            configuration);
 
         await WriteClientResources(contentDir, inputPass, SharedPackaging.AdditionalIgnoredResources, cancel);
 
@@ -174,7 +176,8 @@ public static class ClientPackaging
         AssetPass pass,
         string contentDir,
         IEnumerable<string> contentAssemblies,
-        CancellationToken cancel = default)
+        CancellationToken cancel = default,
+        string configuration = "Debug")
     {
         var mainBinDir = Path.Combine(contentDir, "bin", "Content.Client");
 
@@ -188,7 +191,7 @@ public static class ClientPackaging
         // Map each module to its own build output directory
         foreach (var module in allModules)
         {
-            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(module.ProjectPath);
+            var moduleOutputDir = ModuleDiscovery.GetModuleOutputDir(module.ProjectPath, configuration);
             moduleOutputDirs[module.Name] = moduleOutputDir;
         }
 
