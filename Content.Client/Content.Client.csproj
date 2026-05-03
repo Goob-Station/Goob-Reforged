@@ -25,10 +25,28 @@
   <Import Project="..\RobustToolbox\MSBuild\XamlIL.targets" />
 
   <!-- Module loading -->
+  <!-- Because Robust.Client.Injectors don't support DebugOpt and Tools configurations,
+       we have to ensure that they're compiled in order to not get an error -->
   <Target Name="CompileAndCopyModules" AfterTargets="Build">
     <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Common.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
+      <ModuleProjects Include="../RobustToolbox/Robust.Client.Injectors/Robust.Client.Injectors.csproj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(ModuleProjects)"
+             Properties="Configuration=$(Configuration);Platform=$(Platform);BuildProjectReferences=false;IsBuildingModules=true"
+             BuildInParallel="true">
+      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
+    </MSBuild>
+
+    <Copy SourceFiles="@(ModuleAssemblies)"
+          DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <!-- Client modules -->
+  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+    <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
     </ItemGroup>
 
