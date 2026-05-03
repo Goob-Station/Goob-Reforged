@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Server.Administration;
 using Content.Server.Administration.Managers;
@@ -80,7 +76,9 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
         {
             trackers.Add(PlayTimeTrackingShared.TrackerAdmin);
             trackers.Add(PlayTimeTrackingShared.TrackerOverall);
-            return;
+
+            if (!_cfg.GetCVar(CCVars.GameAdminJobTracking))
+                return;
         }
 
         if (!IsPlayerAlive(player))

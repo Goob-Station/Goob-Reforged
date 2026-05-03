@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 thief-backpack-window-title = Thieving Kit
 
 thief-backpack-window-description =
@@ -22,8 +18,8 @@ thief-backpack-button-deselect = Select [X]
 thief-backpack-category-chameleon-name = Chameleon Kit
 thief-backpack-category-chameleon-description =
     You are everyone and no one; you are a master of disguise.
-    Includes: A full set of chameleon clothing,
-    a chameleon projector, and an Agent ID.
+    Includes: A full set of chameleon clothing with Agent ID,
+    a chameleon projector, and a fake mindshield implant.
     Disguise as anyone and anything.
 
 thief-backpack-category-tools-name = Breacher Kit
@@ -58,7 +54,7 @@ thief-backpack-category-communicator-description =
     Money is power, and secrets are money. Use your silver tongue
     and wealth to subvert the station.
     Includes: Master key for all station channels, a CyberSun pen,
-    voice chameleon mask, and 20k spesos inside a briefcase.
+    voice mask implanter, and 20k spesos inside a briefcase.
 
 thief-backpack-category-smuggler-name = Smuggler Kit
 thief-backpack-category-smuggler-description =

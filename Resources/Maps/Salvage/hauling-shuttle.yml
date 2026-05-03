@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 meta:
   format: 6
   postmapinit: false
@@ -669,13 +665,6 @@ entities:
     components:
     - type: Transform
       pos: 3.5,-5.5
-      parent: 1
-- proto: CratePartsT3
-  entities:
-  - uid: 187
-    components:
-    - type: Transform
-      pos: -2.5,2.5
       parent: 1
 - proto: CratePlasma
   entities:

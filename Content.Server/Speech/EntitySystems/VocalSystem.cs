@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Actions;
 using Content.Server.Chat.Systems;
 using Content.Shared.Chat;
@@ -121,7 +117,7 @@ public sealed class VocalSystem : EntitySystem
         if (component.Sounds == null)
             return;
 
-        sex ??= CompOrNull<HumanoidAppearanceComponent>(uid)?.Sex ?? Sex.Unsexed;
+        sex ??= CompOrNull<HumanoidProfileComponent>(uid)?.Sex ?? Sex.Unsexed;
 
         if (!component.Sounds.TryGetValue(sex.Value, out var protoId))
             return;

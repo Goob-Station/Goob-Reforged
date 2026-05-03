@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 flatpack-unpack-no-room = No room to unpack!
 flatpack-examine = Use a [color=yellow]multitool[/color] to unpack this.
 flatpack-entity-name = {$name} flatpack
@@ -12,5 +8,7 @@ flatpacker-ui-title = Flatpacker 1001
 flatpacker-ui-materials-label = Materials
 flatpacker-ui-cost-label = Packing Cost
 flatpacker-ui-no-board-label = No board present!
+flatpacker-ui-board-invalid-label = [color=red]Invalid board!
+    Unable to print![/color]
 flatpacker-ui-insert-board = Insert a board to begin.
 flatpacker-ui-pack-button = Pack

@@ -1,18 +1,15 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.IntegrationTests.Fixtures;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.Networking
 {
     [TestFixture]
-    public sealed class NetworkIdsMatchTest
+    public sealed class NetworkIdsMatchTest : GameTest
     {
         [Test]
         public async Task TestConnect()
         {
-            await using var pair = await PoolManager.GetServerClient(new PoolSettings { Connected = true });
+            var pair = Pair;
             var server = pair.Server;
             var client = pair.Client;
 
@@ -42,7 +39,6 @@ namespace Content.IntegrationTests.Tests.Networking
                     Assert.That(clientNetComps[netId].Name, Is.EqualTo(serverNetComps[netId].Name));
                 }
             });
-            await pair.CleanReturnAsync();
         }
     }
 }

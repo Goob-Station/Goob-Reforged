@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Chemistry.Components;
 using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.Components;
@@ -43,9 +39,7 @@ namespace Content.Server.Chemistry.EntitySystems
 
         private void HandleCollide(Entity<VaporComponent> entity, ref StartCollideEvent args)
         {
-            if (!TryComp(entity.Owner, out SolutionContainerManagerComponent? contents)) return;
-
-            foreach (var (_, soln) in _solutionContainerSystem.EnumerateSolutions((entity.Owner, contents)))
+            foreach (var (_, soln) in _solutionContainerSystem.EnumerateSolutions(entity.Owner))
             {
                 var solution = soln.Comp.Solution;
                 _reactive.DoEntityReaction(args.OtherEntity, solution, ReactionMethod.Touch);
@@ -106,7 +100,8 @@ namespace Content.Server.Chemistry.EntitySystems
             base.Update(frameTime);
 
             // Enumerate over all VaporComponents
-            var query = EntityQueryEnumerator<VaporComponent, SolutionContainerManagerComponent, TransformComponent>();
+            // TODO: Vapor should just use SolutionComponent and not be capable of having multiple solutions.
+            var query = EntityQueryEnumerator<VaporComponent, SolutionManagerComponent, TransformComponent>();
             while (query.MoveNext(out var uid, out var vaporComp, out var container, out var xform))
             {
                 // Return early if we're not active

@@ -1,17 +1,13 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: [ClothingEyesBase, BaseChameleon]
-  id: ClothingEyesChameleon # no flash immunity, sorry
+  id: ClothingEyesChameleon
   name: sun glasses
   description: Useful both for security and cargonia.
   suffix: Chameleon
   components:
+    - type: FlashImmunity
     - type: Tag
-      tags: # intentionally no WhitelistChameleon tag
-      - PetWearable
+      tags: [] # ignore "WhitelistChameleon" tag
     - type: Sprite
       sprite: Clothing/Eyes/Glasses/sunglasses.rsi
     - type: Clothing

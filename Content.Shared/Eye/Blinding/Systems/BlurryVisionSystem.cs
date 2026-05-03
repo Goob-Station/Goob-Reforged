@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Inventory;
@@ -48,12 +44,12 @@ public sealed class BlurryVisionSystem : EntitySystem
 
     private void OnGlassesEquipped(Entity<VisionCorrectionComponent> glasses, ref GotEquippedEvent args)
     {
-        UpdateBlurMagnitude(args.Equipee);
+        UpdateBlurMagnitude(args.EquipTarget);
     }
 
     private void OnGlassesUnequipped(Entity<VisionCorrectionComponent> glasses, ref GotUnequippedEvent args)
     {
-        UpdateBlurMagnitude(args.Equipee);
+        UpdateBlurMagnitude(args.EquipTarget);
     }
 }
 

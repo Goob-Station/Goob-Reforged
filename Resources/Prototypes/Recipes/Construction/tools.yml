@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: construction
   id: LightTorch
   graph: LightTorch
@@ -47,5 +43,29 @@
   graph: LogicGate
   startNode: start
   targetNode: random_gate
+  category: construction-category-tools
+  objectType: Item
+
+- type: construction
+  id: MakeshiftMortarAndPestle
+  graph: MakeshiftMortarAndPestle
+  startNode: start
+  targetNode: mortarAndPestle
+  category: construction-category-tools
+  objectType: Item
+
+- type: construction
+  id: MakeshiftJuicer
+  graph: MakeshiftJuicer
+  startNode: start
+  targetNode: juicer
+  category: construction-category-tools
+  objectType: Item
+
+- type: construction
+  id: MakeshiftCentrifuge
+  graph: MakeshiftCentrifuge
+  startNode: start
+  targetNode: makeshiftCentrifuge
   category: construction-category-tools
   objectType: Item

@@ -1,9 +1,5 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: localizedDataset
   id: NamesXenoborg
   values:
     prefix: names-xenoborg-dataset-
-    count: 60
+    count: 80

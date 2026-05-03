@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Antag;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Spawners.Components;
@@ -69,9 +65,9 @@ public sealed class RuleGridsSystem : GameRuleSystem<RuleGridsComponent>
             if (_whitelist.IsWhitelistFail(ent.Comp.SpawnerWhitelist, uid))
                 continue;
 
-            if (TryComp<GridSpawnPointWhitelistComponent>(uid, out var gridSpawnPointWhitelistComponent))
+            if (TryComp<AntagGridSpawnPointComponent>(uid, out var comp))
             {
-                if (!_whitelist.CheckBoth(args.Entity, gridSpawnPointWhitelistComponent.Blacklist, gridSpawnPointWhitelistComponent.Whitelist))
+                if (args.Antag == null || !comp.Whitelist.Contains(args.Antag))
                     continue;
             }
 

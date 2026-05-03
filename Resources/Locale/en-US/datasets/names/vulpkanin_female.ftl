@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 names-vulpkanin-female-dataset-1 = Adrianna
 names-vulpkanin-female-dataset-2 = Agatha
 names-vulpkanin-female-dataset-3 = Agneza

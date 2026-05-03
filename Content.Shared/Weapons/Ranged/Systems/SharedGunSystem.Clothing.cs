@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Containers;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
@@ -20,7 +16,7 @@ public partial class SharedGunSystem
     {
         var getConnectedContainerEvent = new GetConnectedContainerEvent();
         RaiseLocalEvent(uid, ref getConnectedContainerEvent);
-        if(!getConnectedContainerEvent.ContainerEntity.HasValue)
+        if (!getConnectedContainerEvent.ContainerEntity.HasValue)
             return;
 
         RaiseLocalEvent(getConnectedContainerEvent.ContainerEntity.Value, args);

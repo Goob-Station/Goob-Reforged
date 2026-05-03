@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Body.Events;
 using Content.Shared.Emoting;
 using Content.Shared.Hands;
@@ -27,14 +23,7 @@ namespace Content.Shared.ActionBlocker
     {
         [Dependency] private readonly SharedContainerSystem _container = default!;
 
-        private EntityQuery<ComplexInteractionComponent> _complexInteractionQuery;
-
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            _complexInteractionQuery = GetEntityQuery<ComplexInteractionComponent>();
-        }
+        [Dependency] private readonly EntityQuery<ComplexInteractionComponent> _complexInteractionQuery = default!;
 
         // These two methods should probably both live in SharedMoverController
         // but they're called in a million places and I'm not doing that

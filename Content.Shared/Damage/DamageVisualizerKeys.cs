@@ -1,7 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.Shared.Damage.Prototypes;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Damage
@@ -18,16 +16,16 @@ namespace Content.Shared.Damage
     [Serializable, NetSerializable]
     public sealed class DamageVisualizerGroupData : ICloneable
     {
-        public List<string> GroupList;
+        public List<ProtoId<DamageGroupPrototype>> GroupList;
 
-        public DamageVisualizerGroupData(List<string> groupList)
+        public DamageVisualizerGroupData(List<ProtoId<DamageGroupPrototype>> groupList)
         {
             GroupList = groupList;
         }
 
         public object Clone()
         {
-            return new DamageVisualizerGroupData(new List<string>(GroupList));
+            return new DamageVisualizerGroupData(new List<ProtoId<DamageGroupPrototype>>(GroupList));
         }
     }
 }

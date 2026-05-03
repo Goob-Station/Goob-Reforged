@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Destructible;
 using Content.Server.DeviceNetwork.Systems;
 using Content.Server.NPC.HTN;
@@ -88,7 +84,7 @@ public sealed partial class DeployableTurretSystem : SharedDeployableTurretSyste
             args.Data.TryGetValue(command, out int? armamentState))
         {
             if (TryComp<BatteryWeaponFireModesComponent>(ent, out var batteryWeaponFireModes))
-                _fireModes.TrySetFireMode(ent, batteryWeaponFireModes, armamentState.Value);
+                _fireModes.TrySetFireMode((ent, batteryWeaponFireModes), armamentState.Value);
 
             TrySetState(ent, armamentState.Value >= 0);
             return;

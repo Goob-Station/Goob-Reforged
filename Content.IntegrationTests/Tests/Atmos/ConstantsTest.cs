@@ -1,8 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
-using System.Linq;
+﻿using System.Linq;
+using Content.IntegrationTests.Fixtures;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Prototypes;
@@ -10,12 +7,12 @@ using Content.Shared.Atmos.Prototypes;
 namespace Content.IntegrationTests.Tests.Atmos;
 
 [TestOf(typeof(Atmospherics))]
-public sealed class ConstantsTest
+public sealed class ConstantsTest : GameTest
 {
     [Test]
     public async Task TotalGasesTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
+        var pair = Pair;
         var server = pair.Server;
         var entityManager = server.EntMan;
         var protoManager = server.ProtoMan;
@@ -38,9 +35,6 @@ public sealed class ConstantsTest
                 // enum mapping gases to their Id
                 Assert.That(Enum.GetValues<Gas>(), Has.Length.EqualTo(Atmospherics.TotalNumberOfGases),
                      $"Gas enum size is not equal to TotalNumberOfGases.");
-                // localized abbreviations for UI purposes
-                Assert.That(Atmospherics.GasAbbreviations, Has.Count.EqualTo(Atmospherics.TotalNumberOfGases),
-                     $"GasAbbreviations size is not equal to TotalNumberOfGases.");
 
                 // the ID for each gas has to correspond to a value in the Gas enum (converted to a string)
                 foreach (var gas in gasProtos)
@@ -49,6 +43,5 @@ public sealed class ConstantsTest
                 }
             });
         });
-        await pair.CleanReturnAsync();
     }
 }

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Atmos.Piping.Binary.Components;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Localizations;
@@ -42,11 +38,9 @@ namespace Content.Client.Atmos.UI
             Update();
         }
 
-        private void OnToggleStatusButtonPressed()
+        private void OnToggleStatusButtonPressed(bool status)
         {
-            if (_window is null) return;
-
-            SendPredictedMessage(new GasVolumePumpToggleStatusMessage(_window.PumpStatus));
+            SendPredictedMessage(new GasVolumePumpToggleStatusMessage(status));
         }
 
         private void OnPumpTransferRatePressed(string value)

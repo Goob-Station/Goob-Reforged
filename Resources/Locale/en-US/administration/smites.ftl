@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 admin-smite-chess-self = You feel exceptionally small.
 admin-smite-chess-others = {CAPITALIZE($name)} shrinks into the chessboard!
 admin-smite-set-alight-self = You burst into flames!
@@ -111,7 +107,6 @@ admin-smite-disarm-prone-description = Makes them get disarmed 100% of the time 
 admin-smite-garbage-can-description = Turn them into a garbage bin to emphasize what they remind you of.
 admin-smite-super-bonk-description = Slams them on every single table on the Station and beyond.
 admin-smite-super-bonk-lite-description= Slams them on every single table on the Station and beyond. Stops when the target is dead.
-admin-smite-terminate-description = Creates a Terminator ghost role with the sole objective of killing them.
 admin-smite-super-slip-description = Slips them really, really hard.
 admin-smite-omni-accent-description = Makes the target speak with almost every accent available.
 admin-smite-crawler-description = Makes the target fall down and be unable to stand up. Remove their hands too for added effect!

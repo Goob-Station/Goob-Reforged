@@ -1,8 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Text;
+using Content.IntegrationTests.Fixtures;
 using Content.Server.Construction.Completions;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Prototypes;
@@ -11,7 +8,7 @@ using Robust.Shared.Prototypes;
 namespace Content.IntegrationTests.Tests.Construction
 {
     [TestFixture]
-    public sealed class ConstructionActionValid
+    public sealed class ConstructionActionValid : GameTest
     {
         private bool IsValid(IGraphAction action, IPrototypeManager protoMan, out string prototype)
         {
@@ -51,7 +48,7 @@ namespace Content.IntegrationTests.Tests.Construction
         [Test]
         public async Task ConstructionGraphSpawnPrototypeValid()
         {
-            await using var pair = await PoolManager.GetServerClient();
+            var pair = Pair;
             var server = pair.Server;
 
             var protoMan = server.ResolveDependency<IPrototypeManager>();
@@ -88,13 +85,12 @@ namespace Content.IntegrationTests.Tests.Construction
             });
 
             Assert.That(valid, Is.True, $"One or more SpawnPrototype actions specified invalid entity prototypes!\n{message}");
-            await pair.CleanReturnAsync();
         }
 
         [Test]
         public async Task ConstructionGraphEdgeValid()
         {
-            await using var pair = await PoolManager.GetServerClient();
+            var pair = Pair;
             var server = pair.Server;
 
             var protoMan = server.ResolveDependency<IPrototypeManager>();
@@ -122,7 +118,6 @@ namespace Content.IntegrationTests.Tests.Construction
             });
 
             Assert.That(valid, Is.True, $"One or more edges specified invalid node targets!\n{message}");
-            await pair.CleanReturnAsync();
         }
     }
 }

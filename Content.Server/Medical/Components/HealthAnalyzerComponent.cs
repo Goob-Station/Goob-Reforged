@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Audio;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
@@ -29,6 +25,12 @@ public sealed partial class HealthAnalyzerComponent : Component
     /// </summary>
     [DataField]
     public TimeSpan UpdateInterval = TimeSpan.FromSeconds(1);
+
+    /// <summary>
+    /// If the last state of the health analyzer was active (e.g. they are in range of the patient).
+    /// </summary>
+    [DataField]
+    public bool IsAnalyzerActive = false;
 
     /// <summary>
     /// How long it takes to scan someone.

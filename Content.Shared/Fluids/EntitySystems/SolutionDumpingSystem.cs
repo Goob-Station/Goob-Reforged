@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Chemistry.Components;
@@ -32,7 +28,7 @@ public sealed class SolutionDumpingSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solContainer = default!;
 
-    private EntityQuery<DumpableSolutionComponent> _dumpQuery;
+    [Dependency] private readonly EntityQuery<DumpableSolutionComponent> _dumpQuery = default!;
 
     public override void Initialize()
     {
@@ -43,9 +39,6 @@ public sealed class SolutionDumpingSystem : EntitySystem
         SubscribeLocalEvent<DrainableSolutionComponent, DragDropDraggedEvent>(OnDrainableDragged);
 
         SubscribeLocalEvent<DumpableSolutionComponent, DrainedTargetEvent>(OnDrainedToDumpableDragged);
-
-        // We use queries for these since CanDropDraggedEvent gets called pretty rapidly
-        _dumpQuery = GetEntityQuery<DumpableSolutionComponent>();
     }
 
     private void OnDrainableCanDrag(Entity<DrainableSolutionComponent> ent, ref CanDragEvent args)

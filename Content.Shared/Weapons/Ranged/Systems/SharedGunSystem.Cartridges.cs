@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage;
 using Content.Shared.Damage.Events;
 using Content.Shared.Damage.Systems;
@@ -30,9 +26,9 @@ public abstract partial class SharedGunSystem
             : Loc.GetString("gun-cartridge-unspent"));
     }
 
-    private void OnCartridgeDamageExamine(EntityUid uid, CartridgeAmmoComponent component, ref DamageExamineEvent args)
+    private void OnCartridgeDamageExamine(Entity<CartridgeAmmoComponent> ent, ref DamageExamineEvent args)
     {
-        var damageSpec = GetProjectileDamage(component.Prototype);
+        var damageSpec = GetProjectileDamage(ent.Comp.Prototype);
 
         if (damageSpec == null)
             return;

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Whitelist;
 
 namespace Content.Shared.Mind.Filters;
@@ -14,7 +10,7 @@ public sealed partial class ObjectiveMindFilter : MindFilter
     [DataField(required: true)]
     public EntityWhitelist Blacklist = new();
 
-    protected override bool ShouldRemove(Entity<MindComponent> mind, EntityUid? exclude, IEntityManager entMan, SharedMindSystem mindSys)
+    protected override bool ShouldRemove(Entity<MindComponent> mind, EntityUid? exclude, IEntityManager entMan)
     {
         var whitelistSys = entMan.System<EntityWhitelistSystem>();
         foreach (var obj in mind.Comp.Objectives)

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: [ BaseMachinePowered, ConstructibleMachine ]
   id: SalvageMagnet
@@ -58,11 +54,3 @@
   - type: SalvageMagnet
   - type: ApcPowerReceiver
     powerLoad: 1000
-
-- type: weightedRandomEntity
-  id: RandomAsteroidPool
-  weights:
-    AsteroidSalvageSmall: 3
-    AsteroidSalvageMedium: 7
-    AsteroidSalvageLarge: 5
-    AsteroidSalvageHuge: 3

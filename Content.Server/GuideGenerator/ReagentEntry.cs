@@ -1,11 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using System.Text.Json.Serialization;
 using Content.Server.Body.Components;
-using Content.Shared.Body.Prototypes;
 using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.EntityEffects;
@@ -47,7 +42,7 @@ public sealed class ReagentEntry
         Description = proto.LocalizedDescription;
         PhysicalDescription = proto.LocalizedPhysicalDescription;
         SubstanceColor = proto.SubstanceColor.ToHex();
-        Metabolisms = proto.Metabolisms?.ToDictionary(x => x.Key.Id, x => x.Value);
+        Metabolisms = proto.Metabolisms?.Metabolisms.ToDictionary(x => x.Key.Id, x => x.Value);
     }
 }
 

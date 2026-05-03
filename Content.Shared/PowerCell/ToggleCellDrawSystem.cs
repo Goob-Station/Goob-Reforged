@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.PowerCell.Components;
@@ -40,9 +36,7 @@ public sealed class ToggleCellDrawSystem : EntitySystem
 
     private void OnToggled(Entity<ToggleCellDrawComponent> ent, ref ItemToggledEvent args)
     {
-        var uid = ent.Owner;
-        var draw = Comp<PowerCellDrawComponent>(uid);
-        _cell.SetDrawEnabled((uid, draw), args.Activated);
+        _cell.SetDrawEnabled(ent.Owner, args.Activated);
     }
 
     private void OnEmpty(Entity<ToggleCellDrawComponent> ent, ref PowerCellSlotEmptyEvent args)

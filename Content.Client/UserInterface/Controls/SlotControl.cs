@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Numerics;
 using Content.Client.Cooldown;
 using Content.Client.UserInterface.Systems.Inventory.Controls;
@@ -13,7 +9,6 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Client.UserInterface.Controls
 {
-    [Virtual]
     public abstract class SlotControl : Control, IEntityControl
     {
         public static int DefaultButtonSize = 64;

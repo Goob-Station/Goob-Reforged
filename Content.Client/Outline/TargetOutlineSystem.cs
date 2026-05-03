@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Numerics;
 using Content.Shared.Interaction;
 using Content.Shared.Whitelist;
@@ -31,6 +27,7 @@ public sealed class TargetOutlineSystem : EntitySystem
     [Dependency] private readonly SharedInteractionSystem _interactionSystem = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
     [Dependency] private readonly SharedTransformSystem _transformSystem = default!;
+    [Dependency] private readonly EntityQuery<SpriteComponent> _spriteQuery = default!;
 
     private bool _enabled = false;
 
@@ -134,11 +131,10 @@ public sealed class TargetOutlineSystem : EntitySystem
         var mousePos = _eyeManager.PixelToMap(_inputManager.MouseScreenPosition).Position;
         var bounds = new Box2(mousePos - LookupVector, mousePos + LookupVector);
         var pvsEntities = _lookup.GetEntitiesIntersecting(_eyeManager.CurrentEye.Position.MapId, bounds, LookupFlags.Approximate | LookupFlags.Static);
-        var spriteQuery = GetEntityQuery<SpriteComponent>();
 
         foreach (var entity in pvsEntities)
         {
-            if (!spriteQuery.TryGetComponent(entity, out var sprite) || !sprite.Visible)
+            if (!_spriteQuery.TryGetComponent(entity, out var sprite) || !sprite.Visible)
                 continue;
 
             // Check the predicate

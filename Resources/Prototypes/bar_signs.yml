@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: barSign
   id: Harmbaton
   name: barsign-prototype-name-harmbaton
@@ -201,3 +197,12 @@
     sprite: Structures/Wallmounts/barsign.rsi
     state: whiskeyechoes
   description: barsign-prototype-description-whiskeyechoes
+
+- type: barSign
+  id: EmpBarSign
+  name: barsign-prototype-name-empbarsign
+  hidden: true
+  icon:
+    sprite: Structures/Wallmounts/barsign.rsi
+    state: empbarsign 
+  description: barsign-prototype-description-empbarsign

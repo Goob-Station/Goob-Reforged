@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Administration;
 using Content.Shared.Administration;
 using Robust.Server.Player;
@@ -77,7 +73,13 @@ public sealed class AddUplinkCommand : LocalizedEntityCommands
         }
 
         // Finally add uplink
-        if (!_uplinkSystem.AddUplink(user, 20, uplinkEntity: uplinkEntity, giveDiscounts: isDiscounted))
+        var result = _uplinkSystem.AddUplink(user, 20, out var code, uplinkEntity: uplinkEntity, giveDiscounts: isDiscounted);
+
+        if (code != null && result == AddUplinkResult.Pda)
+            shell.WriteLine(Loc.GetString("add-uplink-command-success-pda", ("code", string.Join("-", code).Replace("sharp", "#"))));
+        else if (result == AddUplinkResult.Implant)
+            shell.WriteLine(Loc.GetString("add-uplink-command-success-implant"));
+        else if (result == AddUplinkResult.Failure)
             shell.WriteLine(Loc.GetString("add-uplink-command-error-2"));
     }
 

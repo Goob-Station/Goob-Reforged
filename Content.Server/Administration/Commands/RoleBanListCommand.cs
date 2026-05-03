@@ -1,14 +1,8 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
-using System.Linq;
-using System.Text;
-using Content.Server.Administration.BanList;
+﻿using Content.Server.Administration.BanList;
 using Content.Server.EUI;
 using Content.Server.Database;
 using Content.Shared.Administration;
-using Robust.Server.Player;
+using Content.Shared.Database;
 using Robust.Shared.Console;
 
 namespace Content.Server.Administration.Commands;
@@ -52,7 +46,7 @@ public sealed class RoleBanListCommand : IConsoleCommand
         if (shell.Player is not { } player)
         {
 
-            var bans = await _dbManager.GetServerRoleBansAsync(data.LastAddress, data.UserId, data.LastLegacyHWId, data.LastModernHWIds, includeUnbanned);
+            var bans = await _dbManager.GetBansAsync(data.LastAddress, data.UserId, data.LastLegacyHWId, data.LastModernHWIds, includeUnbanned, type: BanType.Role);
 
             if (bans.Count == 0)
             {
@@ -62,7 +56,7 @@ public sealed class RoleBanListCommand : IConsoleCommand
 
             foreach (var ban in bans)
             {
-                var msg = $"ID: {ban.Id}: Role: {ban.Role} Reason: {ban.Reason}";
+                var msg = $"ID: {ban.Id}: Role(s): {string.Join(",", ban.Roles ?? [])} Reason: {ban.Reason}";
                 shell.WriteLine(msg);
             }
             return;

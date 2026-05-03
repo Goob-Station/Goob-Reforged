@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.DoAfter;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Nutrition.Components;
@@ -46,7 +42,7 @@ namespace Content.Server.Nutrition.EntitySystems
             if (!args.CanReach
                 || !_solutionContainerSystem.TryGetRefillableSolution(entity.Owner, out _, out var solution)
                 || !HasComp<BloodstreamComponent>(args.Target)
-                || !_ingestion.HasMouthAvailable(args.Target.Value, args.User)
+                || !_ingestion.HasMouthAvailable(args.User, args.Target.Value)
                 )
             {
                 return;

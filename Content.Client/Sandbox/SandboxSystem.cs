@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Administration.Managers;
 using Content.Client.Movement.Systems;
 using Content.Shared.Sandbox;
@@ -85,6 +81,11 @@ namespace Content.Client.Sandbox
         public void Suicide()
         {
             RaiseNetworkEvent(new MsgSandboxSuicide());
+        }
+
+        public void ToggleThermalVision()
+        {
+            RaiseNetworkEvent(new MsgSandboxThermalVision());
         }
 
         public bool Copy(ICommonSession? session, EntityCoordinates coords, EntityUid uid)

@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <Control xmlns="https://spacestation14.io"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
@@ -34,8 +28,7 @@ SPDX-License-Identifier: MIT-WIZARDS
                         Text="{Loc 'character-setup-gui-character-setup-close-button'}"
                         StyleClasses="ButtonBig"/>
             </BoxContainer>
-            <PanelContainer StyleClasses="highlight">
-            </PanelContainer>
+            <PanelContainer StyleClasses="highlight" MinHeight="2" />
             <BoxContainer Orientation="Horizontal" VerticalExpand="True" SeparationOverride="0">
                 <ScrollContainer MinSize="325 0" Margin="5 5 0 0">
                     <BoxContainer Name="Characters" Orientation="Vertical" />

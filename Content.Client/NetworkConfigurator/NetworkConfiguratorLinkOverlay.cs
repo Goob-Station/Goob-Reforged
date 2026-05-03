@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.NetworkConfigurator.Systems;
 using Content.Shared.DeviceNetwork.Components;
 using Robust.Client.Graphics;
@@ -45,9 +41,9 @@ public sealed class NetworkConfiguratorLinkOverlay : Overlay
             if (!Colors.TryGetValue(uid, out var color))
             {
                 color = new Color(
-                    _random.Next(0, 255),
-                    _random.Next(0, 255),
-                    _random.Next(0, 255));
+                    _random.NextByte(0, 255),
+                    _random.NextByte(0, 255),
+                    _random.NextByte(0, 255));
                 Colors.Add(uid, color);
             }
 

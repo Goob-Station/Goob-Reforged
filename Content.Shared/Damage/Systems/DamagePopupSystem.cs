@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
@@ -11,6 +7,7 @@ namespace Content.Shared.Damage.Systems;
 public sealed class DamagePopupSystem : EntitySystem
 {
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
+    [Dependency] private readonly DamageableSystem _damageable = default!;
 
     public override void Initialize()
     {
@@ -23,7 +20,7 @@ public sealed class DamagePopupSystem : EntitySystem
     {
         if (args.DamageDelta != null)
         {
-            var damageTotal = args.Damageable.TotalDamage;
+            var damageTotal = _damageable.GetTotalDamage((ent, args.Damageable));
             var damageDelta = args.DamageDelta.GetTotal();
 
             var msg = ent.Comp.Type switch

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   name: t-ray scanner
   parent: BaseItem
@@ -29,3 +25,5 @@
       Glass: 150
   - type: StaticPrice
     price: 85
+  - type: UseDelay
+    delay: 1

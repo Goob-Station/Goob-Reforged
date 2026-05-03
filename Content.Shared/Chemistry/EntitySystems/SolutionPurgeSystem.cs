@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
@@ -31,7 +27,8 @@ public sealed class SolutionPurgeSystem : EntitySystem
     {
         base.Update(frameTime);
 
-        var query = EntityQueryEnumerator<SolutionPurgeComponent, SolutionContainerManagerComponent>();
+        // TODO: SolutionPurgeComponent on Solution Entities!
+        var query = EntityQueryEnumerator<SolutionPurgeComponent, SolutionManagerComponent>();
         while (query.MoveNext(out var uid, out var purge, out var manager))
         {
             if (_timing.CurTime < purge.NextPurgeTime)

@@ -1,6 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
+using Content.Shared.Radiation.Systems;
 
 namespace Content.Shared.Radiation.Components;
 
@@ -8,6 +6,7 @@ namespace Content.Shared.Radiation.Components;
 ///     Irradiate all objects in range.
 /// </summary>
 [RegisterComponent]
+[Access(typeof(SharedRadiationSystem))]
 public sealed partial class RadiationSourceComponent : Component
 {
     /// <summary>

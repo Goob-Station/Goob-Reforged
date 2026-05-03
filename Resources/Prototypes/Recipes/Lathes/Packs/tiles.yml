@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 ## Static
 
 - type: latheRecipePack
@@ -13,9 +9,13 @@
   - FloorTileItemDarkHerringbone
   - FloorTileItemDarkMini
   - FloorTileItemDarkMono
+  - FloorTileItemDarkSlatsContinuous
+  - FloorTileItemDarkVerticalSlatsBordered
+  - FloorTileItemDarkHorizontalSlatsBordered
   - FloorTileItemDarkPavement
   - FloorTileItemDarkPavementVertical
   - FloorTileItemDarkOffset
+  - FloorTileItemDarkSquiggly
 
 - type: latheRecipePack
   id: FloorSteelTilesStatic
@@ -26,6 +26,9 @@
   - FloorTileItemSteelDiagonal
   - FloorTileItemSteelHerringbone
   - FloorTileItemSteelMini
+  - FloorTileItemSteelSlatsContinuous
+  - FloorTileItemSteelVerticalSlatsBordered
+  - FloorTileItemSteelHorizontalSlatsBordered
   - FloorTileItemSteelMono
   - FloorTileItemSteelPavement
   - FloorTileItemSteelPavementVertical
@@ -42,6 +45,9 @@
   - FloorTileItemWhiteHerringbone
   - FloorTileItemWhiteMini
   - FloorTileItemWhiteMono
+  - FloorTileItemWhiteSlatsContinuous
+  - FloorTileItemWhiteVerticalSlatsBordered
+  - FloorTileItemWhiteHorizontalSlatsBordered
   - FloorTileItemWhitePavement
   - FloorTileItemWhitePavementVertical
 
@@ -52,6 +58,18 @@
   - FloorTileItemTechmaint
   - FloorTileItemSteelMaint
   - FloorTileItemTechmaintDark
+
+- type: latheRecipePack
+  id: FloorIndustrialTilesStatic
+  recipes:
+  - FloorTileItemMining
+  - FloorTileItemMiningDark
+  - FloorTileItemMiningLight
+  - FloorTileItemElevatorShaft
+  - FloorTileItemRockVault
+  - FloorTileItemMetalDiamond
+  - FloorTileItemFreezer
+  - FloorTileItemShowroom
 
 - type: latheRecipePack
   id: FloorWoodTilesStatic
@@ -72,6 +90,9 @@
   - FloorTileItemOldConcrete
   - FloorTileItemOldConcreteMono
   - FloorTileItemOldConcreteSmooth
+  - FloorTileItemIronsandConcrete
+  - FloorTileItemIronsandConcreteMono
+  - FloorTileItemIronsandConcreteSmooth
 
 - type: latheRecipePack
   id: CircuitFloorsStatic
@@ -85,6 +106,42 @@
   recipes:
   - FloorTileItemWhiteMarble
   - FloorTileItemDarkMarble
+  - FloorTileItemUraniumMarble
+  - FloorTileItemPlasmaMarble
+
+- type: latheRecipePack
+  id: FloorShuttleTilesStatic
+  recipes:
+  - FloorTileItemShuttleWhite
+  - FloorTileItemShuttleBlue
+  - FloorTileItemShuttleOrange
+  - FloorTileItemShuttlePurple
+  - FloorTileItemShuttleRed
+  - FloorTileItemShuttleGrey
+  - FloorTileItemShuttleBlack
+
+- type: latheRecipePack
+  id: PlasticTilesStatic
+  recipes:
+  - FloorTileItemLino
+  - FloorTileItemBoxing
+  - FloorTileItemGym
+
+- type: latheRecipePack
+  id: CarpetTilesStatic
+  recipes:
+  - FloorTileItemArcadeBlue
+  - FloorTileItemArcadeBlue2
+  - FloorTileItemArcadeRed
+  - FloorTileItemEighties
+  - FloorTileItemCarpetClown
+  - FloorTileItemCarpetOffice
+
+- type: latheRecipePack
+  id: PreciousTilesStatic
+  recipes:
+  - FloorTileItemGold
+  - FloorTileItemSilver
 
 ## Dynamic
 
@@ -99,4 +156,7 @@
   - FauxTileAstroIce
   - FauxTileAstroSnow
   - FauxTileAstroAsteroidSand
+  - FauxTileAstroAsteroidSandBorderless
   - FauxTileDesertAstroSand
+  - FauxTileAstroIronsand
+  - FauxTileAstroIronsandBorderless

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Implanters
 
 - type: entity
@@ -263,7 +259,7 @@
 
 - type: entity
   id: VoiceMaskImplanter
-  name: voice mask implanter
+  name: identity mask implanter
   parent: BaseImplantOnlyImplanterSyndi
   components:
   - type: Implanter

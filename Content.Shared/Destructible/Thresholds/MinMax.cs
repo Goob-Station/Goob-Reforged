@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Random;
 
 namespace Content.Shared.Destructible.Thresholds;
@@ -29,5 +25,10 @@ public partial struct MinMax
     public readonly int Next(System.Random random)
     {
         return random.Next(Min, Max + 1);
+    }
+
+    public static implicit operator MinMax((int Min, int Max) tuple)
+    {
+        return new MinMax(tuple.Min, tuple.Max);
     }
 }

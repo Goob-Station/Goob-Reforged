@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Movement.Systems;
 using Content.Shared.Standing;
 using Content.Shared.Throwing;
@@ -17,13 +13,11 @@ public sealed class SlidingSystem : EntitySystem
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _speedModifierSystem = default!;
 
-    private EntityQuery<SlipperyComponent> _slipperyQuery;
+    [Dependency] private readonly EntityQuery<SlipperyComponent> _slipperyQuery = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _slipperyQuery = GetEntityQuery<SlipperyComponent>();
 
         SubscribeLocalEvent<SlidingComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<SlidingComponent, ComponentShutdown>(OnComponentShutdown);

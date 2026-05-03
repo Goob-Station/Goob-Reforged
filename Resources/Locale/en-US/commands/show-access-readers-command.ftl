@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cmd-showaccessreaders-desc = Toggles showing access reader permissions on the map
 cmd-showaccessreaders-help =
     Overlay Info:

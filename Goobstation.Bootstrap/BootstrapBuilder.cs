@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Content.Packaging;
@@ -24,7 +20,7 @@ public static class BootstrapBuilder
         return "dotnet";
     }
 
-    private static string FindRepoRoot()
+    public static string FindRepoRoot()
     {
         var dir = AppContext.BaseDirectory;
         while (dir != null)
@@ -38,9 +34,6 @@ public static class BootstrapBuilder
 
     public static Task BuildAll()
     {
-        var repoRoot = FindRepoRoot();
-        Environment.CurrentDirectory = repoRoot;
-
         var modules = ModuleDiscovery.DiscoverModules().ToList();
 
         Console.WriteLine("Building core projects...");
@@ -70,6 +63,52 @@ public static class BootstrapBuilder
                     CopyModuleOutputs(module, "bin/Content.Client", "bin/Content.Server");
                     break;
             }
+        }
+
+        Console.WriteLine("Build complete.");
+        return Task.CompletedTask;
+    }
+
+    public static Task BuildClient()
+    {
+        var modules = ModuleDiscovery.DiscoverModules().Where(module => module.Type is not ModuleRole.Server).ToList();
+
+        Console.WriteLine("Building core projects...");
+        RunDotnetBuild("Content.Client/Content.Client.csproj");
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Building module {module.Name}...");
+            RunDotnetBuild(module.ProjectPath);
+        }
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Copying {module.Name} outputs...");
+            CopyModuleOutputs(module, "bin/Content.Client");
+        }
+
+        Console.WriteLine("Build complete.");
+        return Task.CompletedTask;
+    }
+
+    public static Task BuildServer()
+    {
+        var modules = ModuleDiscovery.DiscoverModules().Where(module => module.Type is not ModuleRole.Client).ToList();
+
+        Console.WriteLine("Building core projects...");
+        RunDotnetBuild("Content.Server/Content.Server.csproj");
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Building module {module.Name}...");
+            RunDotnetBuild(module.ProjectPath);
+        }
+
+        foreach (var module in modules)
+        {
+            Console.WriteLine($"Copying {module.Name} outputs...");
+            CopyModuleOutputs(module, "bin/Content.Server");
         }
 
         Console.WriteLine("Build complete.");

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Database;
 using Content.Shared.Hands.Components;
 using Content.Shared.Item;
@@ -82,6 +78,10 @@ public abstract partial class SharedHandsSystem
         handId ??= handsComp.ActiveHandId;
 
         if (handId == null)
+            return false;
+
+        // don't try to pick up the item if it's being deleted anyways
+        if (TerminatingOrDeleted(entity) || EntityManager.IsQueuedForDeletion(entity))
             return false;
 
         if (!Resolve(entity, ref item, false))

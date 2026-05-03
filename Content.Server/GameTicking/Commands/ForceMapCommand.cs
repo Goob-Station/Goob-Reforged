@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Server.Administration;
 using Content.Server.Maps;
@@ -27,7 +23,7 @@ namespace Content.Server.GameTicking.Commands
         {
             if (args.Length != 1)
             {
-                shell.WriteLine(Loc.GetString(Loc.GetString($"shell-need-exactly-one-argument")));
+                shell.WriteLine(Loc.GetString("shell-need-exactly-one-argument"));
                 return;
             }
 

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Guidebook.RichText;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
@@ -46,7 +42,7 @@ public sealed class GuidebookRichPrototypeLink : Control, IPrototypeLinkControl
     public void SetMessage(FormattedMessage message)
     {
         _message = message;
-        _richTextLabel.SetMessage(_message);
+        _richTextLabel.SetMessage(_message, tagsAllowed: null);
     }
 
     public IPrototype? LinkedPrototype { get; set; }

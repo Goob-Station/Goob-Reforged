@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
@@ -84,7 +80,7 @@ public abstract partial class SharedPuddleSystem
                 // Injectors should not be hardcoded here.
                 if (TryComp<InjectorComponent>(entity, out var injectorComp)
                     && _prototypeManager.Resolve(injectorComp.ActiveModeProtoId, out var activeMode)
-                    && !activeMode.Behavior.HasFlag(InjectorBehavior.Draw))
+                    && !activeMode.Behavior.HasAnyFlag(InjectorBehavior.Draw | InjectorBehavior.Dynamic))
                 {
                     foreach (var mode in injectorComp.AllowedModes)
                     {

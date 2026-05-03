@@ -1,10 +1,6 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   name: spear
-  parent: [BaseItem, BaseMinorContraband]
+  parent: [BaseItem, SolutionDart, BaseMinorContraband]
   id: Spear
   description: Definition of a Classic. Keeping murder affordable since 200,000 BCE.
   components:
@@ -62,10 +58,6 @@
   - type: Construction
     graph: Spear
     node: spear
-  - type: SolutionContainerManager
-    solutions:
-      melee:
-        maxVol: 2
   - type: MeleeChemicalInjector
     solution: melee
   - type: RefillableSolution
@@ -83,6 +75,7 @@
       types:
         Piercing: 4
   - type: Damageable
+  - type: Injurable
     damageContainer: Inorganic
   - type: Destructible
     thresholds:
@@ -121,7 +114,6 @@
     inHandsMaxFillLevels: 1
     equippedFillBaseName: -fill-
     equippedMaxFillLevels: 1
-
 
 - type: entity
   name: reinforced spear

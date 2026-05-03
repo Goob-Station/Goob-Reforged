@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.EntityTable.EntitySelectors;
 using JetBrains.Annotations;
 
@@ -14,4 +10,16 @@ namespace Content.Shared.EntityTable.ValueSelector;
 public abstract partial class NumberSelector
 {
     public abstract int Get(System.Random rand);
+
+    /// <summary>
+    /// Odds of occurrence
+    /// </summary>
+    /// <returns>An odds multiplier of at least one occurrence</returns>
+    public abstract float Odds();
+
+    /// <summary>
+    /// Average number of occurrences
+    /// </summary>
+    /// <returns>The average amount of occurrences</returns>
+    public abstract float Average();
 }

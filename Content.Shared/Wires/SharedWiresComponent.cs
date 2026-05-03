@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.DoAfter;
 using JetBrains.Annotations;
@@ -246,7 +242,7 @@ namespace Content.Shared.Wires
                 WireLetter.γ => "wire-letter-name-gamma",
                 WireLetter.δ => "wire-letter-name-delta",
                 WireLetter.ε => "wire-letter-name-epsilon",
-                WireLetter.ζ => "wire-letter-name-zeta ",
+                WireLetter.ζ => "wire-letter-name-zeta",
                 WireLetter.η => "wire-letter-name-eta",
                 WireLetter.θ => "wire-letter-name-theta",
                 WireLetter.ι => "wire-letter-name-iota",

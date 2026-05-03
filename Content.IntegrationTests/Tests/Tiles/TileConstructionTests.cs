@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.IntegrationTests.Tests.Interaction;
 using Robust.Shared.Map;
 
@@ -102,6 +98,27 @@ public sealed class TileConstructionTests : InteractionTest
         await AssertTile(Plating);
         AssertGridCount(1);
 
+        await AssertEntityLookup((FloorItem, 1));
+    }
+
+    /// <summary>
+    /// Test brassPlating -> floor -> brassPlating using tilestacking
+    /// </summary>
+    [Test]
+    public async Task BrassPlatingPlace()
+    {
+        await SetTile(PlatingBrass);
+
+        // Brass Plating -> Tile
+        await InteractUsing(FloorItem);
+        Assert.That(HandSys.GetActiveItem((SEntMan.GetEntity(Player), Hands)), Is.Null);
+        await AssertTile(Floor);
+        AssertGridCount(1);
+
+        // Tile -> Brass Plating
+        await InteractUsing(Pry);
+        await AssertTile(PlatingBrass);
+        AssertGridCount(1);
         await AssertEntityLookup((FloorItem, 1));
     }
 }

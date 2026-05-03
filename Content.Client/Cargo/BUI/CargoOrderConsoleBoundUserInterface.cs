@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Cargo;
 using Content.Client.Cargo.UI;
 using Content.Shared.Cargo.BUI;
@@ -74,9 +70,9 @@ namespace Content.Client.Cargo.BUI
 
             _menu.OnClose += Close;
 
-            _menu.OnItemSelected += (args) =>
+            _menu.OnItemSelected += (row) =>
             {
-                if (args.Button.Parent is not CargoProductRow row)
+                if (row == null)
                     return;
 
                 description.Clear();
@@ -179,23 +175,23 @@ namespace Content.Client.Cargo.BUI
             return true;
         }
 
-        private void RemoveOrder(ButtonEventArgs args)
+        private void RemoveOrder(CargoOrderData? order)
         {
-            if (args.Button.Parent?.Parent is not CargoOrderRow row || row.Order == null)
+            if (order == null)
                 return;
 
-            SendMessage(new CargoConsoleRemoveOrderMessage(row.Order.OrderId));
+            SendMessage(new CargoConsoleRemoveOrderMessage(order.OrderId));
         }
 
-        private void ApproveOrder(ButtonEventArgs args)
+        private void ApproveOrder(CargoOrderData? order)
         {
-            if (args.Button.Parent?.Parent is not CargoOrderRow row || row.Order == null)
+            if (order == null)
                 return;
 
             if (OrderCount >= OrderCapacity)
                 return;
 
-            SendMessage(new CargoConsoleApproveOrderMessage(row.Order.OrderId));
+            SendMessage(new CargoConsoleApproveOrderMessage(order.OrderId));
         }
     }
 }

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: ClothingOuterStorageBase
   id: ClothingOuterApron
@@ -206,7 +202,6 @@
     sprite: Clothing/OuterClothing/Misc/violetwizard.rsi
   - type: Tag
     tags:
-    - CorgiWearable
     - WhitelistChameleon
 
 - type: entity
@@ -236,7 +231,6 @@
     sprite: Clothing/OuterClothing/Misc/redwizard.rsi
   - type: Tag
     tags:
-    - CorgiWearable
     - WhitelistChameleon
 
 - type: entity

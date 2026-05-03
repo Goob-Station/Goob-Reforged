@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
@@ -57,5 +53,11 @@ namespace Content.Server.Bible.Components
 
         [DataField("locPrefix")]
         public string LocPrefix = "bible";
+
+        /// <summary>
+        /// A short light effect to display when successfully healing someone
+        /// </summary>
+        [DataField]
+        public EntProtoId? HealingLightEffect = "HolyLightEffect";
     }
 }

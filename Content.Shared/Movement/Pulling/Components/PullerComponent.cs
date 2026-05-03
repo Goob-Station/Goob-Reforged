@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Alert;
 using Content.Shared.Movement.Pulling.Systems;
 using Robust.Shared.GameStates;
@@ -25,7 +21,10 @@ public sealed partial class PullerComponent : Component
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField, Access(Other = AccessPermissions.ReadWriteExecute)]
     public TimeSpan NextThrow;
 
-    [DataField]
+    /// <summary>
+    /// Minimum time between pull throws.
+    /// </summary>
+    [DataField, AutoNetworkedField]
     public TimeSpan ThrowCooldown = TimeSpan.FromSeconds(1);
 
     // Before changing how this is updated, please see SharedPullerSystem.RefreshMovementSpeed
@@ -36,16 +35,19 @@ public sealed partial class PullerComponent : Component
     /// <summary>
     /// Entity currently being pulled if applicable.
     /// </summary>
-    [AutoNetworkedField, DataField]
+    [DataField, AutoNetworkedField]
     public EntityUid? Pulling;
 
     /// <summary>
-    ///     Does this entity need hands to be able to pull something?
+    /// Does this entity need hands to be able to pull something?
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public bool NeedsHands = true;
 
-    [DataField]
+    /// <summary>
+    /// The alert shown to the puller indicating that they are pulling something.
+    /// </summary>
+    [DataField, AutoNetworkedField]
     public ProtoId<AlertPrototype> PullingAlert = "Pulling";
 }
 

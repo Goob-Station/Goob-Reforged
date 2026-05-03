@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <controls:FancyWindow
     xmlns="https://spacestation14.io"
     xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
@@ -82,7 +76,7 @@ SPDX-License-Identifier: MIT-WIZARDS
             </GridContainer>
         </BoxContainer>
         <PanelContainer
-            StyleClasses="Inset"
+            StyleClasses="BackgroundPanelDark"
             VerticalAlignment="Top">
 
             <SpriteView Name="EntityView"

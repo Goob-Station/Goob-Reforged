@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
@@ -22,13 +18,11 @@ public sealed class TagSystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _proto = default!;
 
-    private EntityQuery<TagComponent> _tagQuery;
+    [Dependency] private readonly EntityQuery<TagComponent> _tagQuery = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _tagQuery = GetEntityQuery<TagComponent>();
 
 #if DEBUG
         SubscribeLocalEvent<TagComponent, ComponentInit>(OnTagInit);

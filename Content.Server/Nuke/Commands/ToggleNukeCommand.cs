@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Server.Administration;
 using Content.Shared.Administration;
@@ -68,7 +64,7 @@ public sealed class ToggleNukeCommand : LocalizedCommands
     {
         if (args.Length == 1)
         {
-            return CompletionResult.FromHint(Loc.GetString(Loc.GetString("cmd-nukearm-1-help")));
+            return CompletionResult.FromHint(Loc.GetString("cmd-nukearm-1-help"));
         }
 
         if (args.Length == 2)

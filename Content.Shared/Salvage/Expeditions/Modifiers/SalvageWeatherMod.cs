@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Weather;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
@@ -24,8 +20,8 @@ public sealed partial class SalvageWeatherMod : IPrototype, IBiomeSpecificMod
     public List<ProtoId<SalvageBiomeModPrototype>>? Biomes { get; private set; } = null;
 
     /// <summary>
-    /// Weather prototype to use on the planet.
+    /// Weather status effect prototype to use on the planet.
     /// </summary>
-    [DataField("weather", required: true, customTypeSerializer:typeof(PrototypeIdSerializer<WeatherPrototype>))]
-    public string WeatherPrototype = string.Empty;
+    [DataField("weather", required: true)]
+    public EntProtoId WeatherPrototype = string.Empty;
 }

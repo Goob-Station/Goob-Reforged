@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Operations
 - type: rcd
   id: Invalid   # Hidden prototype - do not add to RCDs
@@ -41,7 +37,7 @@
   category: WallsAndFlooring
   sprite: /Textures/Interface/Radial/RCD/plating.png
   mode: ConstructTile
-  prototype: Plating
+  prototype: PlatingRCD
   cost: 1
   delay: 1
   collisionMask: InteractImpassable
@@ -132,6 +128,7 @@
     - IsWindow
   rotation: User
   fx: EffectRCDConstruct1
+  allowMultiDirection: true
 
 - type: rcd
   id: ReinforcedWindow
@@ -161,6 +158,7 @@
     - IsWindow
   rotation: User
   fx: EffectRCDConstruct2
+  allowMultiDirection: true
 
 # Airlocks
 - type: rcd
@@ -212,6 +210,7 @@
   collisionBounds: "-0.23,-0.49,0.23,-0.36"
   rotation: User
   fx: EffectRCDConstruct1
+  allowMultiDirection: true
 
 - type: rcd
   id: BulbLight
@@ -225,6 +224,7 @@
   collisionBounds: "-0.23,-0.49,0.23,-0.36"
   rotation: User
   fx: EffectRCDConstruct1
+  allowMultiDirection: true
 
 # Electrical
 - type: rcd

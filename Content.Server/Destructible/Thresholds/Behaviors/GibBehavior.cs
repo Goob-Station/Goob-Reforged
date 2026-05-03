@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Body.Components;
 using Content.Shared.Database;
 using JetBrains.Annotations;
@@ -18,10 +14,7 @@ namespace Content.Server.Destructible.Thresholds.Behaviors
 
         public void Execute(EntityUid owner, DestructibleSystem system, EntityUid? cause = null)
         {
-            if (system.EntityManager.TryGetComponent(owner, out BodyComponent? body))
-            {
-                system.BodySystem.GibBody(owner, _recursive, body);
-            }
+            system.Gibbing.Gib(owner, _recursive);
         }
     }
 }

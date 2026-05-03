@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Database;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
@@ -169,10 +165,10 @@ public sealed partial class ResearchSystem
         if (args.Server != null)
             return;
         component.MainDiscipline = null;
-        component.CurrentTechnologyCards = new();
-        component.SupportedDisciplines = new();
-        component.UnlockedTechnologies = new();
-        component.UnlockedRecipes = new();
+        component.CurrentTechnologyCards = new List<string>();
+        component.SupportedDisciplines = new List<ProtoId<TechDisciplinePrototype>>();
+        component.UnlockedTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        component.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>();
         Dirty(uid, component);
     }
 }

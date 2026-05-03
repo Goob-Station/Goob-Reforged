@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <ui:FancyWindow xmlns="https://spacestation14.io"
             xmlns:x="http://schemas.microsoft.com/winfx/2007/xaml"
             xmlns:ui="clr-namespace:Content.Client.UserInterface.Controls"
@@ -13,7 +7,7 @@ SPDX-License-Identifier: MIT-WIZARDS
         <!-- Status (pressure, temperature, alarm state, device total, address, etc) -->
         <BoxContainer Orientation="Horizontal" Margin="0 0 0 2">
             <!-- Left column (view of entity) -->
-            <PanelContainer Margin="2 0 6 0" StyleClasses="Inset" VerticalAlignment="Center" VerticalExpand="True">
+            <PanelContainer Margin="2 0 6 0" StyleClasses="BackgroundPanelDark" VerticalAlignment="Center" VerticalExpand="True">
                 <SpriteView Name="EntityView" OverrideDirection="South" Scale="2 2" SetSize="64 64"/>
             </PanelContainer>
             <!-- Center column (pressure, temperature, alarm state) -->

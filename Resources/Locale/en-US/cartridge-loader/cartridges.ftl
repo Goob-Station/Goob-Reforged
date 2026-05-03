@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 device-pda-slot-component-slot-name-cartridge = Cartridge
 
 default-program-name = Program
@@ -11,6 +7,7 @@ news-read-program-name = Station news
 
 crew-manifest-program-name = Crew manifest
 crew-manifest-cartridge-loading = Loading ...
+crew-manifest-cartridge-loading-failed = Failed to load crew manifest!
 
 net-probe-program-name = NetProbe
 net-probe-scan = Scanned {$device}!

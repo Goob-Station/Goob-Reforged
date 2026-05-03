@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   name: jaws of life
   parent: BaseItem
@@ -55,10 +51,10 @@
       collection: MetalThud
 
 - type: entity
-  name: syndicate jaws of life
+  name: syndicate jaws of death
   parent: [JawsOfLife, BaseSyndicateContraband]
   id: SyndicateJawsOfLife
-  description: Useful for entering the station or its departments.
+  description: Useful for breaking into secure areas and other nefarious activities.
   components:
   - type: Sprite
     sprite: Objects/Tools/jaws_of_life.rsi

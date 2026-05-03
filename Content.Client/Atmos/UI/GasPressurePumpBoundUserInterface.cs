@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Piping.Binary.Components;
@@ -46,12 +42,9 @@ public sealed class GasPressurePumpBoundUserInterface(EntityUid owner, Enum uiKe
         _window.SetOutputPressure(pump.TargetPressure);
     }
 
-    private void OnToggleStatusButtonPressed()
+    private void OnToggleStatusButtonPressed(bool status)
     {
-        if (_window is null)
-            return;
-
-        SendPredictedMessage(new GasPressurePumpToggleStatusMessage(_window.PumpStatus));
+        SendPredictedMessage(new GasPressurePumpToggleStatusMessage(status));
     }
 
     private void OnPumpOutputPressurePressed(float value)

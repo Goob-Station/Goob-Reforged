@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Server.Cargo.Components;
 using Content.Server.Cargo.Systems;
@@ -68,9 +64,7 @@ public sealed class CargoGiftsRule : StationEventSystem<CargoGiftsRuleComponent>
 
             if (!_cargoSystem.AddAndApproveOrder(
                     station!.Value,
-                    product.Product,
-                    product.Name,
-                    product.Cost,
+                    product,
                     qty,
                     Loc.GetString(component.Sender),
                     Loc.GetString(component.Description),

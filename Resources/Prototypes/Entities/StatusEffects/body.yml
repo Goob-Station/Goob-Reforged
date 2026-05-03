@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: MobStatusEffectBase
   id: BloodstreamStatusEffectBase
@@ -28,8 +24,9 @@
   - type: DrunkStatusEffect
 
 - type: entity
+  abstract: true
   parent: MobStatusEffectBase
-  id: PainNumbnessTraitStatusEffect
+  id: PainNumbnessStatusEffectBase
   components:
   - type: StatusEffect
     whitelist:
@@ -37,12 +34,6 @@
       - MobState
       - MobThresholds
   - type: PainNumbnessStatusEffect
-
-- type: entity
-  parent: BloodstreamStatusEffectBase
-  id: StatusEffectHemophiliaTrait
-  components:
-  - type: HemophiliaStatusEffect
 
 - type: entity
   parent: BloodstreamStatusEffectDebuff
@@ -63,7 +54,7 @@
     bleedAmountMultiplier: 1.33
 
 - type: entity
-  parent: [ PainNumbnessTraitStatusEffect, MobStatusEffectDebuff ]
+  parent: [ PainNumbnessStatusEffectBase, MobStatusEffectDebuff ]
   id: StatusEffectPainNumbness
   name: pain numbness
 

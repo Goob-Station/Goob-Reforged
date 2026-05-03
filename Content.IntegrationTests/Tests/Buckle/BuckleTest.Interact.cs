@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Buckle;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Interaction;
@@ -16,7 +12,7 @@ public sealed partial class BuckleTest
     [Test]
     public async Task BuckleInteractUnbuckleOther()
     {
-        await using var pair = await PoolManager.GetServerClient();
+        var pair = Pair;
         var server = pair.Server;
 
         var entMan = server.ResolveDependency<IServerEntityManager>();
@@ -59,14 +55,12 @@ public sealed partial class BuckleTest
                 Assert.That(strap.BuckledEntities, Does.Not.Contain(victim));
             });
         });
-
-        await pair.CleanReturnAsync();
     }
 
     [Test]
     public async Task BuckleInteractBuckleUnbuckleSelf()
     {
-        await using var pair = await PoolManager.GetServerClient();
+        var pair = Pair;
         var server = pair.Server;
 
         var entMan = server.ResolveDependency<IServerEntityManager>();
@@ -106,7 +100,5 @@ public sealed partial class BuckleTest
                 Assert.That(strap.BuckledEntities, Does.Not.Contain(user));
             });
         });
-
-        await pair.CleanReturnAsync();
     }
 }

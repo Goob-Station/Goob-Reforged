@@ -1,8 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 #nullable enable
+using Content.IntegrationTests.Fixtures;
 using Content.Server.Stack;
 using Content.Shared.Stacks;
 using Content.Shared.Materials;
@@ -18,12 +15,12 @@ namespace Content.IntegrationTests.Tests.Materials
     [TestFixture]
     [TestOf(typeof(StackSystem))]
     [TestOf(typeof(MaterialPrototype))]
-    public sealed class MaterialPrototypeSpawnsStackMaterialTest
+    public sealed class MaterialPrototypeSpawnsStackMaterialTest : GameTest
     {
         [Test]
         public async Task MaterialPrototypeSpawnsStackMaterial()
         {
-            await using var pair = await PoolManager.GetServerClient();
+            var pair = Pair;
             var server = pair.Server;
             await server.WaitIdleAsync();
 
@@ -64,8 +61,6 @@ namespace Content.IntegrationTests.Tests.Materials
 
                 mapSystem.DeleteMap(testMap.MapId);
             });
-
-            await pair.CleanReturnAsync();
         }
     }
 }

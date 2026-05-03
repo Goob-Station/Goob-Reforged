@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage.Components;
 using Content.Shared.FixedPoint;
 using Content.Shared.Damage.Prototypes;
@@ -32,6 +28,6 @@ public sealed partial class DamageGroupTrigger : IThresholdTrigger
 
     public bool Reached(Entity<DamageableComponent> damageable, SharedDestructibleSystem system)
     {
-        return damageable.Comp.DamagePerGroup[DamageGroup] >= Damage;
+        return system.Damageable.GetDamagePerGroup(damageable.Owner).GetValueOrDefault(DamageGroup) >= Damage;
     }
 }

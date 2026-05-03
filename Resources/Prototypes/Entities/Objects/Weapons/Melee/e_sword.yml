@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   id: BaseMeleeWeaponEnergy # more generic naming in case someone makes like, idk, an energy axe
   parent: BaseItem
@@ -192,6 +188,7 @@
       types:
         Slash: 10
         Heat: 10
+    deactivatedSecret: true
   - type: ComponentToggler
     components:
     - type: Sharp

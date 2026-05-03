@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.EntitySystems;
 using JetBrains.Annotations;
@@ -50,7 +46,7 @@ namespace Content.Client.UserInterface.Systems.Atmos.GasTank
             if (EntMan.TryGetComponent(Owner, out GasTankComponent? component))
             {
                 var canConnect = EntMan.System<SharedGasTankSystem>().CanConnectToInternals((Owner, component));
-                _window?.Update(canConnect, component.IsConnected, component.OutputPressure);
+                _window?.Update(canConnect, component.IsConnected, component.ReleasePressure);
             }
 
             if (state is GasTankBoundUserInterfaceState cast)

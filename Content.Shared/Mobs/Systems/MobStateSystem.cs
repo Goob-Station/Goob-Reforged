@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Damage.Systems;
@@ -23,12 +19,11 @@ public partial class MobStateSystem : EntitySystem
     [Dependency] private readonly DamageableSystem _damageable = default!;
     private ISawmill _sawmill = default!;
 
-    private EntityQuery<MobStateComponent> _mobStateQuery;
+    [Dependency] private readonly EntityQuery<MobStateComponent> _mobStateQuery = default!;
 
     public override void Initialize()
     {
         _sawmill = _logManager.GetSawmill("MobState");
-        _mobStateQuery = GetEntityQuery<MobStateComponent>();
         base.Initialize();
         SubscribeEvents();
     }

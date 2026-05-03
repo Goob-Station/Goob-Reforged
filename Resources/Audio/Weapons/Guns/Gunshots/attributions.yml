@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - files: ["water_spray.ogg"]
   license: "CC0-1.0"
   copyright: "Watering by elittle13. Converted to .OGG and MONO by EmoGarbage404 (github)"
@@ -46,3 +42,8 @@
   license: "CC-BY-4.0"
   copyright: "Created by UnderlinedDesigns and DrinkingWindGames (https://freesound.org/people/DrinkingWindGames/sounds/789647), modified by Halycon"
   source: "https://freesound.org/people/UnderlinedDesigns/sounds/188499/"
+
+- files: ["magnetic_shot.ogg"]
+  license: "CC-BY-4.0"
+  copyright: "Created by simeonradivoev"
+  source: "https://freesound.org/people/simeonradivoev/sounds/740218"

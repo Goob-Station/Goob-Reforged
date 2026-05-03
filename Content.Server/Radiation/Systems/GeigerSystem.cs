@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Radiation.Components;
 using Content.Server.Radiation.Events;
 using Content.Shared.Hands;
@@ -51,7 +47,7 @@ public sealed class GeigerSystem : SharedGeigerSystem
     {
         if (geiger.Comp.AttachedToSuit)
             SetEnabled(geiger, true);
-        SetUser(geiger, args.Equipee);
+        SetUser(geiger, args.EquipTarget);
     }
 
     private void OnEquippedHand(Entity<GeigerComponent> geiger, ref GotEquippedHandEvent args)

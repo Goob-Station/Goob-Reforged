@@ -1,8 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
-using System.Numerics;
+﻿using System.Numerics;
+using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Pair;
 using Content.Shared.Ghost;
 using Content.Shared.Mind;
@@ -16,7 +13,7 @@ using Robust.UnitTesting;
 namespace Content.IntegrationTests.Tests.Minds;
 
 [TestFixture]
-public sealed class GhostTests
+public sealed class GhostTests : GameTest
 {
     private struct GhostTestData
     {
@@ -49,17 +46,20 @@ public sealed class GhostTests
         }
     }
 
+    // Client is needed to create a session for the ghost system. Creating a dummy session was too difficult.
+    public override PoolSettings PoolSettings => new()
+    {
+        DummyTicker = false,
+        Connected = true,
+        Dirty = true
+    };
+
     private async Task<GhostTestData> SetupData()
     {
         var data = new GhostTestData
         {
-            // Client is needed to create a session for the ghost system. Creating a dummy session was too difficult.
-            Pair = await PoolManager.GetServerClient(new PoolSettings
-            {
-                DummyTicker = false,
-                Connected = true,
-                Dirty = true
-            })
+            // ..Just use the gametest pair, please.
+            Pair = Pair,
         };
 
         data.SEntMan = data.Pair.Server.ResolveDependency<IServerEntityManager>();
@@ -130,8 +130,6 @@ public sealed class GhostTests
         // Ensure the position is the same
         var ghostPosition = data.SEntMan.GetComponent<TransformComponent>(ghost).Coordinates;
         Assert.That(ghostPosition, Is.EqualTo(oldPosition));
-
-        await data.Pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -158,8 +156,6 @@ public sealed class GhostTests
         // Ensure the position is the same
         var ghostPosition = data.SEntMan.GetComponent<TransformComponent>(ghost).Coordinates;
         Assert.That(ghostPosition, Is.EqualTo(oldPosition));
-
-        await data.Pair.CleanReturnAsync();
     }
 
     [Test]
@@ -172,10 +168,6 @@ public sealed class GhostTests
             // Delete the grid
             await data.Server.WaitPost(() => data.SEntMan.DeleteEntity(data.MapData.Grid.Owner));
         });
-
-        await data.Pair.RunTicksSync(5);
-
-        await data.Pair.CleanReturnAsync();
     }
 
 }

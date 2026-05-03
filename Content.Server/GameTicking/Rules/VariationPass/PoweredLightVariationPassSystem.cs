@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.GameTicking.Rules.VariationPass.Components;
 using Content.Server.Light.Components;
 using Content.Server.Light.EntitySystems;
@@ -43,7 +39,7 @@ public sealed class PoweredLightVariationPassSystem : VariationPassSystem<Powere
                 // some aging fluorescents (tubes) start to flicker
                 // its also way too annoying right now so we wrap it in another prob lol
                 if (Random.Prob(ent.Comp.AgedLightTubeFlickerChance))
-                    _poweredLight.ToggleBlinkingLight(uid, comp, true);
+                    EnsureComp<BlinkingPoweredLightComponent>(uid);
                 _poweredLight.ReplaceSpawnedPrototype((uid, comp), ent.Comp.AgedLightTubePrototype);
             }
             else

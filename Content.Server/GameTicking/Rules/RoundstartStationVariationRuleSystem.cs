@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Shuttles.Systems;
 using Content.Server.Station.Components;
@@ -30,7 +26,7 @@ public sealed class RoundstartStationVariationRuleSystem : GameRuleSystem<Rounds
         var spawns = EntitySpawnCollection.GetSpawns(component.Rules, _random);
         foreach (var rule in spawns)
         {
-            GameTicker.AddGameRule(rule);
+            GameTicker.AddFilteredGameRule(rule);
         }
     }
 

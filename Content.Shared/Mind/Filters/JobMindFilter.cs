@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Roles;
 using Content.Shared.Roles.Jobs;
 using Robust.Shared.Prototypes;
@@ -17,7 +13,7 @@ public sealed partial class JobMindFilter : MindFilter
     [DataField(required: true)]
     public ProtoId<JobPrototype> Job;
 
-    protected override bool ShouldRemove(Entity<MindComponent> mind, EntityUid? exclude, IEntityManager entMan, SharedMindSystem mindSys)
+    protected override bool ShouldRemove(Entity<MindComponent> mind, EntityUid? exclude, IEntityManager entMan)
     {
         var jobSys = entMan.System<SharedJobSystem>();
         return jobSys.MindHasJobWithId(mind, Job);

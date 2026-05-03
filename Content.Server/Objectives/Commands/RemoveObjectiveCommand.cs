@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Administration;
 using Content.Shared.Administration;
 using Content.Shared.Mind;
@@ -23,7 +19,7 @@ namespace Content.Server.Objectives.Commands
         {
             if (args.Length != 2)
             {
-                shell.WriteError(Loc.GetString(Loc.GetString("cmd-rmobjective-invalid-args")));
+                shell.WriteError(Loc.GetString("cmd-rmobjective-invalid-args"));
                 return;
             }
 

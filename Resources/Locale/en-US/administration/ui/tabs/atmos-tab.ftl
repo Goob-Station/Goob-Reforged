@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 admin-ui-atmos-add = Add Atmos
 admin-ui-atmos-add-gas = Add Gas
 admin-ui-atmos-fill-gas = Fill Gas

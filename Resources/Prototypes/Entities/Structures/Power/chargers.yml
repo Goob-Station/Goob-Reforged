@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   abstract: true
   parent: [BaseMachinePowered, ConstructibleMachine]
@@ -115,6 +111,9 @@
         blacklist:
           tags:
           - PotatoBattery
+  - type: Item
+    size: Ginormous
+  - type: MultiHandedItem
 
 - type: entity
   parent: [ BaseItemRecharger, ConstructibleMachine ]
@@ -179,6 +178,9 @@
         blacklist:
           tags:
           - PotatoBattery
+  - type: Item
+    size: Ginormous
+  - type: MultiHandedItem
 
 - type: entity
   parent: BaseItemRecharger
@@ -204,6 +206,9 @@
         blacklist:
           tags:
           - PotatoBattery
+  - type: Item
+    size: Ginormous
+  - type: MultiHandedItem
 
 - type: entity
   parent: [ BaseItemRecharger, BaseWallmount ]
@@ -241,6 +246,7 @@
   components:
   - type: Sprite
     sprite: Structures/Power/borg_charger.rsi
+    noRot: True
     layers:
       - state: borgcharger-u1
         map: ["base"]
@@ -308,6 +314,17 @@
       entity_storage: !type:Container
       machine_board: !type:Container
       machine_parts: !type:Container
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.48
+        density: 190
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
 
 - type: entity
   parent: BorgCharger

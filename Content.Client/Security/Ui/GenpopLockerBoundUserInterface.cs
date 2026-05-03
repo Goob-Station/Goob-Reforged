@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Security.Components;
 using JetBrains.Annotations;
 
@@ -20,7 +16,7 @@ public sealed class GenpopLockerBoundUserInterface(EntityUid owner, Enum uiKey) 
 
         _menu.OnConfigurationComplete += (name, time, crime) =>
         {
-            SendMessage(new GenpopLockerIdConfiguredMessage(name, time, crime));
+            SendPredictedMessage(new GenpopLockerIdConfiguredMessage(name, time, crime));
             Close();
         };
 

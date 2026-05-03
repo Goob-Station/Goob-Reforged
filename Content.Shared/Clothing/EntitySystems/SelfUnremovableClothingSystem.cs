@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Clothing.Components;
 using Content.Shared.Examine;
 using Content.Shared.Inventory;
@@ -27,7 +23,7 @@ public sealed class SelfUnremovableClothingSystem : EntitySystem
         if (TryComp<ClothingComponent>(selfUnremovableClothing, out var clothing) && (clothing.Slots & args.SlotFlags) == SlotFlags.NONE)
             return;
 
-        if (args.UnEquipTarget == args.Unequipee)
+        if (args.UnEquipTarget == args.User)
         {
             args.Cancel();
         }

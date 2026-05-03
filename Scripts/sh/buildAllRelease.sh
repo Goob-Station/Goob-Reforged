@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Goob Station Contributors
-#
-# SPDX-License-Identifier: MPL-2.0
-
 #!/usr/bin/env sh
 
 # make sure to start from script dir

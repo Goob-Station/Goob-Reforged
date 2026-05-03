@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 adjectives-dataset-1 = adorable
 adjectives-dataset-2 = adventurous
 adjectives-dataset-3 = aggressive
@@ -128,7 +124,7 @@ adjectives-dataset-123 = clumsy
 adjectives-dataset-124 = combative
 adjectives-dataset-125 = condemned
 adjectives-dataset-126 = confused
-adjectives-dataset-127 = crazy,flipped-out
+adjectives-dataset-127 = flipped-out
 adjectives-dataset-128 = creepy
 adjectives-dataset-129 = cruel
 adjectives-dataset-130 = dangerous

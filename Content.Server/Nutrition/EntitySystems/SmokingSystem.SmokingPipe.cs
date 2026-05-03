@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Nutrition.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Containers.ItemSlots;
@@ -85,11 +81,10 @@ namespace Content.Server.Nutrition.EntitySystems
 
             EntityUid contents = entity.Comp.BowlSlot.Item.Value;
 
-            if (!TryComp<SolutionContainerManagerComponent>(contents, out var reagents) ||
-                !_solutionContainerSystem.TryGetSolution(smokable.Owner, smokable.Comp.Solution, out var pipeSolution, out _))
+            if (!_solutionContainerSystem.TryGetSolution(smokable.Owner, smokable.Comp.Solution, out var pipeSolution, out _))
                 return false;
 
-            foreach (var (_, soln) in _solutionContainerSystem.EnumerateSolutions((contents, reagents)))
+            foreach (var (_, soln) in _solutionContainerSystem.EnumerateSolutions(contents))
             {
                 var reagentSolution = soln.Comp.Solution;
                 _solutionContainerSystem.TryAddSolution(pipeSolution.Value, reagentSolution);

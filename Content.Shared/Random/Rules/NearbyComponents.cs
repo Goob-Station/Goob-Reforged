@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Random.Rules;
@@ -26,9 +22,8 @@ public sealed partial class NearbyComponentsRule : RulesRule
     public override bool Check(EntityManager entManager, EntityUid uid)
     {
         var inRange = new HashSet<Entity<IComponent>>();
-        var xformQuery = entManager.GetEntityQuery<TransformComponent>();
 
-        if (!xformQuery.TryGetComponent(uid, out var xform) ||
+        if (!entManager.TryGetComponent(uid, out TransformComponent? xform) ||
             xform.MapUid == null)
         {
             return false;
@@ -48,7 +43,7 @@ public sealed partial class NearbyComponentsRule : RulesRule
             foreach (var comp in inRange)
             {
                 if (Anchored &&
-                    (!xformQuery.TryGetComponent(comp, out var compXform) ||
+                    (!entManager.TryGetComponent(comp, out TransformComponent? compXform) ||
                      !compXform.Anchored))
                 {
                     continue;

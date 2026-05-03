@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 namespace Content.Server.Cargo.Components;
 
 /// <summary>
@@ -10,12 +6,6 @@ namespace Content.Server.Cargo.Components;
 [RegisterComponent]
 public sealed partial class MobPriceComponent : Component
 {
-    /// <summary>
-    /// How much of a penalty per part there should be. This is a multiplier for a multiplier, the penalty for each body part is calculated from the total number of slots, and then multiplied by this.
-    /// </summary>
-    [DataField("missingBodyPartPenalty")]
-    public double MissingBodyPartPenalty = 1.0f;
-
     /// <summary>
     /// The base price this mob should fetch.
     /// </summary>

@@ -1,16 +1,14 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
+using Content.Shared.Objectives.Systems;
 
 namespace Content.Shared.Mind.Filters;
 
 /// <summary>
-/// A mind pool that uses <see cref="SharedMindSystem.AddAliveHumans"/>.
+/// A mind pool that uses <see cref="TargetSystem.AddAliveHumans"/>.
 /// </summary>
-public sealed partial class AliveHumansPool : IMindPool
+public sealed partial class AliveHumansPool : MindPool
 {
-    void IMindPool.FindMinds(HashSet<Entity<MindComponent>> minds, EntityUid? exclude, IEntityManager entMan, SharedMindSystem mindSys)
+    public override void FindMinds(HashSet<Entity<MindComponent>> minds, EntityUid? exclude, IEntityManager entMan, TargetSystem targetSystem)
     {
-        mindSys.AddAliveHumans(minds, exclude);
+        targetSystem.AddAliveHumans(minds, exclude);
     }
 }

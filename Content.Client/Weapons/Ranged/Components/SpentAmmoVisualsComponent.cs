@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Weapons.Ranged.Systems;
 
 namespace Content.Client.Weapons.Ranged.Components;
@@ -12,9 +8,10 @@ public sealed partial class SpentAmmoVisualsComponent : Component
     /// <summary>
     /// Should we do "{_state}-spent" or just "spent"
     /// </summary>
-    [DataField("suffix")] public bool Suffix = true;
+    [DataField]
+    public bool Suffix = true;
 
-    [DataField("state")]
+    [DataField]
     public string State = "base";
 }
 

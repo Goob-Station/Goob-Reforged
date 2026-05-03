@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # -- Melee --
 # Selects a target in melee and tries to attack it.
 - type: htnCompound
@@ -53,6 +49,34 @@
       tasks:
         - !type:HTNCompoundTask
           task: PickupMeleeCompound
+
+    # Wield melee weapon
+    - preconditions:
+        - !type:ActiveHandComponentPrecondition
+          components:
+            - type: MeleeWeapon
+              damage:
+                types:
+                  Blunt: 0
+        - !type:WieldedPrecondition
+          wielded: false
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:WieldOperator
+
+    # Activate toggleable weapons
+    - preconditions:
+        - !type:ActiveHandComponentPrecondition
+          components:
+            - type: MeleeWeapon
+              damage:
+                types:
+                  Blunt: 0
+        - !type:ItemTogglePrecondition
+          activated: false
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:UseItemInHandOperator
 
     # Melee combat (unarmed or otherwise)
     - tasks:

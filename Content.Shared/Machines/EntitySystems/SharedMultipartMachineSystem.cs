@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Machines.Components;
 
@@ -12,15 +8,6 @@ namespace Content.Shared.Machines.EntitySystems;
 /// </summary>
 public abstract class SharedMultipartMachineSystem : EntitySystem
 {
-    protected EntityQuery<TransformComponent> XformQuery;
-
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        XformQuery = GetEntityQuery<TransformComponent>();
-    }
-
     /// <summary>
     /// Returns whether each non-optional part of the machine has a matched entity
     /// </summary>

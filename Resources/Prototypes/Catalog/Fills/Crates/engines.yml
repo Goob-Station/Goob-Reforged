@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # AME
 
 - type: entity
@@ -37,7 +33,7 @@
   - type: EntityTableContainerFill
     containers:
       entity_storage:
-        id: AmeControllerUnanchored
+        id: AmeControllerFlatpack
 
 # Singularity
 
@@ -119,17 +115,6 @@
 #    containers:
 #      entity_storage:
 #        id: Singularity
-
-- type: entity
-  parent: CrateEngineering
-  id: CrateEngineeringGenerator
-  name:  generator crate
-  suffix: DEBUG
-  components:
-  - type: EntityTableContainerFill
-    containers:
-      entity_storage:
-        id: DebugGenerator # TODO change to flatpack
 
 - type: entity
   parent: CrateEngineering

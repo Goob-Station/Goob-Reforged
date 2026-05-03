@@ -1,22 +1,18 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Weapons.Ranged.Components;
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
 public sealed partial class GunSystem
 {
-    protected override void SpinRevolver(EntityUid revolverUid, RevolverAmmoProviderComponent component, EntityUid? user = null)
+    protected override void SpinRevolver(Entity<RevolverAmmoProviderComponent> ent, EntityUid? user = null)
     {
-        base.SpinRevolver(revolverUid, component, user);
-        var index = Random.Next(component.Capacity);
+        base.SpinRevolver(ent, user);
+        var index = Random.Next(ent.Comp.Capacity);
 
-        if (component.CurrentIndex == index)
+        if (ent.Comp.CurrentIndex == index)
             return;
 
-        component.CurrentIndex = index;
-        Dirty(revolverUid, component);
+        ent.Comp.CurrentIndex = index;
+        Dirty(ent);
     }
 }

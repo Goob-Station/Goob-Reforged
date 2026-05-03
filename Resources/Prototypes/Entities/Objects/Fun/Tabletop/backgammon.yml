@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: BaseBoardEntity
   id: BackgammonBoard
@@ -16,12 +12,12 @@
     size: 550, 410
     setup:
       !type:TabletopBackgammonSetup
-      boardPrototype: BackgammonBoardTabletop
+      boardPrototype: &BackgammonBoard BackgammonBoardTabletop
 
 - type: entity
-  id: BackgammonBoardTabletop
-  name: backgammon
   parent: BaseBoardTabletop
+  id: *BackgammonBoard
+  name: backgammon
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite

@@ -1,9 +1,5 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
-- type: entity
-  parent: [ClothingOuterBase, BaseChameleon]
+﻿- type: entity
+  parent: [ClothingOuterBase, AllowSuitStorageClothingGasTanks, BaseChameleon]
   id: ClothingOuterChameleon
   name: vest
   description: A thick vest with a rubbery, water-resistant shell.

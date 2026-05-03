@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <Document>
   # Valves
   Valves are a quick way to halt or permit gas flow through a [textlink="pipenet" link="PipeNetworks"].

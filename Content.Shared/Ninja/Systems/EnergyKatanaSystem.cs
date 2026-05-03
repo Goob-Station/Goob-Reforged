@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Inventory.Events;
 using Content.Shared.Ninja.Components;
 
@@ -27,7 +23,7 @@ public sealed class EnergyKatanaSystem : EntitySystem
     /// </summary>
     private void OnEquipped(Entity<EnergyKatanaComponent> ent, ref GotEquippedEvent args)
     {
-        _ninja.BindKatana(args.Equipee, ent);
+        _ninja.BindKatana(args.EquipTarget, ent);
     }
 
     private void OnCheckDash(Entity<EnergyKatanaComponent> ent, ref CheckDashEvent args)

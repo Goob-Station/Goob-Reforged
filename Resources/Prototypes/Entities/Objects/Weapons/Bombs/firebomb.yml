@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # ied crafted from random stuff
 # ideally it would be dynamic and work by actually sparking the solution but that doesnt exist yet :(
 # with that you could make napalm ied instead of welding fuel with no additional complexity
@@ -46,6 +42,7 @@
   - type: TimerTriggerVisuals
     unprimedSprite: base
   - type: Damageable
+  - type: Injurable
     damageContainer: Inorganic
   - type: Destructible
     thresholds:
@@ -100,13 +97,11 @@
     - state: base
       map: ["enum.OpenableVisuals.Layer"]
     - state: fuel
-  - type: SolutionContainerManager
-    solutions:
-      drink:
-        maxVol: 30
-        reagents:
-        - ReagentId: WeldingFuel
-          Quantity: 30
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: WeldingFuel
+        Quantity: 60
   - type: Construction
     node: fuel
     defaultTarget: firebomb

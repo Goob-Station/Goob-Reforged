@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Resources;
 using Content.Client.Stylesheets.Fonts;
 using Content.Client.Stylesheets.Palette;
@@ -73,10 +69,10 @@ public sealed class LabelSheetlet : Sheetlet<PalettedStylesheet>
                 .Class(StyleClass.LabelMonospaceText)
                 .Prop(Label.StylePropertyFont, robotoMonoBold11),
             E<Label>()
-                .Class(StyleClass.LabelMonospaceHeading)
+                .Class(StyleClass.LabelMonospaceSubHeading)
                 .Prop(Label.StylePropertyFont, robotoMonoBold12),
             E<Label>()
-                .Class(StyleClass.LabelMonospaceSubHeading)
+                .Class(StyleClass.LabelMonospaceHeading)
                 .Prop(Label.StylePropertyFont, robotoMonoBold14),
         ];
     }

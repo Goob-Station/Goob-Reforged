@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Globalization;
 using Content.Shared.Access.Components;
 using Content.Shared.Administration.Logs;
@@ -29,6 +25,7 @@ public abstract class SharedIdCardSystem : EntitySystem
     [Dependency] private readonly InventorySystem _inventorySystem = default!;
     [Dependency] private readonly MetaDataSystem _metaSystem = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private readonly SharedJobStatusSystem _jobStatus = default!;
 
     // CCVar.
     private int _maxNameLength;
@@ -39,6 +36,7 @@ public abstract class SharedIdCardSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<IdCardComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<IdCardComponent, AfterAutoHandleStateEvent>(OnHandleState);
         SubscribeLocalEvent<TryGetIdentityShortInfoEvent>(OnTryGetIdentityShortInfo);
         SubscribeLocalEvent<EntityRenamedEvent>(OnRename);
 
@@ -79,6 +77,15 @@ public abstract class SharedIdCardSystem : EntitySystem
 
         ev.Title = title;
         ev.Handled = true;
+    }
+
+    private void OnHandleState(Entity<IdCardComponent> ent, ref AfterAutoHandleStateEvent args)
+    {
+        // Try to update the job status icon of the player owning the ID, if any.
+        if (HasComp<PdaComponent>(Transform(ent).ParentUid))
+            _jobStatus.UpdateStatus(Transform(Transform(ent).ParentUid).ParentUid); //ID is inside a PDA
+        else
+            _jobStatus.UpdateStatus(Transform(ent).ParentUid); //ID is held/directly in the ID slot
     }
 
     /// <summary>

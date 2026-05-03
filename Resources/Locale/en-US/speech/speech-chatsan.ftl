@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 chatsan-word-1 = omg
 chatsan-replacement-1 = oh my god
 
@@ -196,3 +192,6 @@ chatsan-replacement-67 = all good
 
 chatsan-word-68 = idk
 chatsan-replacement-68 = i don't know
+
+chatsan-word-69 = wya
+chatsan-replacement-69 = where you at

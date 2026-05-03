@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage.Components;
 
 namespace Content.Shared.Damage.Systems;
@@ -15,7 +11,7 @@ public sealed partial class DamageableSystem
     {
         foreach (var (uid, damageable) in damageables)
         {
-            TryChangeDamage((uid, damageable), damage);
+            ChangeDamage((uid, damageable), damage);
         }
     }
 }

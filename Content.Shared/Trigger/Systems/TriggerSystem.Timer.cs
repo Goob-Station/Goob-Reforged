@@ -1,11 +1,8 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Trigger.Components;
 using Content.Shared.Trigger.Components.Triggers;
 using Content.Shared.Examine;
 using Content.Shared.Verbs;
+using Robust.Shared.Random;
 
 namespace Content.Shared.Trigger.Systems;
 

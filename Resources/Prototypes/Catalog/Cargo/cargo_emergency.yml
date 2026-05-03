@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: cargoProduct
   id: EmergencyExplosive
   icon:
@@ -54,10 +50,14 @@
 
 - type: cargoProduct
   id: EmergencyInflatablewall
+  description: cargoproduct-description-emergencyinflatablewall
   icon:
     sprite: Objects/Misc/inflatable_wall.rsi
     state: item_wall
-  product: CrateEmergencyInflatablewall
+  product: BoxInflatable
+  container:
+    entity: WrappedParcel
+    containerId: contents
   cost: 500
   category: cargoproduct-category-name-emergency
   group: market

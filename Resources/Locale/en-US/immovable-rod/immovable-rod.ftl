@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 immovable-rod-collided-rod-not-good = Oh fuck, that can't be good.
 immovable-rod-penetrated-mob = {CAPITALIZE(THE($rod))} cleanly eviscerates {THE($mob)}!
 

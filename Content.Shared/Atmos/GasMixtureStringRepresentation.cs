@@ -1,6 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
+﻿using System.Text;
 
 namespace Content.Shared.Atmos;
 
@@ -8,7 +6,14 @@ public readonly record struct GasMixtureStringRepresentation(float TotalMoles, f
 {
     public override string ToString()
     {
-        return $"{Temperature}K {Pressure} kPa";
+        var stringBuilder = new StringBuilder();
+        foreach (var (gas, moles) in MolesPerGas)
+        {
+            stringBuilder.Append($"{gas}: {moles}, ");
+        }
+        var result = stringBuilder.ToString();
+
+        return $"{Temperature} K, {Pressure} kPa, {result}Total Moles: {TotalMoles}";
     }
 
     public string ToString(string? format, IFormatProvider? formatProvider)

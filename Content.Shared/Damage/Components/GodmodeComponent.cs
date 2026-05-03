@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage.Systems;
 using Robust.Shared.GameStates;
 
@@ -12,7 +8,4 @@ public sealed partial class GodmodeComponent : Component
 {
     [DataField("wasMovedByPressure")]
     public bool WasMovedByPressure;
-
-    [DataField("oldDamage")]
-    public DamageSpecifier? OldDamage = null;
 }

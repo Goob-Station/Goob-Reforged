@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.UserInterface.Controls;
 using Content.Shared.SmartFridge;
 using Robust.Client.UserInterface;
@@ -23,12 +19,13 @@ public sealed class SmartFridgeBoundUserInterface : BoundUserInterface
 
         _menu = this.CreateWindow<SmartFridgeMenu>();
         _menu.OnItemSelected += OnItemSelected;
+        _menu.OnRemoveButtonPressed += data => SendPredictedMessage(new SmartFridgeRemoveEntryMessage(data.Entry));
         Refresh();
     }
 
     public void Refresh()
     {
-        if (_menu is not {} menu || !EntMan.TryGetComponent(Owner, out SmartFridgeComponent? fridge))
+        if (_menu is not { } menu || !EntMan.TryGetComponent(Owner, out SmartFridgeComponent? fridge))
             return;
 
         menu.SetFlavorText(Loc.GetString(fridge.FlavorText));

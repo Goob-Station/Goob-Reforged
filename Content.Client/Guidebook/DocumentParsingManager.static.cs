@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Client.Guidebook.Controls;
 using Pidgin;
@@ -86,7 +82,7 @@ public sealed partial class DocumentParsingManager
                     }
 
                     msg.Pop();
-                    rt.SetMessage(msg);
+                    rt.SetMessage(msg, tagsAllowed: null);
                     return rt;
                 },
                 TextParser)

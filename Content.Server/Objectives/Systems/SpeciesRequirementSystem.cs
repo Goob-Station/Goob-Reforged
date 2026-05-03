@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Objectives.Components;
 using Content.Shared.Humanoid;
 using Content.Shared.Objectives.Components;
@@ -25,7 +21,7 @@ public sealed class SpeciesRequirementSystem : EntitySystem
         if (args.Cancelled)
             return;
 
-        if (!TryComp<HumanoidAppearanceComponent>(args.Mind.OwnedEntity, out var appearance)) {
+        if (!TryComp<HumanoidProfileComponent>(args.Mind.OwnedEntity, out var appearance)) {
             args.Cancelled = true;
             return;
         }

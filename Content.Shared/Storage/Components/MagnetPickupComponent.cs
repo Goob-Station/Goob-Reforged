@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Inventory;
 using Robust.Shared.GameStates;
 
@@ -15,7 +11,7 @@ namespace Content.Shared.Storage.Components;
 [AutoGenerateComponentPause]
 public sealed partial class MagnetPickupComponent : Component
 {
-    [ViewVariables(VVAccess.ReadWrite), DataField("nextScan")]
+    [DataField]
     [AutoPausedField]
     [AutoNetworkedField]
     public TimeSpan NextScan = TimeSpan.Zero;
@@ -23,9 +19,12 @@ public sealed partial class MagnetPickupComponent : Component
     /// <summary>
     /// What container slot the magnet needs to be in to work.
     /// </summary>
-    [ViewVariables(VVAccess.ReadWrite), DataField("slotFlags")]
-    public SlotFlags SlotFlags = SlotFlags.BELT;
+    [DataField]
+    public SlotFlags? SlotFlags = Inventory.SlotFlags.BELT;
 
-    [ViewVariables(VVAccess.ReadWrite), DataField("range")]
+    [DataField]
+    public bool RequireActiveHand = false;
+
+    [DataField]
     public float Range = 1f;
 }

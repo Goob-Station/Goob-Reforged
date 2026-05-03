@@ -1,7 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Shared.Chemistry.Reagent;
 using Robust.Shared.Reflection;
@@ -12,12 +9,12 @@ namespace Content.IntegrationTests.Tests.Chemistry;
 
 [TestFixture]
 [TestOf(typeof(ReagentData))]
-public sealed class ReagentDataTest : InteractionTest
+public sealed class ReagentDataTest : GameTest
 {
     [Test]
     public async Task ReagentDataIsSerializable()
     {
-        await using var pair = await PoolManager.GetServerClient();
+        var pair = Pair;
         var reflection = pair.Server.ResolveDependency<IReflectionManager>();
 
         Assert.Multiple(() =>
@@ -28,7 +25,5 @@ public sealed class ReagentDataTest : InteractionTest
                 Assert.That(instance.HasCustomAttribute<SerializableAttribute>(), $"{instance} must have the serializable attribute.");
             }
         });
-
-        await pair.CleanReturnAsync();
     }
 }

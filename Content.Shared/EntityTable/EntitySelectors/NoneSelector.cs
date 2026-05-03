@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.EntityTable.EntitySelectors;
@@ -15,6 +11,16 @@ public sealed partial class NoneSelector : EntityTableSelector
         IEntityManager entMan,
         IPrototypeManager proto,
         EntityTableContext ctx)
+    {
+        yield break;
+    }
+
+    protected override IEnumerable<(EntProtoId spawn, double)> ListSpawnsImplementation(IEntityManager entMan, IPrototypeManager proto, EntityTableContext ctx)
+    {
+        yield break;
+    }
+
+    protected override IEnumerable<(EntProtoId spawn, double)> AverageSpawnsImplementation(IEntityManager entMan, IPrototypeManager proto, EntityTableContext ctx)
     {
         yield break;
     }

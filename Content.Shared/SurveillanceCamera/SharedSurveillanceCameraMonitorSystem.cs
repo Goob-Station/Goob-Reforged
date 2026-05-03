@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.DeviceNetwork;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -43,10 +39,12 @@ public sealed class SurveillanceCameraMonitorUiState : BoundUserInterfaceState
 public sealed class SurveillanceCameraMonitorSwitchMessage : BoundUserInterfaceMessage
 {
     public string Address { get; }
+    public string? CameraSubnet { get; }
 
-    public SurveillanceCameraMonitorSwitchMessage(string address)
+    public SurveillanceCameraMonitorSwitchMessage(string address, string? cameraSubnet = null)
     {
         Address = address;
+        CameraSubnet = cameraSubnet;
     }
 }
 

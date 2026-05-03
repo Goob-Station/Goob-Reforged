@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Administration;
 using Content.Shared.Administration;
 using Content.Shared.Chemistry.Reagent;
@@ -39,7 +35,7 @@ public sealed class DumpReagentGuideText : LocalizedEntityCommands
             return;
         }
 
-        foreach (var entry in reagent.Metabolisms.Values)
+        foreach (var entry in reagent.Metabolisms.Metabolisms.Values)
         {
             foreach (var effect in entry.Effects)
             {

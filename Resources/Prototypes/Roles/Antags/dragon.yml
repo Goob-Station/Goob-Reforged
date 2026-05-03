@@ -1,9 +1,13 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: antag
   id: Dragon
   name: roles-antag-dragon-name
   antagonist: true
   objective: roles-antag-dragon-objective
+
+- type: antagSpecifier
+  parent: RestrictedAntag
+  id: Dragon
+  spawnerPrototype: SpawnPointGhostDragon
+  pickPlayer: false
+  mindRoles:
+  - MindRoleDragon

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Content.Shared.CCVar;
@@ -70,6 +66,7 @@ public sealed class ChatSanitizationManager : IChatSanitizationManager
         Entry(".-.", "chatsan-confused"),
         Entry("-_-", "chatsan-unimpressed"),
         Entry("smh", "chatsan-unimpressed"),
+        Entry(":?", "chatsan-shrugs"),
         Entry("o/", "chatsan-waves"),
         Entry("^^/", "chatsan-waves"),
         Entry(":/", "chatsan-uncertain"),

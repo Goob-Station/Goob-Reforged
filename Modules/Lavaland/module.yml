@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
+name: Lavaland
+id: lavaland
+version: 1.0.0
+
+projects:
+  - path: Content.Lavaland.Shared
+    role: Shared
+
+  - path: Content.Lavaland.Client
+    role: Client
+
+  - path: Content.Lavaland.Server
+    role: Server
+
+  - path: Content.Lavaland.Common
+    role: Common

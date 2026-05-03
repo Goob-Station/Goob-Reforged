@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using System.Numerics;
 using Content.Client.Gameplay;
@@ -151,7 +147,7 @@ public sealed class InventoryUIController : UIController, IOnStateEntered<Gamepl
             if (!container.TryGetButton(data.SlotName, out var button))
             {
                 button = CreateSlotButton(data);
-                container.AddButton(button);
+                container.TryAddButton(button);
             }
 
             var showStorage = _entities.HasComponent<StorageComponent>(data.HeldEntity);
@@ -377,7 +373,7 @@ public sealed class InventoryUIController : UIController, IOnStateEntered<Gamepl
             return;
 
         var button = CreateSlotButton(data);
-        slotGroup.AddButton(button);
+        slotGroup.TryAddButton(button);
     }
 
     private void RemoveSlot(SlotData data)
@@ -385,7 +381,7 @@ public sealed class InventoryUIController : UIController, IOnStateEntered<Gamepl
         if (!_slotGroups.TryGetValue(data.SlotGroup, out var slotGroup))
             return;
 
-        slotGroup.RemoveButton(data.SlotName);
+        slotGroup.TryRemoveButton(data.SlotName, out _);
     }
 
     public void ReloadSlots()

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Weapons.Ranged;
 
 namespace Content.Client.Weapons.Ranged.Systems;
@@ -15,11 +11,11 @@ public sealed partial class GunSystem
         SubscribeLocalEvent<MagazineAmmoProviderComponent, AmmoCounterControlEvent>(OnMagazineControl);
     }
 
-    private void OnMagazineAmmoUpdate(EntityUid uid, MagazineAmmoProviderComponent component, UpdateAmmoCounterEvent args)
+    private void OnMagazineAmmoUpdate(Entity<MagazineAmmoProviderComponent> ent, ref UpdateAmmoCounterEvent args)
     {
-        var ent = GetMagazineEntity(uid);
+        var magEnt = GetMagazineEntity(ent);
 
-        if (ent == null)
+        if (magEnt == null)
         {
             if (args.Control is DefaultStatusControl control)
             {
@@ -29,14 +25,14 @@ public sealed partial class GunSystem
             return;
         }
 
-        RaiseLocalEvent(ent.Value, args, false);
+        RaiseLocalEvent(magEnt.Value, args, false);
     }
 
-    private void OnMagazineControl(EntityUid uid, MagazineAmmoProviderComponent component, AmmoCounterControlEvent args)
+    private void OnMagazineControl(Entity<MagazineAmmoProviderComponent> ent, ref AmmoCounterControlEvent args)
     {
-        var ent = GetMagazineEntity(uid);
-        if (ent == null)
+        var magEnt = GetMagazineEntity(ent);
+        if (magEnt == null)
             return;
-        RaiseLocalEvent(ent.Value, args, false);
+        RaiseLocalEvent(magEnt.Value, args, false);
     }
 }

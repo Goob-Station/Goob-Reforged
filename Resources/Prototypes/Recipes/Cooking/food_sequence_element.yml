@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Bun bottom
 
 - type: foodSequenceElement
@@ -537,7 +533,7 @@
   id: Cabbage
   name: food-sequence-content-cabbage
   sprites:
-  - sprite: Objects/Specific/Hydroponics/carrot.rsi
+  - sprite: Objects/Specific/Hydroponics/cabbage.rsi
     state: produce
   tags:
   - Vegetable

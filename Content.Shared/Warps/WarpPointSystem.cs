@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Examine;
 using Content.Shared.Ghost;
 
@@ -20,7 +16,7 @@ public sealed class WarpPointSystem : EntitySystem
         if (!HasComp<GhostComponent>(args.Examiner))
             return;
 
-        var loc = component.Location == null ? "<null>" : $"'{component.Location}'";
+        var loc = component.Location == null ? Name(uid) : component.Location;
         args.PushText(Loc.GetString("warp-point-component-on-examine-success", ("location", loc)));
     }
 }

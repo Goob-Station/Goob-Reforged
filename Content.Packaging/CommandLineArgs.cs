@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 
 namespace Content.Packaging;
@@ -40,6 +36,11 @@ public sealed class CommandLineArgs
     /// </summary>
     public string Configuration { get; set; }
 
+    /// <summary>
+    /// Log builds with MSBuild binlog. Logs get saved to release/
+    /// </summary>
+    public bool LogBuild { get; set; }
+
     // CommandLineArgs, 3rd of her name.
     public static bool TryParse(IReadOnlyList<string> args, [NotNullWhen(true)] out CommandLineArgs? parsed)
     {
@@ -48,6 +49,7 @@ public sealed class CommandLineArgs
         var skipBuild = false;
         var wipeRelease = true;
         var hybridAcz = false;
+        var logBuild = false;
         var configuration = "Release";
         List<string>? platforms = null;
 
@@ -62,18 +64,32 @@ public sealed class CommandLineArgs
             {
                 switch (arg)
                 {
-                    case "client": client = true; break;
-                    case "server": client = false; break;
-                    default: return false;
+                    case "client":
+                        client = true;
+                        break;
+                    case "server":
+                        client = false;
+                        break;
+                    default:
+                        return false;
                 }
                 continue;
             }
 
             switch (arg)
             {
-                case "--skip-build": skipBuild = true; break;
-                case "--no-wipe-release": wipeRelease = false; break;
-                case "--hybrid-acz": hybridAcz = true; break;
+                case "--skip-build":
+                    skipBuild = true;
+                    break;
+                case "--no-wipe-release":
+                    wipeRelease = false;
+                    break;
+                case "--hybrid-acz":
+                    hybridAcz = true;
+                    break;
+                case "--log-build":
+                    logBuild = true;
+                    break;
                 case "--platform" when !enumerator.MoveNext():
                     Console.WriteLine("No platform provided");
                     return false;
@@ -84,11 +100,15 @@ public sealed class CommandLineArgs
                 case "--configuration" when !enumerator.MoveNext():
                     Console.WriteLine("No configuration provided");
                     return false;
-                case "--configuration": configuration = enumerator.Current; break;
+                case "--configuration":
+                    configuration = enumerator.Current;
+                    break;
                 case "--help":
                     PrintHelp();
                     return false;
-                default: Console.WriteLine("Unknown argument: {0}", arg); break;
+                default:
+                    Console.WriteLine("Unknown argument: {0}", arg);
+                    break;
             }
         }
 
@@ -98,7 +118,7 @@ public sealed class CommandLineArgs
             return false;
         }
 
-        parsed = new CommandLineArgs(client.Value, skipBuild, wipeRelease, hybridAcz, platforms, configuration);
+        parsed = new CommandLineArgs(client.Value, skipBuild, wipeRelease, hybridAcz, logBuild, platforms, configuration);
         return true;
     }
 
@@ -113,6 +133,7 @@ Options:
   --hybrid-acz          Use HybridACZ for server builds.
   --platform            Platform for server builds. Default will output several x64 targets.
   --configuration       Configuration to use for building the server (Release, Debug, Tools). Default is Release.
+  --log-build           Log builds with MSBuild binlog. Logs get saved to release/
 ");
     }
 
@@ -121,6 +142,7 @@ Options:
         bool skipBuild,
         bool wipeRelease,
         bool hybridAcz,
+        bool logBuild,
         List<string>? platforms,
         string configuration)
     {
@@ -130,5 +152,6 @@ Options:
         HybridAcz = hybridAcz;
         Platforms = platforms;
         Configuration = configuration;
+        LogBuild = logBuild;
     }
 }

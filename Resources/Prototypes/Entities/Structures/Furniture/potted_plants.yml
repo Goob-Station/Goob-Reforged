@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   id: PottedPlantBase
   parent: BaseStructureDynamic
@@ -44,6 +40,7 @@
     sprite: Structures/Furniture/potted_plants.rsi
     size: Huge
   - type: Damageable
+  - type: Injurable
     damageContainer: StructuralInorganic # The pot. Not the plant. Or is it plastic?
   - type: Destructible
     thresholds:

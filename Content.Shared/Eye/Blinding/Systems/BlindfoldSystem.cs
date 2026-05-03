@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Inventory;
@@ -28,11 +24,11 @@ public sealed class BlindfoldSystem : EntitySystem
 
     private void OnEquipped(Entity<BlindfoldComponent> blindfold, ref GotEquippedEvent args)
     {
-        _blindableSystem.UpdateIsBlind(args.Equipee);
+        _blindableSystem.UpdateIsBlind(args.EquipTarget);
     }
 
     private void OnUnequipped(Entity<BlindfoldComponent> blindfold, ref GotUnequippedEvent args)
     {
-        _blindableSystem.UpdateIsBlind(args.Equipee);
+        _blindableSystem.UpdateIsBlind(args.EquipTarget);
     }
 }

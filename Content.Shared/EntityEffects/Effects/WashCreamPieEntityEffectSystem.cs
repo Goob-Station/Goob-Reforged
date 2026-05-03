@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Robust.Shared.Prototypes;
@@ -19,7 +15,7 @@ public sealed partial class WashCreamPieEntityEffectSystem : EntityEffectSystem<
 
     protected override void Effect(Entity<CreamPiedComponent> entity, ref EntityEffectEvent<WashCreamPie> args)
     {
-        _creamPie.SetCreamPied(entity, entity.Comp, false);
+        _creamPie.SetCreamPied((entity, entity.Comp), false);
     }
 }
 

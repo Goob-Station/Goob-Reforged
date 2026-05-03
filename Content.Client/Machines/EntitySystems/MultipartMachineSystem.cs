@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Examine;
 using Content.Client.Machines.Components;
 using Content.Shared.Machines.Components;
@@ -62,7 +58,7 @@ public sealed class MultipartMachineSystem : SharedMultipartMachineSystem
             var entityCoords = new EntityCoordinates(ent.Owner, part.Offset);
             var ghostEnt = Spawn(_ghostPrototype, entityCoords);
 
-            if (!XformQuery.TryGetComponent(ghostEnt, out var xform))
+            if (!TryComp(ghostEnt, out TransformComponent? xform))
                 break;
 
             xform.LocalRotation = part.Rotation;

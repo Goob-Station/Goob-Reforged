@@ -1,12 +1,6 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Inventory.Events;
 using Content.Shared.Overlays;
 using Robust.Client.Graphics;
-using System.Linq;
-using Robust.Client.Player;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.Overlays;
@@ -38,6 +32,9 @@ public sealed class ShowHealthBarsSystem : EquipmentHudSystem<ShowHealthBarsComp
     protected override void UpdateInternal(RefreshEquipmentHudEvent<ShowHealthBarsComponent> component)
     {
         base.UpdateInternal(component);
+
+        _overlay.DamageContainers.Clear();
+        _overlay.StatusIcon = null;
 
         foreach (var comp in component.Components)
         {

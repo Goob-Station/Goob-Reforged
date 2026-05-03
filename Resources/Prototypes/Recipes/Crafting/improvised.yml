@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: construction
   id: bat
   graph: WoodenBat
@@ -151,6 +147,14 @@
   graph: PetCarrier
   startNode: start
   targetNode: petCarrier
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: RepairMothershipPinpointer
+  graph: RepairMothershipPinpointer
+  startNode: start
+  targetNode: repairedPinpointer
   category: construction-category-misc
   objectType: Item
 

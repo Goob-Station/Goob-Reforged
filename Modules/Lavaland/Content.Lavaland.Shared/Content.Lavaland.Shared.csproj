@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\MSBuild\Content.props"/>
+
+  <Import Project="..\..\..\RobustToolbox\Imports\Lidgren.props" />
+  <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Content.Lavaland.Common\Content.Lavaland.Common.csproj" />
+    <ProjectReference Include="..\..\..\Content.Shared\Content.Shared.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
+</Project>

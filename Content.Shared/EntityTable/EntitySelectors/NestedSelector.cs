@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.EntityTable.EntitySelectors;
@@ -21,5 +17,15 @@ public sealed partial class NestedSelector : EntityTableSelector
         EntityTableContext ctx)
     {
         return proto.Index(TableId).Table.GetSpawns(rand, entMan, proto, ctx);
+    }
+
+    protected override IEnumerable<(EntProtoId spawn, double)> ListSpawnsImplementation(IEntityManager entMan, IPrototypeManager proto, EntityTableContext ctx)
+    {
+        return proto.Index(TableId).Table.ListSpawns(entMan, proto, ctx);
+    }
+
+    protected override IEnumerable<(EntProtoId spawn, double)> AverageSpawnsImplementation(IEntityManager entMan, IPrototypeManager proto, EntityTableContext ctx)
+    {
+        return proto.Index(TableId).Table.AverageSpawns(entMan, proto, ctx);
     }
 }

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 ## Entity
 
 gas-analyzer-object-out-of-range = The object went out of range.
@@ -15,7 +11,6 @@ gas-analyzer-window-tab-title-capitalized = {CAPITALIZE($title)}
 gas-analyzer-window-refresh-button = Refresh
 gas-analyzer-window-no-data = No Data
 gas-analyzer-window-no-gas-text = No Gases
-gas-analyzer-window-error-text = Error: {$errorText}
 gas-analyzer-window-volume-text = Volume:
 gas-analyzer-window-volume-val-text = {$volume} L
 gas-analyzer-window-pressure-text = Pressure:

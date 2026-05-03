@@ -1,9 +1,5 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
-  parent: [ GrenadeBase, BaseMinorContraband ]
+  parent: [ TimerGrenadeBase, BaseMinorContraband ]
   id: PipeBomb
   name: pipe bomb
   description: An improvised explosive made from pipes and wire.

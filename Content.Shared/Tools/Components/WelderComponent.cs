@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.FixedPoint;
 using Content.Shared.Tools.Systems;
@@ -45,7 +41,7 @@ public sealed partial class WelderComponent : Component
     /// Name of the fuel solution.
     /// </summary>
     [DataField]
-    public string FuelSolutionName = "Welder";
+    public string FuelSolutionName = "welder";
 
     /// <summary>
     /// Reagent that will be used as fuel for welding.

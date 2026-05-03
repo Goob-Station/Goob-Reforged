@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Actions.Components;
@@ -27,13 +23,11 @@ public sealed class ActionContainerSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;
 
-    private EntityQuery<ActionComponent> _query;
+    [Dependency] private readonly EntityQuery<ActionComponent> _query = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _query = GetEntityQuery<ActionComponent>();
 
         SubscribeLocalEvent<ActionsContainerComponent, ComponentInit>(OnInit);
         SubscribeLocalEvent<ActionsContainerComponent, ComponentShutdown>(OnShutdown);

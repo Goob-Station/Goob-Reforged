@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 #Basic EVA
 - type: entity
   parent: ClothingOuterEVASuitBase
@@ -17,7 +13,6 @@
     tags:
     - SuitEVA
     - MonkeyWearable
-    - CorgiWearable
     - WhitelistChameleon
 
 #Syndicate EVA
@@ -175,5 +170,4 @@
       toggleable-clothing: !type:ContainerSlot {}
   - type: Tag
     tags:
-    - CorgiWearable
     - WhitelistChameleon

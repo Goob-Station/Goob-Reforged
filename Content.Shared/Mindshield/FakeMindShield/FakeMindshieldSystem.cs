@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
 using Content.Shared.Implants;
@@ -62,6 +58,7 @@ public sealed class FakeMindShieldSystem : EntitySystem
                 continue;
 
             component.IsEnabled = args.ChameleonOutfit.HasMindShield;
+            _actions.SetToggled(action, args.ChameleonOutfit.HasMindShield);
             Dirty(uid, component);
 
             if (actionComp.UseDelay != null)

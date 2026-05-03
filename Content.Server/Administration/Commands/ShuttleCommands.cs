@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.RoundEnd;
 using Content.Shared.Administration;
 using Content.Shared.Localizations;
@@ -20,13 +16,13 @@ namespace Content.Server.Administration.Commands
         {
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (args.Length == 1 && TimeSpan.TryParseExact(args[0], ContentLocalizationManager.TimeSpanMinutesFormats, LocalizationManager.DefaultCulture, out var timeSpan))
-                _roundEndSystem.RequestRoundEnd(timeSpan, shell.Player?.AttachedEntity, false);
+                _roundEndSystem.RequestRoundEnd(timeSpan, shell.Player?.AttachedEntity, checkCooldown: false);
 
             else if (args.Length == 1)
                 shell.WriteLine(Loc.GetString("shell-timespan-minutes-must-be-correct"));
 
             else
-                _roundEndSystem.RequestRoundEnd(shell.Player?.AttachedEntity, false);
+                _roundEndSystem.RequestRoundEnd(shell.Player?.AttachedEntity, checkCooldown: false);
         }
     }
 

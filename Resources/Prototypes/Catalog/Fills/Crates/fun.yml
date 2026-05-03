@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entityTable
   id: AllPottedPlantsTable
   table: !type:GroupSelector
@@ -406,6 +402,8 @@
     containers:
       entity_storage: !type:AllSelector
         children:
+        - id: CrazyGlue
+        - id: CrazyLube
         - !type:NestedSelector
           tableId: AllToyWeaponsTable
           rolls: 2

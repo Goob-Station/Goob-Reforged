@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Net;
 using Content.Client.Hands.Systems;
 using Content.Shared.CombatMode;
@@ -34,16 +30,6 @@ public sealed class GrapplingGunSystem : SharedGrapplingGunSystem
         var handUid = _hands.GetActiveHandEntity();
 
         if (!TryComp<GrapplingGunComponent>(handUid, out var grappling))
-            return;
-
-        if (!TryComp<JointComponent>(handUid, out var jointComp) ||
-            !jointComp.GetJoints.TryGetValue(GrapplingJoint, out var joint) ||
-            joint is not DistanceJoint distance)
-        {
-            return;
-        }
-
-        if (distance.MaxLength <= distance.MinLength)
             return;
 
         var reelKey = _input.CmdStates.GetState(EngineKeyFunctions.UseSecondary) == BoundKeyState.Down;

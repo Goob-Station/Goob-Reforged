@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Labels.EntitySystems;
 using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
@@ -21,8 +17,17 @@ public sealed partial class HandLabelerComponent : Component
     [DataField]
     public int MaxLabelChars = 50;
 
+    /// <summary>
+    /// Blacklist for entities that can be labeled.
+    /// </summary>
     [DataField]
-    public EntityWhitelist Whitelist = new();
+    public EntityWhitelist? Whitelist;
+
+    /// <summary>
+    /// Blacklist for entities that cannot be labeled.
+    /// </summary>
+    [DataField]
+    public EntityWhitelist? Blacklist;
 }
 
 [Serializable, NetSerializable]

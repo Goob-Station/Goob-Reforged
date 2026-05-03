@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Access;
 using Content.Shared.Guidebook;
 using Content.Shared.Players.PlayTimeTracking;
@@ -84,9 +80,6 @@ namespace Content.Shared.Roles
         /// </summary>
         [DataField]
         public bool? OverrideConsoleVisibility { get; private set; } = null;
-
-        [DataField]
-        public bool CanBeAntag { get; private set; } = true;
 
         /// <summary>
         ///     The "weight" or importance of this job. If this number is large, the job system will assign this job

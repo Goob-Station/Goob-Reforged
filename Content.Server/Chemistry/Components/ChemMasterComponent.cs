@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Chemistry.EntitySystems;
 using Content.Shared.Chemistry;
 using Robust.Shared.Audio;
@@ -30,5 +26,11 @@ namespace Content.Server.Chemistry.Components
 
         [DataField("clickSound"), ViewVariables(VVAccess.ReadWrite)]
         public SoundSpecifier ClickSound = new SoundPathSpecifier("/Audio/Machines/machine_switch.ogg");
+
+        /// <summary>
+        /// Which source the chem master should draw from when making pills/bottles.
+        /// </summary>
+        [DataField]
+        public ChemMasterDrawSource DrawSource = ChemMasterDrawSource.Internal;
     }
 }

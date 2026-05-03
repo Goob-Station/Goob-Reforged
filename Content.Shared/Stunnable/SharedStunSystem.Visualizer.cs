@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Bed.Sleep;
 using Content.Shared.Mobs;
 using Robust.Shared.Serialization;
@@ -14,6 +10,12 @@ public abstract partial class SharedStunSystem
     {
         SubscribeLocalEvent<StunVisualsComponent, MobStateChangedEvent>(OnStunMobStateChanged);
         SubscribeLocalEvent<StunVisualsComponent, SleepStateChangedEvent>(OnSleepStateChanged);
+        SubscribeLocalEvent<StunVisualsComponent, StunnedEvent>(OnStunned);
+    }
+
+    private void OnStunned(Entity<StunVisualsComponent> ent, ref StunnedEvent args)
+    {
+        TrySeeingStars(ent.Owner);
     }
 
     private bool GetStarsData(Entity<StunVisualsComponent, StunnedComponent?> entity)

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Fluids;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Popups;
@@ -41,10 +37,7 @@ public sealed class MessyDrinkerSystem : EntitySystem
         if (proto == null || !ent.Comp.SpillableTypes.Contains(proto.Value))
             return;
 
-        // TODO: Replace with RandomPredicted once the engine PR is merged
-        var seed = SharedRandomExtensions.HashCodeCombine((int)_timing.CurTick.Value, GetNetEntity(ent).Id);
-        var rand = new System.Random(seed);
-        if (!rand.Prob(ent.Comp.SpillChance))
+        if (!SharedRandomExtensions.PredictedProb(_timing, ent.Comp.SpillChance, GetNetEntity(ent)))
             return;
 
         if (ent.Comp.SpillMessagePopup != null)

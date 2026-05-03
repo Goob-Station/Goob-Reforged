@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 -create-3rd-person =
     { $chance ->
         [1] Creates
@@ -339,8 +335,14 @@ entity-effect-guidebook-drunk =
 
 entity-effect-guidebook-electrocute =
     { $chance ->
-        [1] Electrocutes
-        *[other] electrocute
+        [1] { $stuns ->
+            [true] Electrocutes
+            *[false] Shocks
+            }
+        *[other] { $stuns ->
+            [true] electrocute
+            *[false] shock
+            }
     } the metabolizer for {NATURALFIXED($time, 3)} {MANY("second", $time)}
 
 entity-effect-guidebook-emote =
@@ -492,6 +494,12 @@ entity-effect-guidebook-plant-phalanximine =
         [1] Restores
         *[other] restore
     } viability to a plant rendered nonviable by a mutation
+
+entity-effect-guidebook-plant-remove-kudzu =
+    { $chance ->
+        [1] Removes
+        *[other] remove
+    } kudzu weed growth from a plant
 
 entity-effect-guidebook-plant-diethylamine =
     { $chance ->

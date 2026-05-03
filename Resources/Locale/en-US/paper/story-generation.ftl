@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 story-gen-book-type1 = book
 story-gen-book-type2 = folio
 story-gen-book-type3 = collection

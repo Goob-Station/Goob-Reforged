@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Mobs;
 using Content.Shared.Xenoarchaeology.Artifact.Components;
 using Content.Shared.Xenoarchaeology.Artifact.XAT.Components;
@@ -15,14 +11,12 @@ public sealed class XATDeathSystem : BaseXATSystem<XATDeathComponent>
 {
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
-    private EntityQuery<XenoArtifactComponent> _xenoArtifactQuery;
+    [Dependency] private readonly EntityQuery<XenoArtifactComponent> _xenoArtifactQuery = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
     {
         base.Initialize();
-
-        _xenoArtifactQuery = GetEntityQuery<XenoArtifactComponent>();
 
         SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
     }

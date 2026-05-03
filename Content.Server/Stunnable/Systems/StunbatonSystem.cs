@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Power.Components;
 using Content.Server.Power.Events;
 using Content.Server.Power.EntitySystems;
@@ -30,7 +26,7 @@ namespace Content.Server.Stunnable.Systems
             base.Initialize();
 
             SubscribeLocalEvent<StunbatonComponent, ExaminedEvent>(OnExamined);
-            SubscribeLocalEvent<StunbatonComponent, SolutionContainerChangedEvent>(OnSolutionChange);
+            SubscribeLocalEvent<StunbatonComponent, SolutionChangedEvent>(OnSolutionChange);
             SubscribeLocalEvent<StunbatonComponent, StaminaDamageOnHitAttemptEvent>(OnStaminaHitAttempt);
             SubscribeLocalEvent<StunbatonComponent, ChargeChangedEvent>(OnChargeChanged);
         }
@@ -79,7 +75,7 @@ namespace Content.Server.Stunnable.Systems
         }
 
         // https://github.com/space-wizards/space-station-14/pull/17288#discussion_r1241213341
-        private void OnSolutionChange(Entity<StunbatonComponent> entity, ref SolutionContainerChangedEvent args)
+        private void OnSolutionChange(Entity<StunbatonComponent> entity, ref SolutionChangedEvent args)
         {
             // Explode if baton is activated and rigged.
             if (!TryComp<RiggableComponent>(entity, out var riggable) ||

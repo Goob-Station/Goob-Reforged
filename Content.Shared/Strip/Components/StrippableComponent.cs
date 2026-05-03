@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.DoAfter;
 using Content.Shared.Inventory;
 using Robust.Shared.GameStates;
@@ -43,7 +39,7 @@ namespace Content.Shared.Strip.Components
         public TimeSpan Additive = TimeSpan.Zero;
         public bool Stealth = stealth;
 
-        public TimeSpan Time => TimeSpan.FromSeconds(MathF.Max(InitialTime.Seconds * Multiplier + Additive.Seconds, 0f));
+        public TimeSpan Time => TimeSpan.FromTicks(Math.Max((InitialTime * Multiplier + Additive).Ticks, 0));
 
         public SlotFlags TargetSlots { get; } = SlotFlags.GLOVES;
     }

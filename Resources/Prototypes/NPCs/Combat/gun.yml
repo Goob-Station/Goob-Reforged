@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Tries to shoot a target at range.
 - type: htnCompound
   id: GunCombatCompound
@@ -100,6 +96,29 @@
 - type: htnCompound
   id: RangedCombatCompound
   branches:
+    # Close or rack the gun chamber if necessary
+    - preconditions:
+        - !type:ActiveHandComponentPrecondition
+          components:
+            - type: Gun
+        - !type:GunAmmoPrecondition
+          minPercent: 0.001
+        - !type:NeedToRackBoltPrecondition
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:RackBoltOperator
+
+    # Wield gun
+    - preconditions:
+        - !type:ActiveHandComponentPrecondition
+          components:
+            - type: Gun
+        - !type:WieldedPrecondition
+          wielded: false
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:WieldOperator
+
     # Move to target and shoot them if ammo
     - preconditions:
         - !type:GunAmmoPrecondition

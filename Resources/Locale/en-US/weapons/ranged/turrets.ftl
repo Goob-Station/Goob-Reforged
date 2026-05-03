@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Deployable turret component
 deployable-turret-component-activating = Deploying...
 deployable-turret-component-deactivating = Deactivating...

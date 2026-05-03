@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   id: ToolboxBase
   parent: BaseStorageItem
@@ -85,6 +81,7 @@
   description: A toolbox typically stocked with electrical gear.
   components:
   - type: Damageable
+  - type: Injurable
     damageContainer: Inorganic
   - type: Destructible
     thresholds:

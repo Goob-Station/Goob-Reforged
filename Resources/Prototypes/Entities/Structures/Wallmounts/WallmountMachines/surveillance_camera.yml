@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   abstract: true
   id: SurveillanceCameraBase
@@ -15,7 +11,7 @@
       light:
         shape:
           !type:PhysShapeCircle
-          radius: 5
+          radius: 0.5
         hard: false
         mask:
         - GhostImpassable
@@ -28,7 +24,8 @@
         - None
         layer:
         - TabletopMachineLayer
-  - type: LightOnCollide
+  - type: CameraActiveOnCollide
+    requiresPower: false # TODO: Change this when AI can no longer see via unpowered cameras
   - type: PointLight
     enabled: false
     radius: 5
@@ -56,8 +53,9 @@
     alwaysRandomize: true
     layoutId: SurveillanceCamera
   - type: Damageable
-    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: Structures/Wallmounts/camera.rsi
@@ -241,8 +239,9 @@
     - type: Transform
       anchored: true
     - type: Damageable
-      damageContainer: StructuralInorganic
       damageModifierSet: Metallic
+    - type: Injurable
+      damageContainer: StructuralInorganic
     - type: Sprite
       drawdepth: WallMountedItems
       sprite: Structures/Wallmounts/camera.rsi

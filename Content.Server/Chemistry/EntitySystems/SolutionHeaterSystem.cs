@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Chemistry.Components;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
@@ -85,13 +81,10 @@ public sealed class SolutionHeaterSystem : EntitySystem
         var query = EntityQueryEnumerator<ActiveSolutionHeaterComponent, SolutionHeaterComponent, ItemPlacerComponent>();
         while (query.MoveNext(out _, out _, out var heater, out var placer))
         {
+            var energy = heater.HeatPerSecond * frameTime;
             foreach (var heatingEntity in placer.PlacedEntities)
             {
-                if (!TryComp<SolutionContainerManagerComponent>(heatingEntity, out var container))
-                    continue;
-
-                var energy = heater.HeatPerSecond * frameTime;
-                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((heatingEntity, container)))
+                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions(heatingEntity))
                 {
                     _solutionContainer.AddThermalEnergy(soln, energy);
                 }

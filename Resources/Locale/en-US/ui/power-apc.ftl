@@ -1,10 +1,5 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 apc-menu-title = APC
 apc-menu-breaker-label = Main Breaker
-apc-menu-breaker-button = Toggle
 apc-menu-power-label = Load
 apc-menu-external-label = External Power
 apc-menu-charge-label = {$percent} Charged

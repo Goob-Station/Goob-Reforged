@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Emp;
 using Content.Shared.Trigger.Components.Effects;
 
@@ -13,7 +9,7 @@ public sealed class EmpOnTriggerSystem : XOnTriggerSystem<EmpOnTriggerComponent>
 
     protected override void OnTrigger(Entity<EmpOnTriggerComponent> ent, EntityUid target, ref TriggerEvent args)
     {
-        _emp.EmpPulse(Transform(target).Coordinates, ent.Comp.Range, ent.Comp.EnergyConsumption, ent.Comp.DisableDuration, args.User);
+        _emp.EmpPulse(Transform(target).Coordinates, ent.Comp.Range, ent.Comp.EnergyConsumption, ent.Comp.DisableDuration, args.User, predicted: args.Predicted);
         args.Handled = true;
     }
 }

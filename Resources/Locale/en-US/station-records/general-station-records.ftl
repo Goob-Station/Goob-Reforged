@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 general-station-record-console-window-title = Station Records Computer
 general-station-record-console-select-record-info = Select a record on the left.
 general-station-record-console-empty-state = No records found!

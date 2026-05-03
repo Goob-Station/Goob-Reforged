@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Administration;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
@@ -21,7 +17,7 @@ public sealed class RemoveActionCommand : LocalizedEntityCommands
     {
         if (args.Length != 2)
         {
-            shell.WriteError(Loc.GetString(Loc.GetString("cmd-rmaction-invalid-args")));
+            shell.WriteError(Loc.GetString("cmd-rmaction-invalid-args"));
             return;
         }
 

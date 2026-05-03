@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 using Robust.Shared.Player;
@@ -15,14 +11,12 @@ public abstract class AlertsSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
 
-    private EntityQuery<AlertsComponent> _alertsQuery;
+    [Dependency] private readonly EntityQuery<AlertsComponent> _alertsQuery = default!;
     private FrozenDictionary<ProtoId<AlertPrototype>, AlertPrototype> _typeToAlert = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _alertsQuery = GetEntityQuery<AlertsComponent>();
 
         SubscribeLocalEvent<AlertsComponent, ComponentStartup>(HandleComponentStartup);
         SubscribeLocalEvent<AlertsComponent, ComponentShutdown>(HandleComponentShutdown);

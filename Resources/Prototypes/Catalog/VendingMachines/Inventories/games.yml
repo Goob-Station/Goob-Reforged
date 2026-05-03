@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: vendingMachineInventory
   id: GoodCleanFunInventory
   startingInventory:
@@ -20,6 +16,7 @@
     PaperCNCSheet: 6
     MysteryFigureBox: 2
     BooksBag: 3
+    Magic9Ball: 2
   contrabandInventory:
     Basketball: 1
     FoodSnackBoritos: 3

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
@@ -18,11 +14,11 @@ public sealed partial class ParcelWrapOverrideComponent : Component
     /// The <see cref="EntityPrototype"/> of the parcel created by wrapping this entity.
     /// </summary>
     [DataField(required: true), AutoNetworkedField]
-    public EntProtoId? ParcelPrototype;
+    public EntProtoId<WrappedParcelComponent> ParcelPrototype;
 
     /// <summary>
     /// How long it takes to use this to wrap something.
     /// </summary>
-    [DataField(required: true), AutoNetworkedField]
+    [DataField, AutoNetworkedField]
     public TimeSpan? WrapDelay;
 }

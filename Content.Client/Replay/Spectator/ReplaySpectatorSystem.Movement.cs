@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Movement.Components;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
@@ -78,8 +74,7 @@ public sealed partial class ReplaySpectatorSystem
         if ((Direction & DirectionFlag.East) != 0)
             effectiveDir &= ~DirectionFlag.West;
 
-        var query = GetEntityQuery<TransformComponent>();
-        var xform = query.GetComponent(player);
+        var xform = Transform(player);
         var pos = _transform.GetWorldPosition(xform);
 
         if (!xform.ParentUid.IsValid())

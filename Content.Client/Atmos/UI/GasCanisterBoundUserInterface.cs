@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Piping.Binary.Components;
 using Content.Shared.Atmos.Piping.Unary.Components;
@@ -78,7 +74,7 @@ namespace Content.Client.Atmos.UI
             _window.SetTankPressure(cast.TankPressure);
             _window.SetReleasePressureRange(component.MinReleasePressure, component.MaxReleasePressure);
             _window.SetReleasePressure(component.ReleasePressure);
-            _window.SetReleaseValve(component.ReleaseValve);
+            _window.SetReleaseValve(component.ReleaseValveOpen);
         }
 
         protected override void Dispose(bool disposing)

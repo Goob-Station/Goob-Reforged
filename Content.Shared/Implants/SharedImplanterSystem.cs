@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Containers.ItemSlots;
@@ -32,6 +28,8 @@ public abstract class SharedImplanterSystem : EntitySystem
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _uiSystem = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
+
+    [Dependency] private readonly EntityQuery<SubdermalImplantComponent> _implantCompQuery = default!;
 
     public override void Initialize()
     {
@@ -197,13 +195,11 @@ public abstract class SharedImplanterSystem : EntitySystem
 
         if (_container.TryGetContainer(target, ImplanterComponent.ImplantSlotId, out var implantContainer))
         {
-            var implantCompQuery = GetEntityQuery<SubdermalImplantComponent>();
-
             if (component.AllowDeimplantAll)
             {
                 foreach (var implant in implantContainer.ContainedEntities)
                 {
-                    if (!implantCompQuery.TryGetComponent(implant, out var implantComp))
+                    if (!_implantCompQuery.TryGetComponent(implant, out var implantComp))
                         continue;
 
                     //Don't remove a permanent implant and look for the next that can be drawn
@@ -238,7 +234,7 @@ public abstract class SharedImplanterSystem : EntitySystem
                     }
                 }
 
-                if (implant != null && implantCompQuery.TryGetComponent(implant, out var implantComp))
+                if (implant != null && _implantCompQuery.TryGetComponent(implant, out var implantComp))
                 {
                     //Don't remove a permanent implant
                     if (!_container.CanRemove(implant.Value, implantContainer))

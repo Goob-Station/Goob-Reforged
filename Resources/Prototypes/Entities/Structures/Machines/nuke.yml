@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: [BaseStructure, StructureWheeled, BaseMajorContraband]
   id: NuclearBomb
@@ -133,7 +129,7 @@
     bodyType: Dynamic
 
 - type: entity
-  parent: StorageTank
+  parent: StorageTankBig
   id: NuclearBombKeg
   name: nuclear fission explosive
   suffix: keg
@@ -179,12 +175,11 @@
         - MachineMask
         layer:
         - WallLayer
-  - type: SolutionContainerManager
-    solutions:
-      tank:
-        reagents:
-        - ReagentId: NuclearCola
-          Quantity: 3000
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: NuclearCola
+        Quantity: 3840
   - type: ReagentTank
     transferAmount: 100
   - type: StaticPrice

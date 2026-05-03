@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Mobs;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
@@ -32,12 +28,6 @@ public sealed partial class PassiveDamageComponent : Component
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float Interval = 1f;
-
-    /// <summary>
-    /// The maximum HP the damage will be given to. If 0, disabled.
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public FixedPoint2 DamageCap = 0;
 
     [DataField("nextDamage", customTypeSerializer: typeof(TimeOffsetSerializer)), ViewVariables(VVAccess.ReadWrite)]
     public TimeSpan NextDamage = TimeSpan.Zero;

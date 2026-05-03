@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -30,8 +26,9 @@ public abstract class SharedNavMapSystem : EntitySystem
     [Robust.Shared.IoC.Dependency] private readonly TagSystem _tagSystem = default!;
     [Robust.Shared.IoC.Dependency] private readonly INetManager _net = default!;
 
+    [Robust.Shared.IoC.Dependency] private readonly EntityQuery<NavMapDoorComponent> _doorQuery = default!;
+
     private static readonly ProtoId<TagPrototype>[] WallTags = {"Wall", "Window"};
-    private EntityQuery<NavMapDoorComponent> _doorQuery;
 
     public override void Initialize()
     {
@@ -40,8 +37,6 @@ public abstract class SharedNavMapSystem : EntitySystem
         // Data handling events
         SubscribeLocalEvent<NavMapComponent, ComponentGetState>(OnGetState);
         SubscribeLocalEvent<ConfigurableNavMapBeaconComponent, ExaminedEvent>(OnConfigurableExamined);
-
-        _doorQuery = GetEntityQuery<NavMapDoorComponent>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

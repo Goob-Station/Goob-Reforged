@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Sticky.Components;
 using Robust.Client.GameObjects;
 
@@ -9,13 +5,11 @@ namespace Content.Client.Sticky.Visualizers;
 
 public sealed class StickyVisualizerSystem : VisualizerSystem<StickyVisualizerComponent>
 {
-    private EntityQuery<SpriteComponent> _spriteQuery;
+    [Dependency] private readonly EntityQuery<SpriteComponent> _spriteQuery = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _spriteQuery = GetEntityQuery<SpriteComponent>();
 
         SubscribeLocalEvent<StickyVisualizerComponent, ComponentInit>(OnInit);
     }

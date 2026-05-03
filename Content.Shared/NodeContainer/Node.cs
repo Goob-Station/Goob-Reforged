@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.NodeContainer.NodeGroups;
 using Robust.Shared.Map.Components;
 
@@ -96,9 +92,10 @@ public abstract partial class Node
     /// of this asymmetric relation are made to manually update with <see cref="NodeGroupSystem.QueueReflood"/>.
     /// </para>
     /// </remarks>
-    public abstract IEnumerable<Node> GetReachableNodes(TransformComponent xform,
+    public abstract IEnumerable<Node> GetReachableNodes(
+        Entity<TransformComponent> xform,
         EntityQuery<NodeContainerComponent> nodeQuery,
         EntityQuery<TransformComponent> xformQuery,
-        MapGridComponent? grid,
+        Entity<MapGridComponent>? grid,
         IEntityManager entMan);
 }

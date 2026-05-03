@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Objectives.Components;
 using Content.Server.Shuttles.Components;
 using Content.Server.Shuttles.Systems;
@@ -65,7 +61,7 @@ public sealed class HijackShuttleConditionSystem : EntitySystem
     private bool IsShuttleHijacked(EntityUid shuttleGridId, EntityUid mindId)
     {
         var gridPlayers = Filter.BroadcastGrid(shuttleGridId).Recipients;
-        var humanoids = GetEntityQuery<HumanoidAppearanceComponent>();
+        var humanoids = GetEntityQuery<HumanoidProfileComponent>();
         var cuffable = GetEntityQuery<CuffableComponent>();
         EntityQuery<MobStateComponent>();
 

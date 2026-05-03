@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Clothing.Components;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Movement.Components;
@@ -67,7 +63,7 @@ public sealed partial class PilotedClothingSystem : EntitySystem
         if (!isCorrectSlot)
             return;
 
-        entity.Comp.Wearer = args.Equipee;
+        entity.Comp.Wearer = args.EquipTarget;
         Dirty(entity);
 
         // Attempt to setup control link, if Pilot and Wearer are both present.

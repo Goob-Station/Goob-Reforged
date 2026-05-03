@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Server.Administration;
 using Content.Server.Administration.Logs;
@@ -442,20 +438,22 @@ public sealed partial class InstrumentSystem : SharedInstrumentSystem
                 if (Deleted(master))
                 {
                     Clean(uid, instrument);
+                    continue;
                 }
 
                 var masterActive = activeQuery.CompOrNull(master);
                 if (masterActive == null)
                 {
                     Clean(uid, instrument);
+                    continue;
                 }
 
                 var trans = transformQuery.GetComponent(uid);
                 var masterTrans = transformQuery.GetComponent(master);
-                if (!_transform.InRange(masterTrans.Coordinates, trans.Coordinates, 10f)
-)
+                if (!_transform.InRange(masterTrans.Coordinates, trans.Coordinates, 10f))
                 {
                     Clean(uid, instrument);
+                    continue;
                 }
             }
 

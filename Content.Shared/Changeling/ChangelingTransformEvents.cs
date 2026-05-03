@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Actions;
 using Content.Shared.DoAfter;
 using Robust.Shared.Serialization;
@@ -18,3 +14,26 @@ public sealed partial class ChangelingTransformActionEvent : InstantActionEvent;
 /// </summary>
 [Serializable, NetSerializable]
 public sealed partial class ChangelingTransformDoAfterEvent : SimpleDoAfterEvent;
+
+/// <summary>
+/// Raised on a changeling before they transform into a stored identity.
+/// This is raised after the DoAfter finished.
+/// </summary>
+public readonly record struct BeforeChangelingTransformEvent(EntityUid StoredIdentity)
+{
+    /// <summary>
+    /// The stored identity the changeling will transform into.
+    /// </summary>
+    public readonly EntityUid StoredIdentity = StoredIdentity;
+};
+
+/// <summary>
+/// Raised on a changeling after they successfully transformed into a stored identity.
+/// </summary>
+public readonly record struct AfterChangelingTransformEvent(EntityUid StoredIdentity)
+{
+    /// <summary>
+    /// The stored identity the changeling transformed into.
+    /// </summary>
+    public readonly EntityUid StoredIdentity = StoredIdentity;
+};

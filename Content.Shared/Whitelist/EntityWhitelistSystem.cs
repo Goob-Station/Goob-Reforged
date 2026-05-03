@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Item;
 using Content.Shared.Tag;
@@ -13,13 +9,7 @@ public sealed class EntityWhitelistSystem : EntitySystem
 {
     [Dependency] private readonly TagSystem _tag = default!;
 
-    private EntityQuery<ItemComponent> _itemQuery;
-
-    public override void Initialize()
-    {
-        base.Initialize();
-        _itemQuery = GetEntityQuery<ItemComponent>();
-    }
+    [Dependency] private readonly EntityQuery<ItemComponent> _itemQuery = default!;
 
     /// <inheritdoc cref="IsValid(Content.Shared.Whitelist.EntityWhitelist,Robust.Shared.GameObjects.EntityUid)"/>
     public bool IsValid(EntityWhitelist list, [NotNullWhen(true)] EntityUid? uid)

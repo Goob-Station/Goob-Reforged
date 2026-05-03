@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Numerics;
 using Content.Server.Shuttles.Systems;
 using Content.Shared.Damage;
@@ -14,6 +10,12 @@ namespace Content.Server.Shuttles.Components
     [Access(typeof(ThrusterSystem))]
     public sealed partial class ThrusterComponent : Component
     {
+        /// <summary>
+        /// If the thruster can be toggled on or off via interaction
+        /// </summary>
+        [DataField]
+        public bool CanToggle = true;
+
         /// <summary>
         /// Whether the thruster has been force to be enabled / disabled (e.g. VV, interaction, etc.)
         /// </summary>

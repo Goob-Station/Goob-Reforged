@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cargo-account-cargo-name = Station Supply Budget
 cargo-account-cargo-code = SUP
 

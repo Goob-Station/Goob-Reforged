@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 meta:
   format: 6
   postmapinit: false
@@ -2780,7 +2776,7 @@ entities:
     components:
     - type: MetaData
       desc: looks like it took some serious explosive damage
-      name: Destryoed thruster
+      name: Destroyed thruster
     - type: Transform
       pos: -2.5,-7.5
       parent: 2

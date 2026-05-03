@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Discord;
 using Content.Shared.CCVar;
 using Content.Shared.GameTicking;
@@ -80,6 +76,7 @@ namespace Content.Server.GameTicking
 #if EXCEPTION_TOLERANCE
             Subs.CVar(_cfg, CCVars.RoundStartFailShutdownCount, value => RoundStartFailShutdownCount = value, true);
 #endif
+            Subs.CVar(_cfg, CCVars.GameTickerIgnoredPresets, value => _ignoredRules = value.Split(","));
         }
     }
 }

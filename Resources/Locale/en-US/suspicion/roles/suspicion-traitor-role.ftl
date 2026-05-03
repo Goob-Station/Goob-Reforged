@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Shown when greeted with the Suspicion role
 suspicion-role-greeting = You're a {$roleName}!
 

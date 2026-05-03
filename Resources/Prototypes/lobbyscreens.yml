@@ -1,12 +1,14 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: lobbyBackground
   id: Warden
   background: /Textures/LobbyScreens/warden.webp
   title: lobby-state-background-warden-title
   artist: lobby-state-background-warden-artist
+
+- type: lobbyBackground
+  id: InvisibleWall
+  background: /Textures/LobbyScreens/invisiblewall.webp
+  title: lobby-state-background-invisiblewall-title
+  artist: lobby-state-background-invisiblewall-artist
 
 - type: lobbyBackground
   id: Pharmacy

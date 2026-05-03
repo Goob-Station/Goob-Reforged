@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: latheRecipe
   id: Beaker
   result: Beaker
@@ -95,11 +91,19 @@
     Steel: 250
 
 - type: latheRecipe
-  id: BaseChemistryEmptyVial
-  result: BaseChemistryEmptyVial
+  id: ChemistryEmptyVial
+  result: ChemistryEmptyVial
   completetime: 2
   materials:
     Glass: 100
+    Wood: 20
+
+- type: latheRecipe
+  id: ChemistryEmptyVialSmall
+  result: ChemistryEmptyVialSmall
+  completetime: 2
+  materials:
+    Glass: 50
     Wood: 20
 
 - type: latheRecipe

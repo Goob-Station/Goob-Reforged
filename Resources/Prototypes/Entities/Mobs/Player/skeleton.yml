@@ -1,18 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
-- type: entity
-  save: false
-  parent: BaseMobSkeletonPerson
-  id: MobSkeletonPerson
-  components:
-  - type: InteractionPopup
-    successChance: 1
-    interactSuccessString: hugging-success-generic
-    interactSuccessSound: /Audio/Effects/thudswoosh.ogg
-    messagePerceivedByOthers: hugging-success-generic-others
-
 - type: entity
   name: skeleton pirate
   parent: MobSkeletonPerson

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Objectives.Systems;
 using Content.Shared.Mind.Filters;
 
@@ -20,7 +16,7 @@ public sealed partial class PickRandomPersonComponent : Component
     /// A pool to pick potential targets from.
     /// </summary>
     [DataField]
-    public IMindPool Pool = new AliveHumansPool();
+    public MindPool Pool = new AliveHumansPool();
 
     /// <summary>
     /// Filters to apply to <see cref="Pool"/>.

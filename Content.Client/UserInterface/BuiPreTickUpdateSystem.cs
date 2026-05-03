@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Client.GameObjects;
 using Robust.Client.Player;
 using Robust.Shared.ContentPack;
@@ -37,15 +33,7 @@ public sealed class BuiPreTickUpdateSystem : EntitySystem
     [Dependency] private readonly IPlayerManager _playerManager = null!;
     [Dependency] private readonly UserInterfaceSystem _uiSystem = null!;
     [Dependency] private readonly IGameTiming _gameTiming = null!;
-
-    private EntityQuery<UserInterfaceUserComponent> _userQuery;
-
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        _userQuery = GetEntityQuery<UserInterfaceUserComponent>();
-    }
+    [Dependency] private readonly EntityQuery<UserInterfaceUserComponent> _userQuery = default!;
 
     public void RunUpdates()
     {

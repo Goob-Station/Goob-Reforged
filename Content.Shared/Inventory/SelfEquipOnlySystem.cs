@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.ActionBlocker;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Inventory.Events;
@@ -27,7 +23,7 @@ public sealed class SelfEquipOnlySystem : EntitySystem
         if (TryComp<ClothingComponent>(ent, out var clothing) && (clothing.Slots & args.SlotFlags) == SlotFlags.NONE)
             return;
 
-        if (args.Equipee != args.EquipTarget)
+        if (args.User != args.EquipTarget)
             args.Cancel();
     }
 
@@ -36,7 +32,7 @@ public sealed class SelfEquipOnlySystem : EntitySystem
         if (args.Cancelled)
             return;
 
-        if (args.Unequipee == args.UnEquipTarget)
+        if (args.User == args.UnEquipTarget)
             return;
 
         if (TryComp<ClothingComponent>(ent, out var clothing) && (clothing.Slots & args.SlotFlags) == SlotFlags.NONE)

@@ -1,9 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
-using Content.Shared.Anomaly.Effects;
-using Content.Shared.Body.Prototypes;
+﻿using Content.Shared.Anomaly.Effects;
 using Content.Shared.Humanoid.Prototypes;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;

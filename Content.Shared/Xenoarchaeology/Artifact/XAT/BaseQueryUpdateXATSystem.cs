@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Xenoarchaeology.Artifact.Components;
 
 namespace Content.Shared.Xenoarchaeology.Artifact.XAT;
@@ -12,15 +8,7 @@ namespace Content.Shared.Xenoarchaeology.Artifact.XAT;
 /// <typeparam name="T">Type of XAT component that system will work with.</typeparam>
 public abstract class BaseQueryUpdateXATSystem<T> : BaseXATSystem<T> where T : Component
 {
-    protected EntityQuery<XenoArtifactComponent> _xenoArtifactQuery;
-
-    /// <inheritdoc />
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        _xenoArtifactQuery = GetEntityQuery<XenoArtifactComponent>();
-    }
+    [Dependency] protected readonly EntityQuery<XenoArtifactComponent> _xenoArtifactQuery = default!;
 
     /// <inheritdoc />
     public override void Update(float frameTime)

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: BaseHandheldInstrument
   id: BaseStringInstrument
@@ -99,6 +95,7 @@
     sprite: Objects/Fun/Instruments/guitar.rsi
   - type: Wieldable
   - type: Damageable # Smash it! Does 20 damage a hit, but breaks after 1 hit.
+  - type: Injurable
     damageContainer: Inorganic
   - type: Destructible
     thresholds:

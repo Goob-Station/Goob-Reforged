@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 
 - type: entity
   name: telecrystal
@@ -127,3 +123,4 @@
   - type: Store
     balance:
       Telecrystal: 99999
+    expectedFaction: #nulls out the expected faction

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Attempted to keep the files in alphabetical order so its easier to audit.
 # Finding individual authors is an unfeasible task. If you can reference the author please do so.
 
@@ -59,6 +55,11 @@
   license: "CC-BY-SA-3.0"
   copyright: "Created by Sarahon"
   source: "https://github.com/Sarahon"
+
+- files: ["flap.png"]
+  license: "CC-BY-SA-3.0"
+  copyright: "Made from mothroach.png (created by TurboTracker, screwed by TheShuEd), edited by Pgriha"
+  source: "https://github.com/space-wizards/space-station-14/pull/42912"
 
 - files: ["hew.png"]
   license: "CC-BY-SA-3.0"

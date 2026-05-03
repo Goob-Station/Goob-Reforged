@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   id: WardrobePrisonFilled
   suffix: Filled
@@ -271,6 +267,8 @@
     - id: ClothingUniformJumpsuitChaplain
     - id: ClothingShoesColorBlack
     - id: ClothingUniformJumpskirtChaplain
+    - id: PlushieLizardJobChaplain
+      prob: 0.02
 
 - type: entity
   id: WardrobeSecurityFilled
@@ -317,6 +315,8 @@
     - id: ClothingUniformJumpskirtCargo
     - id: ClothingHandsGlovesFingerless
     - id: AppraisalTool
+    - id: PlushieLizardJobCargotechnician
+      prob: 0.02
 
 - type: entity
   id: WardrobeSalvageFilled

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Dataset;
 using Content.Shared.Humanoid.Prototypes;
 using Robust.Shared.Prototypes;
@@ -21,5 +17,6 @@ namespace Content.Shared.Humanoid
     ///     Raised when entity has changed their sex.
     ///     This doesn't handle gender changes.
     /// </summary>
+    [ByRefEvent]
     public record struct SexChangedEvent(Sex OldSex, Sex NewSex);
 }

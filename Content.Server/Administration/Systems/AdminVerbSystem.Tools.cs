@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
@@ -726,7 +722,7 @@ public sealed partial class AdminVerbSystem
                             return;
 
                         _gun.SetBallisticUnspawned((args.Target, ballisticAmmo), result);
-                        _gun.UpdateBallisticAppearance(args.Target, ballisticAmmo);
+                        _gun.UpdateBallisticAppearance((args.Target, ballisticAmmo));
                     });
                 },
                 Impact = LogImpact.Medium,

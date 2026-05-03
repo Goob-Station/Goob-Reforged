@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Head
 - type: loadout
   id: JesterHat
@@ -12,6 +8,11 @@
   id: JesterAltHat
   equipment:
     head: ClothingHeadHatJesterAlt
+
+- type: loadout
+  id: ClownMitre
+  equipment:
+    head: ClothingHeadHatMitreClown
 
 # Jumpsuit
 - type: loadout

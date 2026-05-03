@@ -1,10 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Collections;
 using System.Linq;
-using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.FixedPoint;
 using JetBrains.Annotations;
@@ -62,12 +57,6 @@ namespace Content.Shared.Chemistry.Components
         /// </summary>
         [DataField]
         public float Temperature { get; set; } = 293.15f;
-
-        /// <summary>
-        ///     The name of this solution, if it is contained in some <see cref="SolutionContainerManagerComponent"/>
-        /// </summary>
-        [DataField]
-        public string? Name;
 
         /// <summary>
         ///     Checks if a solution can fit into the container.
@@ -192,6 +181,11 @@ namespace Content.Shared.Chemistry.Components
             return new Solution(this);
         }
 
+        public override string ToString()
+        {
+            return string.Join("; ", Contents);
+        }
+
         [AssertionMethod]
         public void ValidateSolution()
         {
@@ -204,7 +198,7 @@ namespace Content.Shared.Chemistry.Components
             DebugTools.Assert(!Contents.Any(x => x.Quantity <= FixedPoint2.Zero));
 
             // No duplicate reagents iDs
-            DebugTools.Assert(Contents.Select(x => x.Reagent).ToHashSet().Count == Contents.Count);
+            DebugTools.Assert(Contents.Select(x => x.Reagent).ToHashSet().Count == Contents.Count, $"Solution: {this}, contained duplcate contents {Contents}");
 
             // If it isn't flagged as dirty, check heat capacity is correct.
             if (!_heatCapacityDirty)

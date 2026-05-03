@@ -1,7 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.IntegrationTests.Fixtures;
 using Content.Server.Administration.Logs;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Database;
@@ -11,14 +8,21 @@ namespace Content.IntegrationTests.Tests.Administration.Logs;
 
 [TestFixture]
 [TestOf(typeof(AdminLogSystem))]
-public sealed class FilterTests
+public sealed class FilterTests : GameTest
 {
+    public override PoolSettings PoolSettings => new()
+    {
+        AdminLogsEnabled = true,
+        DummyTicker = false,
+        Connected = true
+    };
+
     [Test]
     [TestCase(DateOrder.Ascending)]
     [TestCase(DateOrder.Descending)]
     public async Task Date(DateOrder order)
     {
-        await using var pair = await PoolManager.GetServerClient(AddTests.LogTestSettings);
+        var pair = Pair;
         var server = pair.Server;
 
         var sEntities = server.ResolveDependency<IEntityManager>();
@@ -100,6 +104,5 @@ public sealed class FilterTests
 
             return firstFound && secondFound;
         });
-        await pair.CleanReturnAsync();
     }
 }

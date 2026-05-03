@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.GameStates;
 
 namespace Content.Shared.Eye.Blinding.Components;
@@ -23,5 +19,5 @@ public sealed partial class VisionCorrectionComponent : Component
     /// Controls the exponent of the blur effect when worn
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite), DataField("correctionPower"), AutoNetworkedField]
-    public float CorrectionPower = 2f;
+    public float CorrectionPower = 7f;
 }

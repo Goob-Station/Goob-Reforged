@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
 using Content.Shared.Cloning.Events;
@@ -103,13 +99,15 @@ public sealed partial class SharedJumpAbilitySystem : EntitySystem
         if (!args.Settings.EventComponents.Contains(Factory.GetRegistration(ent.Comp.GetType()).Name))
             return;
 
+        // Make sure to set the datafields before adding the component so that the correct action gets spawned on map init.
         var targetComp = Factory.GetComponent<JumpAbilityComponent>();
         targetComp.Action = ent.Comp.Action;
-        targetComp.CanCollide = ent.Comp.CanCollide;
-        targetComp.JumpSound = ent.Comp.JumpSound;
-        targetComp.CollideKnockdown = ent.Comp.CollideKnockdown;
         targetComp.JumpDistance = ent.Comp.JumpDistance;
         targetComp.JumpThrowSpeed = ent.Comp.JumpThrowSpeed;
+        targetComp.CanCollide = ent.Comp.CanCollide;
+        targetComp.CollideKnockdown = ent.Comp.CollideKnockdown;
+        targetComp.JumpSound = ent.Comp.JumpSound;
+        targetComp.JumpFailedPopup = ent.Comp.JumpFailedPopup;
         AddComp(args.CloneUid, targetComp, true);
     }
 }

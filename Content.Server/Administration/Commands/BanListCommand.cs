@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Server.Administration.BanList;
 using Content.Server.Database;
@@ -43,7 +39,7 @@ public sealed class BanListCommand : LocalizedCommands
 
         if (shell.Player is not { } player)
         {
-            var bans = await _dbManager.GetServerBansAsync(data.LastAddress, data.UserId, data.LastLegacyHWId, data.LastModernHWIds, false);
+            var bans = await _dbManager.GetBansAsync(data.LastAddress, data.UserId, data.LastLegacyHWId, data.LastModernHWIds, false);
 
             if (bans.Count == 0)
             {

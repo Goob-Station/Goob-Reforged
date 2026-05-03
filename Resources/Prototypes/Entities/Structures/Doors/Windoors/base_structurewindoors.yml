@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 #Normal windoors
 - type: entity
   id: BaseWindoor
@@ -87,8 +83,9 @@
     lastSignals:
       DoorStatus: false
   - type: Damageable
-    damageContainer: StructuralInorganic
     damageModifierSet: Glass
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: ExaminableDamage
     messages: WindowMessages
   - type: RCDDeconstructable
@@ -141,8 +138,8 @@
     denyAnimationTime: 0.4
     animatePanel: false
     openUnlitVisible: true
-    # needed so that windoors will close regardless of whether there are people in it; it doesn't crush after all
-    safety: false
+    # needed so that windoors loop between closing and reopening less often even though they don't crush
+    safety: true
   - type: NavMapDoor
   - type: DoorBolt
   - type: Electrified
@@ -179,6 +176,10 @@
   - type: StaticPrice
     price: 150
   - type: PryUnpowered
+  - type: Tag
+    tags:
+      - DoorRemoteWhitelist
+      # This tag is used by door remotes to allow or not a door remote to normally be able to interact with a door
 
 - type: entity
   id: BaseSecureWindoor
@@ -253,6 +254,8 @@
     tags:
       - SecureWindoor
       # This tag is used to nagivate the Airlock construction graph. It's needed because the construction graph is shared between Airlock, AirlockGlass, and HighSecDoor
+      - DoorRemoteWhitelist
+      # This tag is used by door remotes to allow or not a door remote to normally be able to interact with a door
 
 
 #Plasma Windoors
@@ -398,6 +401,8 @@
     tags:
       - SecurePlasmaWindoor
       # This tag is used to nagivate the Airlock construction graph. It's needed because the construction graph is shared between Airlock, AirlockGlass, and HighSecDoor
+      - DoorRemoteWhitelist
+      # This tag is used by door remotes to allow or not a door remote to normally be able to interact with a door
 
 
 #Uranium Windoors
@@ -543,3 +548,5 @@
     tags:
       - SecureUraniumWindoor
       # This tag is used to nagivate the Airlock construction graph. It's needed because the construction graph is shared between Airlock, AirlockGlass, and HighSecDoor
+      - DoorRemoteWhitelist
+      # This tag is used by door remotes to allow or not a door remote to normally be able to interact with a door

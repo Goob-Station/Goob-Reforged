@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 [assembly: Parallelizable(ParallelScope.Children)]
 
 // I don't know why this parallelism limit was originally put here.

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Xenoarchaeology.Artifact.Components;
@@ -16,12 +12,10 @@ public abstract partial class SharedXenoArtifactSystem
 {
     [Dependency] private readonly SharedAudioSystem _audio = default!;
 
-    private EntityQuery<XenoArtifactUnlockingComponent> _unlockingQuery;
+    [Dependency] private readonly EntityQuery<XenoArtifactUnlockingComponent> _unlockingQuery = default!;
 
     private void InitializeUnlock()
     {
-        _unlockingQuery = GetEntityQuery<XenoArtifactUnlockingComponent>();
-
         SubscribeLocalEvent<XenoArtifactUnlockingComponent, MapInitEvent>(OnUnlockingStarted);
     }
 

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   id: RandomArcade
   name: random arcade spawner
@@ -12,8 +8,8 @@
       - state: red
       - sprite: Structures/Machines/arcade.rsi
         state: icon
-  - type: RandomSpawner
-    prototypes:
-      - BlockGameArcade
-      - SpaceVillainArcadeFilled
-    chance: 1
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      children:
+      - id: BlockGameArcade
+      - id: SpaceVillainArcadeFilled

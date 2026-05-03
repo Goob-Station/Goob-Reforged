@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: vendingMachineInventory
   id: DinnerwareInventory
   startingInventory:
@@ -31,6 +27,8 @@
     DrinkMugOne: 1
     DrinkMugRainbow: 2
     DrinkMugRed: 2
+    MortarAndPestle: 1
+    HandheldJuicer: 1
   contrabandInventory:
     CandyBowl: 1
     BarSpoon: 2

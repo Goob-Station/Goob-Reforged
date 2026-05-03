@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Changelog;
 using Content.Client.Credits;
 using Robust.Client.UserInterface;
@@ -28,7 +24,7 @@ namespace Content.Client.Info
         }
         public void SetInfoBlob(string markup)
         {
-            _richTextLabel.SetMessage(FormattedMessage.FromMarkupOrThrow(markup));
+            _richTextLabel.SetMessage(FormattedMessage.FromMarkupOrThrow(markup), tagsAllowed: null);
         }
     }
 }

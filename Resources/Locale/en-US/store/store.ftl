@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 store-ui-default-title = Store
 store-ui-default-withdraw-text = Withdraw
 store-ui-refund-text = Refund
@@ -18,4 +14,5 @@ store-not-account-owner = This {$store} is not bound to you!
 
 store-preset-name-uplink = Uplink
 store-preset-name-spellbook = Spellbook
+store-preset-name-nukie-delivery = NukeOps Bluespace Delivery
 store-preset-name-changeling = DNA Store

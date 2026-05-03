@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Ghost;
@@ -25,6 +21,8 @@ namespace Content.Shared.Examine
         [Dependency] private readonly SharedInteractionSystem _interactionSystem = default!;
         [Dependency] protected readonly MobStateSystem MobStateSystem = default!;
 
+        [Dependency] private readonly EntityQuery<GhostComponent> _ghostQuery = default!;
+
         public const float MaxRaycastRange = 100;
 
         /// <summary>
@@ -46,8 +44,6 @@ namespace Content.Shared.Examine
         protected const float ExamineDetailsRange = 3f;
 
         protected const float ExamineBlurrinessMult = 2.5f;
-
-        private EntityQuery<GhostComponent> _ghostQuery;
 
         /// <summary>
         ///     Creates a new examine tooltip with arbitrary info.
@@ -272,7 +268,7 @@ namespace Content.Shared.Examine
             //Add an entity description if one is declared
             if (!string.IsNullOrEmpty(metadata.EntityDescription))
             {
-                message.AddText(metadata.EntityDescription);
+                message.AddMarkupOrThrow(metadata.EntityDescription);
                 hasDescription = true;
             }
 

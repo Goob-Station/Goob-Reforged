@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: BaseStructure
   id: BaseRailing
@@ -19,8 +15,9 @@
   - type: InteractionOutline
   - type: Repairable
   - type: Damageable
-    damageContainer: StructuralInorganic
     damageModifierSet: FlimsyMetallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: Climbable
   - type: Construction
     graph: Railing

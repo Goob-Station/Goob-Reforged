@@ -1,16 +1,9 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Atmos.Piping.Unary.EntitySystems;
 using Content.Shared.Atmos.Piping.Unary.Components;
 using Content.Shared.Atmos.Visuals;
 using Content.Shared.Examine;
 using Content.Shared.Destructible;
-using Content.Server.Atmos.Piping.Components;
 using Content.Server.Atmos.EntitySystems;
-using Content.Server.Power.Components;
-using Content.Server.NodeContainer;
 using Robust.Server.GameObjects;
 using Content.Server.NodeContainer.Nodes;
 using Content.Server.NodeContainer.NodeGroups;
@@ -18,6 +11,7 @@ using Content.Server.Audio;
 using Content.Server.Administration.Logs;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Shared.Atmos;
+using Content.Shared.Atmos.Components;
 using Content.Shared.Database;
 using Content.Shared.Power;
 

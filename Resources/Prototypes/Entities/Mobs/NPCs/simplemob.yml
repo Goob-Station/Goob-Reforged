@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   save: false
   parent:
@@ -17,17 +13,14 @@
       Flammable: [Touch]
       Extinguish: [Touch]
       Acidic: [Touch, Ingestion]
-  - type: Internals
   - type: MovementSpeedModifier
     baseWalkSpeed : 4
     baseSprintSpeed : 4
   - type: StatusEffects
     allowed:
     - Electrocution
-    - TemporaryBlindness
     - Pacified
     - Flashed
-    - RadiationProtection
     - Adrenaline
   - type: Buckle
   - type: StandingState
@@ -45,6 +38,7 @@
   - MobCombat
   - MobBloodstream
   - MobFlammable
+  - BaseMobAnimal
   id: SimpleSpaceMobBase # Mob without barotrauma, freezing and asphyxiation (for space carps!?)
   suffix: AI
   components:
@@ -57,8 +51,6 @@
   - type: MeleeWeapon
     angle: 0
     animation: WeaponArcBite
-  - type: Body
-    prototype: Animal
   - type: Climbing
   - type: NameIdentifier
     group: GenericNumber
@@ -98,10 +90,8 @@
   - type: StatusEffects
     allowed:
     - Electrocution
-    - TemporaryBlindness
     - Pacified
     - Flashed
-    - RadiationProtection
     - Adrenaline
   - type: Bloodstream
     bloodReferenceSolution:

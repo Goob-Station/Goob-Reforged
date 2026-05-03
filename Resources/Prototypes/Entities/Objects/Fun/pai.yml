@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 # Placeholder PAIs, aka semi-automatic ghost roles
 
 - type: entity
@@ -191,6 +187,8 @@
   - type: Construction
     graph: PotatoAI
     node: potatoai
+
+# PAI Actions
 
 - type: entity
   parent: ActionIntrinsicStore

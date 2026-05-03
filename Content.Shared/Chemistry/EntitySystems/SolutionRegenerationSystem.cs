@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.FixedPoint;
@@ -42,7 +38,8 @@ public sealed class SolutionRegenerationSystem : EntitySystem
     {
         base.Update(frameTime);
 
-        var query = EntityQueryEnumerator<SolutionRegenerationComponent, SolutionContainerManagerComponent>();
+        // TODO: SolutionRegenerationComponent on Solution Entities!
+        var query = EntityQueryEnumerator<SolutionRegenerationComponent, SolutionManagerComponent>();
         while (query.MoveNext(out var uid, out var regen, out var manager))
         {
             if (_timing.CurTime < regen.NextRegenTime)

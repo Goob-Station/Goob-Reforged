@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: BaseItem
   id: BaseFlatpack
@@ -53,6 +49,26 @@
     - state: solar-assembly-part
   - type: StaticPrice
     price: 75
+
+- type: entity
+  parent: BaseFlatpack
+  id: AmeControllerFlatpack
+  name: AME controller flatpack
+  description: A flatpack used for constructing the terminal that controls the antimatter engine.
+  components:
+  - type: Sprite
+    layers:
+    - state: ame-part
+    - state: overlay
+      color: "#EFB341"
+  - type: Flatpack
+    entity: AmeController
+  - type: StaticPrice
+    price: 1000
+  - type: GuideHelp
+    guides:
+    - AME
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -270,3 +286,17 @@
     guides:
     - Botany
     - Chemicals
+
+- type: entity
+  parent: [ BaseFlatpack, BaseSyndicateContraband ]
+  id: SyndicateMicrowaveFlatpack
+  name: donk co. microwave flatpack
+  description: A flatpack used for constructing a microwave too hot for Nanotrasen to handle.
+  components:
+  - type: Item
+    size: Normal
+  - type: Flatpack
+    entity: SyndicateMicrowave
+  - type: GuideHelp
+    guides:
+    - FoodRecipes

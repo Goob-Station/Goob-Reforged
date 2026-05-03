@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 chatsan-smiles = smiles
 chatsan-frowns = frowns
 chatsan-smiles-widely = smiles widely
@@ -22,5 +18,6 @@ chatsan-unimpressed = seems unimpressed
 chatsan-waves = waves
 chatsan-salutes = salutes
 chatsan-tearfully-salutes = tearfully salutes
+chatsan-shrugs = shrugs
 chatsan-tearfully-smiles = tearfully smiles
 chatsan-winks = winks

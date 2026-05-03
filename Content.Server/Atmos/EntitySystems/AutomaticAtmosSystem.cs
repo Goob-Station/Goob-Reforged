@@ -1,9 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
-using Content.Server.Atmos.Components;
 using Content.Server.Shuttles.Systems;
+using Content.Shared.Atmos.Components;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics.Events;
 

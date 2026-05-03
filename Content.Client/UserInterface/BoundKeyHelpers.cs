@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using Robust.Client.Input;
 using Robust.Shared.Input;
@@ -14,7 +10,7 @@ public static class BoundKeyHelper
     public static string ShortKeyName(BoundKeyFunction keyFunction)
     {
         // need to use shortened key names so they fit in the buttons.
-        return TryGetShortKeyName(keyFunction, out var name) ? Loc.GetString(name) : " ";
+        return TryGetShortKeyName(keyFunction, out var name) ? name : " ";
     }
 
     public static bool IsBound(BoundKeyFunction keyFunction)

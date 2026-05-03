@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 ## RoundEndSystem
 
 round-end-system-shuttle-called-announcement = An emergency shuttle has been sent. ETA: {$time} {$units}.
@@ -11,5 +7,11 @@ round-end-system-shuttle-recalled-announcement = The emergency shuttle has been 
 round-end-system-shuttle-sender-announcement = Station
 round-end-system-round-restart-eta-announcement = Restarting the round in {$time} {$units}...
 
-eta-units-minutes = minutes
-eta-units-seconds = seconds
+eta-units-minutes = {$amount ->
+    [one] minute
+    *[other] minutes
+}
+eta-units-seconds = {$amount ->
+    [one] second
+    *[other] seconds
+}

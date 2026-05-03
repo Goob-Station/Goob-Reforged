@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 admin-ui-baby-jail-window-title = Baby Jail
 
 admin-ui-baby-jail-enabled = Baby Jail Enabled

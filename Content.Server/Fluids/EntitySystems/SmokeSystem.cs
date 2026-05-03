@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Administration.Logs;
 using Content.Server.Body.Systems;
 using Content.Shared.EntityEffects.Effects;
@@ -208,7 +204,7 @@ public sealed class SmokeSystem : EntitySystem
 
     private void OnReactionAttempt(Entity<SmokeComponent> entity, ref SolutionRelayEvent<ReactionAttemptEvent> args)
     {
-        if (args.Name == SmokeComponent.SolutionName)
+        if (args.Solution.Comp.Id == SmokeComponent.SolutionName)
             OnReactionAttempt(entity, ref args.Event);
     }
 

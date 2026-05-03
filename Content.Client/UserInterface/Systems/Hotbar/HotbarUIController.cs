@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.UserInterface.Systems.Gameplay;
 using Content.Client.UserInterface.Systems.Hands;
 using Content.Client.UserInterface.Systems.Hands.Controls;
@@ -40,7 +36,6 @@ public sealed class HotbarUIController : UIController
         _inventory = UIManager.GetUIController<InventoryUIController>();
         _hands = UIManager.GetUIController<HandsUIController>();
         _storage = UIManager.GetUIController<StorageUIController>();
-        _hands.RegisterHandContainer(handsContainer);
     }
 
     public void ReloadHotbar()

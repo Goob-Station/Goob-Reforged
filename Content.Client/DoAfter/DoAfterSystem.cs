@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.Components;
@@ -54,9 +50,7 @@ public sealed class DoAfterSystem : SharedDoAfterSystem
 
         var time = GameTiming.CurTime;
         var comp = Comp<DoAfterComponent>(playerEntity.Value);
-        var xformQuery = GetEntityQuery<TransformComponent>();
-        var handsQuery = GetEntityQuery<HandsComponent>();
-        Update(playerEntity.Value, active, comp, time, xformQuery, handsQuery);
+        Update(playerEntity.Value, active, comp, time);
     }
 
     /// <summary>

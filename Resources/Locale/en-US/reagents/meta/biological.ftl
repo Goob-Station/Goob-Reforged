@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 reagent-name-blood = blood
 reagent-desc-blood = I hope this is ketchup.
 
@@ -19,6 +15,9 @@ reagent-desc-hemocyanin-blood = Contains copper as opposed to iron which gives i
 
 reagent-name-ammonia-blood = anaerobic blood
 reagent-desc-ammonia-blood = Nothing else in the entire galaxy smells quite so appalling.
+
+reagent-name-sulfur-blood = sulfuric blood
+reagent-desc-sulfur-blood = Feels almost acidic.
 
 reagent-name-zombie-blood = zombie blood
 reagent-desc-zombie-blood = Would not advise eating. Can be used to create an inoculation against the infection.

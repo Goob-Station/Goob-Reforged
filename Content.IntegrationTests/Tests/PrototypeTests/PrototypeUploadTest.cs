@@ -1,7 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Tag;
 using Robust.Client.Upload.Commands;
 using Robust.Shared.GameObjects;
@@ -10,7 +7,7 @@ using Robust.Shared.Upload;
 
 namespace Content.IntegrationTests.Tests.PrototypeTests;
 
-public sealed class PrototypeUploadTest
+public sealed class PrototypeUploadTest : GameTest
 {
     public const string IdA = "UploadTestPrototype";
     public const string IdB = $"{IdA}NoParent";
@@ -40,7 +37,7 @@ public sealed class PrototypeUploadTest
     [TestOf(typeof(LoadPrototypeCommand))]
     public async Task TestFileUpload()
     {
-        await using var pair = await PoolManager.GetServerClient(new PoolSettings {Connected = true});
+        var pair = Pair;
         var sCompFact = pair.Server.ResolveDependency<IComponentFactory>();
         var cCompFact = pair.Client.ResolveDependency<IComponentFactory>();
 
@@ -83,7 +80,5 @@ public sealed class PrototypeUploadTest
             Assert.That(cProtoB!.TryGetComponent<TagComponent>(out _, cCompFact), Is.False);
             Assert.That(cProtoD!.TryGetComponent<TagComponent>(out _, cCompFact), Is.True);
         });
-
-        await pair.CleanReturnAsync();
     }
 }

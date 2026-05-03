@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.DeviceLinking.Components;
 using Content.Shared.DeviceLinking.Events;
 using Content.Shared.Weapons.Ranged.Components;
@@ -31,18 +27,18 @@ public sealed partial class GunSignalControlSystem : EntitySystem
             return;
 
         if (args.Port == gunControl.Comp.TriggerPort)
-            _gun.AttemptShoot(gunControl, gun);
+            _gun.AttemptShoot((gunControl, gun));
 
         if (!TryComp<AutoShootGunComponent>(gunControl, out var autoShoot))
             return;
 
         if (args.Port == gunControl.Comp.TogglePort)
-           _gun.SetEnabled(gunControl, autoShoot, !autoShoot.Enabled);
+            _gun.SetEnabled((gunControl, autoShoot), !autoShoot.Enabled);
 
         if (args.Port == gunControl.Comp.OnPort)
-            _gun.SetEnabled(gunControl, autoShoot, true);
+            _gun.SetEnabled((gunControl, autoShoot), true);
 
         if (args.Port == gunControl.Comp.OffPort)
-            _gun.SetEnabled(gunControl, autoShoot, false);
+            _gun.SetEnabled((gunControl, autoShoot), false);
     }
 }

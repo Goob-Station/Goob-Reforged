@@ -1,14 +1,8 @@
-<!--
-SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-
-SPDX-License-Identifier: MIT-WIZARDS
--->
-
 <Document>
   # Reptilians
 
   <Box>
-    <GuideEntityEmbed Entity="MobReptilian" Caption=""/>
+    <GuideEntityEmbed Entity="AppearanceReptilian" Caption=""/>
   </Box>
 
   They can ONLY eat fruits and meat, but can eat raw meat and drink blood without any ill effects.

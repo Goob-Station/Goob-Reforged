@@ -1,8 +1,5 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Access.Components;
+using Content.Shared.Access.Systems;
 using Content.Shared.Containers.ItemSlots;
 using Robust.Shared.Containers;
 
@@ -12,6 +9,7 @@ namespace Content.Shared.PDA
     {
         [Dependency] protected readonly ItemSlotsSystem ItemSlotsSystem = default!;
         [Dependency] protected readonly SharedAppearanceSystem Appearance = default!;
+        [Dependency] private readonly SharedJobStatusSystem _jobStatus = default!;
 
         public override void Initialize()
         {
@@ -50,6 +48,7 @@ namespace Content.Shared.PDA
                 pda.ContainedId = args.Entity;
 
             UpdatePdaAppearance(uid, pda);
+            UpdateJobStatus(uid);
         }
 
         protected virtual void OnItemRemoved(EntityUid uid, PdaComponent pda, EntRemovedFromContainerMessage args)
@@ -58,6 +57,7 @@ namespace Content.Shared.PDA
                 pda.ContainedId = null;
 
             UpdatePdaAppearance(uid, pda);
+            UpdateJobStatus(uid);
         }
 
         private void OnGetAdditionalAccess(EntityUid uid, PdaComponent component, ref GetAdditionalAccessEvent args)
@@ -69,6 +69,14 @@ namespace Content.Shared.PDA
         private void UpdatePdaAppearance(EntityUid uid, PdaComponent pda)
         {
             Appearance.SetData(uid, PdaVisuals.IdCardInserted, pda.ContainedId != null);
+        }
+
+        // update the status icon of the player that has the pda currently equipped
+        private void UpdateJobStatus(EntityUid uid)
+        {
+            // Only the player who has the pda currently equipped can insert or remove Ids
+            var parent = Transform(uid).ParentUid;
+            _jobStatus.UpdateStatus(parent);
         }
 
         public virtual void UpdatePdaUi(EntityUid uid, PdaComponent? pda = null)

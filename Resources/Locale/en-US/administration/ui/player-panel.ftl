@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 player-panel-title = information for {$player}
 player-panel-username = Username: {$player}
 player-panel-whitelisted = Whitelisted:

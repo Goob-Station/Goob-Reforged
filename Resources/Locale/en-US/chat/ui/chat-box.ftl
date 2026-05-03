@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 hud-chatbox-info = {$talk-key} to talk, {$cycle-key} to cycle channels.
 hud-chatbox-info-talk = {$talk-key} to talk.
 hud-chatbox-info-cycle = Click here to talk, {$cycle-key} to cycle channels.
@@ -14,7 +10,7 @@ hud-chatbox-select-channel-Dead = Dead
 hud-chatbox-select-channel-Emotes = Emotes
 hud-chatbox-select-channel-Local = Local
 hud-chatbox-select-channel-Whisper = Whisper
-hud-chatbox-select-channel-LOOC = Help
+hud-chatbox-select-channel-LOOC = LOOC
 hud-chatbox-select-channel-OOC = OOC
 hud-chatbox-select-channel-Damage = Damage
 hud-chatbox-select-channel-Visual = Actions
@@ -27,7 +23,7 @@ hud-chatbox-channel-Dead = Dead
 hud-chatbox-channel-Emotes = Emotes
 hud-chatbox-channel-Local = Local
 hud-chatbox-channel-Whisper = Whisper
-hud-chatbox-channel-LOOC = Help
+hud-chatbox-channel-LOOC = LOOC
 hud-chatbox-channel-OOC = OOC
 hud-chatbox-channel-Radio = Radio
 hud-chatbox-channel-Notifications = Notifications

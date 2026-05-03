@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 comp-kitchen-spike-begin-hook-self = You begin dragging yourself onto { THE($hook) }!
 comp-kitchen-spike-begin-hook-self-other = { CAPITALIZE(THE($victim)) } begins dragging { REFLEXIVE($victim) } onto { THE($hook) }!
 
@@ -39,3 +35,5 @@ comp-kitchen-spike-hooked = [color=red]{ CAPITALIZE(THE($victim)) } is on this s
 comp-kitchen-spike-meat-name = { $name } ({ $victim })
 
 comp-kitchen-spike-victim-examine = [color=orange]{ CAPITALIZE(SUBJECT($target)) } looks quite lean.[/color]
+
+comp-kitchen-spike-deconstruct-occupied = Next, [color=red]unhook the body[/color].

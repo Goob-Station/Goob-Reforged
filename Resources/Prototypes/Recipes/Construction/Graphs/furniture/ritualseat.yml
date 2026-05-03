@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: constructionGraph
   id: RitualSeat
   start: start
@@ -46,7 +42,7 @@
         - to: chairRitual
           completed:
             - !type:SpawnPrototype
-              prototype: HeadSkeleton
+              prototype: OrganSkeletonPersonHead
               amount: 1
           steps:
             - tool: Prying

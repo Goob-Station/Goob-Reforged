@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.CCVar;
 using Content.Shared.Mind.Components;
 using Content.Shared.Mobs.Systems;
@@ -36,8 +32,7 @@ public sealed class SSDIndicatorSystem : EntitySystem
             _cfg.GetCVar(CCVars.ICShowSSDIndicator) &&
             !_mobState.IsDead(uid) &&
             !HasComp<ActiveNPCComponent>(uid) &&
-            TryComp<MindContainerComponent>(uid, out var mindContainer) &&
-            mindContainer.ShowExamineInfo)
+            HasComp<MindExaminableComponent>(uid))
         {
             args.StatusIcons.Add(_prototype.Index(component.Icon));
         }

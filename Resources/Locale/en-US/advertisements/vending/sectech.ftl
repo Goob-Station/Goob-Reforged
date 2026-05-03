@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 advertisement-sectech-1 = Crack syndicate skulls!
 advertisement-sectech-2 = Beat some heads in!
 advertisement-sectech-3 = Don't forget - harm is good!

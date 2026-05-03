@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.GameTicking;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
@@ -19,7 +15,7 @@ public abstract class EquipmentHudSystem<T> : EntitySystem where T : IComponent
     [Dependency] private readonly IPlayerManager _player = default!;
 
     [ViewVariables]
-    protected bool IsActive;
+    public bool IsActive { get; private set; }
     protected virtual SlotFlags TargetSlots => ~SlotFlags.POCKET;
 
     public override void Initialize()

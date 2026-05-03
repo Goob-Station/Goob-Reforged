@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 cmd-showmarkers-desc = Toggles visibility of markers such as spawn points.
 cmd-showmarkers-help = Usage: {$command}
 

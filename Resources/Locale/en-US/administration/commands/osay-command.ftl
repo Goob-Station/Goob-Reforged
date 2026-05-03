@@ -1,9 +1,5 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
-osay-command-description = Forces another entity to try to send a message
-osay-command-help-text = Usage: {$command} <uid> <type> <message>
+cmd-osay-desc = Forces another entity to try to send a message
+cmd-osay-help = Usage: {$command} <uid> <type> <message>
 
 osay-command-arg-uid = source uid
 osay-command-arg-type = type

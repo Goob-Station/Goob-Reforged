@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 advertisement-dinnerware-1 = Mm, food stuffs!
 advertisement-dinnerware-2 = Food and food accessories.
 advertisement-dinnerware-3 = Get your plates!

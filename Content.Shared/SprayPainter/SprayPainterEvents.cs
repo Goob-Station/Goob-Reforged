@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Decals;
 using Content.Shared.DoAfter;
 using Content.Shared.SprayPainter.Prototypes;
@@ -58,6 +54,12 @@ public sealed class SprayPainterSetPaintableStyleMessage(string group, string st
 public sealed class SprayPainterSetPipeColorMessage(string? key) : BoundUserInterfaceMessage
 {
     public readonly string? Key = key;
+}
+
+[Serializable, NetSerializable]
+public sealed class SprayPainterSetDecalColorPickerMessage(bool toggle) : BoundUserInterfaceMessage
+{
+    public bool Toggle = toggle;
 }
 
 [Serializable, NetSerializable]

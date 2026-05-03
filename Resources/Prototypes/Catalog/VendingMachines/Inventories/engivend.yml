@@ -1,11 +1,8 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: vendingMachineInventory
   id: EngiVendInventory
   startingInventory:
     ClothingEyesGlassesMeson: 4
+    ClothingEyesGlassesThermal: 4
     ClothingEyesHudDiagnostic: 4
     ClothingHeadHatWelding: 6
     CrowbarYellow: 8

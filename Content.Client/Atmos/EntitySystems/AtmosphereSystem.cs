@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Atmos.Components;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.EntitySystems;
@@ -9,7 +5,7 @@ using Robust.Shared.GameStates;
 
 namespace Content.Client.Atmos.EntitySystems;
 
-public sealed class AtmosphereSystem : SharedAtmosphereSystem
+public sealed partial class AtmosphereSystem : SharedAtmosphereSystem
 {
     public override void Initialize()
     {

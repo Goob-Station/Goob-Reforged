@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Damage.Components;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Map;
@@ -31,15 +27,15 @@ public sealed partial class GunSystem
                 if (!autoShoot.Enabled)
                     continue;
 
-                AttemptShoot(uid, gun);
+                AttemptShoot((uid, gun));
             }
             else if (gun.BurstActivated)
             {
                 var parent = TransformSystem.GetParentUid(uid);
                 if (HasComp<DamageableComponent>(parent))
-                    AttemptShoot(parent, uid, gun, gun.ShootCoordinates ?? new EntityCoordinates(uid, gun.DefaultDirection));
+                    AttemptShoot(parent, (uid, gun), gun.ShootCoordinates ?? new EntityCoordinates(uid, gun.DefaultDirection));
                 else
-                    AttemptShoot(uid, gun);
+                    AttemptShoot((uid, gun));
             }
         }
     }

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: weightedRandomXenoArchTrigger
   id: DefaultTriggers
   weights:
@@ -247,6 +243,7 @@
     - AmmoniaBlood
     - ZombieBlood
     - Sap
+    - SulfurBlood
 
 - type: xenoArchTrigger
   id: TriggerThrow

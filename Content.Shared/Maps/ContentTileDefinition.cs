@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Atmos;
 using Content.Shared.Light.Components;
 using Content.Shared.Movement.Systems;
@@ -12,6 +8,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Maps
@@ -45,7 +42,13 @@ namespace Content.Shared.Maps
         [DataField("isSubfloor")] public bool IsSubFloor { get; private set; }
 
         [DataField("baseTurf")]
-        public string BaseTurf { get; private set; } = string.Empty;
+        public ProtoId<ContentTileDefinition>? BaseTurf { get; private set; }
+
+        /// <summary>
+        /// On what tiles this tile can be placed on. BaseTurf is already included.
+        /// </summary>
+        [DataField]
+        public List<ProtoId<ContentTileDefinition>> BaseWhitelist { get; private set; } = new();
 
         [DataField]
         public PrototypeFlags<ToolQualityPrototype> DeconstructTools { get; set; } = new();
@@ -125,6 +128,11 @@ namespace Content.Shared.Maps
         /// Is this tile immune to RCD deconstruct.
         /// </summary>
         [DataField("indestructible")] public bool Indestructible = false;
+
+        /// <summary>
+        ///     Hide this tile in the tile placement editor.
+        /// </summary>
+        [DataField] public bool EditorHidden { get; private set; } = false;
 
         public void AssignTileId(ushort id)
         {

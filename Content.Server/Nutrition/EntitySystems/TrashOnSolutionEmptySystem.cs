@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Nutrition.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
@@ -22,7 +18,7 @@ namespace Content.Server.Nutrition.EntitySystems
         {
             base.Initialize();
             SubscribeLocalEvent<TrashOnSolutionEmptyComponent, MapInitEvent>(OnMapInit);
-            SubscribeLocalEvent<TrashOnSolutionEmptyComponent, SolutionContainerChangedEvent>(OnSolutionChange);
+            SubscribeLocalEvent<TrashOnSolutionEmptyComponent, SolutionChangedEvent>(OnSolutionChange);
         }
 
         public void OnMapInit(Entity<TrashOnSolutionEmptyComponent> entity, ref MapInitEvent args)
@@ -30,16 +26,13 @@ namespace Content.Server.Nutrition.EntitySystems
             CheckSolutions(entity);
         }
 
-        public void OnSolutionChange(Entity<TrashOnSolutionEmptyComponent> entity, ref SolutionContainerChangedEvent args)
+        public void OnSolutionChange(Entity<TrashOnSolutionEmptyComponent> entity, ref SolutionChangedEvent args)
         {
             CheckSolutions(entity);
         }
 
         public void CheckSolutions(Entity<TrashOnSolutionEmptyComponent> entity)
         {
-            if (!HasComp<SolutionContainerManagerComponent>(entity))
-                return;
-
             if (_solutionContainerSystem.TryGetSolution(entity.Owner, entity.Comp.Solution, out _, out var solution))
                 UpdateTags(entity, solution);
         }

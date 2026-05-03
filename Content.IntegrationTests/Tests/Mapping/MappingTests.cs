@@ -1,7 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.IntegrationTests.Fixtures;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
@@ -9,15 +6,18 @@ using Robust.Shared.Map;
 namespace Content.IntegrationTests.Tests.Mapping;
 
 [TestFixture]
-public sealed class MappingTests
+public sealed class MappingTests : GameTest
 {
+    public override PoolSettings PoolSettings =>
+        new() { Dirty = true, Connected = true, DummyTicker = false };
+
     /// <summary>
     /// Checks that the mapping command creates paused & uninitialized maps.
     /// </summary>
     [Test]
     public async Task MappingTest()
     {
-        await using var pair = await PoolManager.GetServerClient(new PoolSettings { Dirty = true, Connected = true, DummyTicker = false });
+        var pair = Pair;
 
         var server = pair.Server;
         var entMan = server.EntMan;
@@ -101,6 +101,5 @@ public sealed class MappingTests
         Assert.That(server.MetaData(ent).EntityPaused, Is.True);
 
         await server.WaitPost(() => entMan.DeleteEntity(map));
-        await pair.CleanReturnAsync();
     }
 }

@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   id: TegCenter
   name: thermo-electric generator
@@ -67,6 +63,7 @@
     - type: AtmosDevice
     - type: TegGenerator
       thermalEfficiency: 0.1
+      powerFactor: 2
 
     - type: DeviceNetwork
       deviceNetId: AtmosDevices

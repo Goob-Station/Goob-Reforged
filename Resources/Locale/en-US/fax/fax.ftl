@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 fax-machine-popup-source-unknown = unknown
 fax-machine-popup-received = Received correspondence from { $from }.
 fax-machine-popup-name-long = Fax name is too long
@@ -30,3 +26,10 @@ fax-machine-ui-paper-not-inserted = No paper
 fax-machine-chat-notify = Received new fax message from "{$fax}" fax
 
 fax-machine-printed-paper-name = printed paper
+
+fax-machine-sender-info =
+    ─────────────────────────────────────
+    Fax sent
+    from: {$sender_name} [address: {$sender_addr}]
+    to: {$recipient_name} [address: {$recipient_addr}]
+    at: {$time}

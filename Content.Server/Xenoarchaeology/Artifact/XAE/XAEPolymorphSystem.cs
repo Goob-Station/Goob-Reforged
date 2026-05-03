@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Polymorph.Systems;
 using Content.Server.Xenoarchaeology.Artifact.XAE.Components;
 using Content.Shared.Humanoid;
@@ -23,7 +19,7 @@ public sealed class XAEPolymorphSystem : BaseXAESystem<XAEPolymorphComponent>
     [Dependency] private readonly SharedAudioSystem _audio = default!;
 
     /// <summary> Pre-allocated and re-used collection.</summary>
-    private readonly HashSet<Entity<HumanoidAppearanceComponent>> _humanoids = new();
+    private readonly HashSet<Entity<HumanoidProfileComponent>> _humanoids = new();
 
     /// <inheritdoc />
     protected override void OnActivated(Entity<XAEPolymorphComponent> ent, ref XenoArtifactNodeActivatedEvent args)

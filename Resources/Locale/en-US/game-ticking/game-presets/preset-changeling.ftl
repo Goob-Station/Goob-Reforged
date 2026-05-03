@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 changeling-role-greeting =
     You are a changeling, a highly intelligent predator.
     Your primary goal is to escape the station alive via assuming the identities of the denizens of this station.

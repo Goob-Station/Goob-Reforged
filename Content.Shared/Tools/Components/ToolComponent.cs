@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Tools.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
@@ -20,7 +16,7 @@ public sealed partial class ToolComponent : Component
     ///     For tool interactions that have a delay before action this will modify the rate, time to wait is divided by this value
     /// </summary>
     [DataField]
-    public float SpeedModifier  = 1;
+    public float SpeedModifier = 1f;
 
     [DataField]
     public SoundSpecifier? UseSound;

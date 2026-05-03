@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Robust.Shared.Audio;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.Damage;
@@ -30,7 +26,7 @@ public sealed partial class CluwneComponent : Component
     {
         DamageDict = new()
         {
-            { "Genetic", 300.0 },
+            { "Cellular", 300.0 },
         },
     };
 

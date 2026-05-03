@@ -1,13 +1,10 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Speech.EntitySystems;
 
-public abstract class SharedStutteringSystem : EntitySystem
+public abstract class SharedStutteringSystem : RelayAccentSystem<StutteringAccentComponent>
 {
     public static readonly EntProtoId Stuttering = "StatusEffectStutter";
 

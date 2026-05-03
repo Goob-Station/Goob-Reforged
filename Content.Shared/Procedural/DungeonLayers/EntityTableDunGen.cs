@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.EntityTable.EntitySelectors;
 
 namespace Content.Shared.Procedural.DungeonLayers;
@@ -28,4 +24,10 @@ public sealed partial class EntityTableDunGen : IDunGenLayer
     /// </summary>
     [DataField]
     public bool PerDungeon;
+
+    /// <summary>
+    /// Should the spawner ignore reserved tiles.
+    /// </summary>
+    [DataField]
+    public bool IgnoreReserved;
 }

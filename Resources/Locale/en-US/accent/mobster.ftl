@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 accent-mobster-prefix-1 = Nyehh,
 
 accent-mobster-suffix-boss-1 = , see?

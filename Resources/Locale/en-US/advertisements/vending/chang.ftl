@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 advertisement-chang-1 = Taste 5000 years of culture!
 advertisement-chang-2 = Mr. Chang, approved for safe consumption in over 10 sectors!
 advertisement-chang-3 = Chinese food is great for a date night, or a lonely night!

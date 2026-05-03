@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Client.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Piping.Trinary.Components;
@@ -41,10 +37,9 @@ namespace Content.Client.Atmos.UI
             _window.SelectGasPressed += OnSelectGasPressed;
         }
 
-        private void OnToggleStatusButtonPressed()
+        private void OnToggleStatusButtonPressed(bool status)
         {
-            if (_window is null) return;
-            SendMessage(new GasFilterToggleStatusMessage(_window.FilterStatus));
+            SendMessage(new GasFilterToggleStatusMessage(status));
         }
 
         private void OnFilterTransferRatePressed(string value)

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.IO;
 using Content.Server.Administration.Managers;
 using Content.Shared.Administration;
@@ -18,6 +14,7 @@ namespace Content.Server.Mapping;
 
 public sealed class MappingManager : IPostInjectInit
 {
+#if !FULL_RELEASE
     [Dependency] private readonly IAdminManager _admin = default!;
     [Dependency] private readonly ILogManager _log = default!;
     [Dependency] private readonly IServerNetManager _net = default!;
@@ -27,6 +24,7 @@ public sealed class MappingManager : IPostInjectInit
 
     private ISawmill _sawmill = default!;
     private ZStdCompressionContext _zstd = default!;
+#endif
 
     public void PostInject()
     {

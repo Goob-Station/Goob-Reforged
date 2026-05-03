@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.CCVar;
@@ -63,7 +59,7 @@ public abstract class SharedGenpopSystem : EntitySystem
         // Instead, we just fill in the spot temporarily til the checks pass.
         ent.Comp.LinkedId = EntityUid.Invalid;
 
-        _lock.Lock(ent.Owner, null);
+        _lock.Lock(ent.Owner, args.Actor);
         _entityStorage.CloseStorage(ent);
 
         CreateId(ent, args.Name, args.Sentence, args.Crime);

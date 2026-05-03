@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Audio;
 using Content.Shared.Construction.Components;
 using Content.Shared.Explosion;
@@ -30,13 +26,11 @@ namespace Content.Shared.SubFloor
         [Dependency] private readonly SharedVisibilitySystem _visibility = default!;
         [Dependency] protected readonly SharedPopupSystem _popup = default!;
 
-        private EntityQuery<SubFloorHideComponent> _hideQuery;
+        [Dependency] private readonly EntityQuery<SubFloorHideComponent> _hideQuery = default!;
 
         public override void Initialize()
         {
             base.Initialize();
-
-            _hideQuery = GetEntityQuery<SubFloorHideComponent>();
 
             SubscribeLocalEvent<TileChangedEvent>(OnTileChanged);
             SubscribeLocalEvent<SubFloorHideComponent, ComponentStartup>(OnSubFloorStarted);

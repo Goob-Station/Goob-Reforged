@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Goob Station Contributors
-#
-# SPDX-License-Identifier: MPL-2.0
-
 cd ../../
 
 mkdir Scripts/logs

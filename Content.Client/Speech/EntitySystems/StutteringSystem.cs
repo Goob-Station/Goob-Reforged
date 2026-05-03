@@ -1,13 +1,12 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
+using Content.Shared.Speech.Components;
 using Content.Shared.Speech.EntitySystems;
 
-namespace Content.Client.Speech.EntitySystems
-{
-    public sealed class StutteringSystem : SharedStutteringSystem
-    {
+namespace Content.Client.Speech.EntitySystems;
 
+public sealed class StutteringSystem : SharedStutteringSystem
+{
+    protected override string AccentuateInternal(EntityUid uid, StutteringAccentComponent comp, string message)
+    {
+        return message;
     }
 }

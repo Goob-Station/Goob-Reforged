@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Text.RegularExpressions;
 using Content.Shared.Chat;
 using Content.Shared.Speech;
@@ -19,6 +15,9 @@ public sealed class AccentSystem : EntitySystem
 
     private void AccentHandler(TransformSpeechEvent args)
     {
+        if (args.Cancelled)
+            return;
+
         var accentEvent = new AccentGetEvent(args.Sender, args.Message);
 
         RaiseLocalEvent(args.Sender, accentEvent, true);

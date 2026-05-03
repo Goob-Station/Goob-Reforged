@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Destructible.Thresholds;
 using Content.Shared.EntityTable.EntitySelectors;
 
@@ -16,6 +12,12 @@ public sealed partial class BasicStationEventSchedulerComponent : Component
     /// </summary>
     [DataField]
     public float MinimumTimeUntilFirstEvent = 200;
+
+    /// <summary>
+    /// How much additional time it may take for a GameRule to first start.
+    /// </summary>
+    [DataField]
+    public float MaximumSpanUntilFirstEvent = 120;
 
     /// <summary>
     /// The minimum and maximum time between rule starts in seconds.

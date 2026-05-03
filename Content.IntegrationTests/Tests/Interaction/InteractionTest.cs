@@ -1,12 +1,9 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 #nullable enable
 using System.Numerics;
 using Content.Client.Construction;
 using Content.Client.Examine;
 using Content.Client.Gameplay;
+using Content.Client.Interaction;
 using Content.IntegrationTests.Pair;
 using Content.Server.Hands.Systems;
 using Content.Server.Stack;
@@ -138,6 +135,7 @@ public abstract partial class InteractionTest
     protected InteractionTestSystem CTestSystem = default!;
     protected ISawmill CLogger = default!;
     protected SharedUserInterfaceSystem CUiSys = default!;
+    protected DragDropSystem CDragDropSys = default!;
 
     // player components
     protected HandsComponent? Hands;
@@ -177,7 +175,7 @@ public abstract partial class InteractionTest
     [SetUp]
     public virtual async Task Setup()
     {
-        Pair = await PoolManager.GetServerClient(Settings);
+        Pair = await PoolManager.GetServerClient(Settings, new NUnitTestContextWrap(TestContext.CurrentContext, TestContext.Out));
 
         // server dependencies
         SEntMan = Server.ResolveDependency<IEntityManager>();
@@ -212,6 +210,7 @@ public abstract partial class InteractionTest
         CConSys = CEntMan.System<ConstructionSystem>();
         ExamineSys = CEntMan.System<ExamineSystem>();
         CUiSys = CEntMan.System<SharedUserInterfaceSystem>();
+        CDragDropSys = CEntMan.System<DragDropSystem>();
 
         // Setup map.
         if (TestMapPath == null)

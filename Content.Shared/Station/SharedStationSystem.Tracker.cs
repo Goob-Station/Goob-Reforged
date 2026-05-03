@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Station.Components;
 using JetBrains.Annotations;
 using Robust.Shared.Map;
@@ -54,7 +50,7 @@ public abstract partial class SharedStationSystem
 
         var xform = ent.Comp2;
 
-        if (!_xformQuery.Resolve(ent, ref xform))
+        if (!Resolve(ent, ref xform))
             return;
 
         // Entity is in nullspace or not on a grid

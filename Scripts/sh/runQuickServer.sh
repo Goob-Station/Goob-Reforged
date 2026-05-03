@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Goob Station Contributors
-#
-# SPDX-License-Identifier: MPL-2.0
-
 #!/usr/bin/env sh
 
 # make sure to start from script dir
@@ -10,4 +6,4 @@ if [ "$(dirname $0)" != "." ]; then
 fi
 
 cd ../../
-dotnet run --project Modules/GoobStation/Content.Goobstation.Server --no-build
+dotnet run --project Goobstation.Bootstrap server --skip-build

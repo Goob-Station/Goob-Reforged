@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Clothing;
 using Content.Shared.Damage.Components;
 using Content.Shared.Examine;
@@ -14,6 +10,7 @@ namespace Content.Shared.Damage.Systems;
 public sealed class SlowOnDamageSystem : EntitySystem
 {
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeedModifierSystem = default!;
+    [Dependency] private readonly DamageableSystem _damage = default!;
 
     public override void Initialize()
     {
@@ -37,12 +34,14 @@ public sealed class SlowOnDamageSystem : EntitySystem
         if (!TryComp<DamageableComponent>(uid, out var damage))
             return;
 
-        if (damage.TotalDamage == FixedPoint2.Zero)
+        var totalDamage = _damage.GetTotalDamage((uid, damage));
+
+        if (totalDamage == FixedPoint2.Zero)
             return;
 
         // Get closest threshold
         FixedPoint2 closest = FixedPoint2.Zero;
-        var total = damage.TotalDamage;
+        var total = totalDamage;
         foreach (var thres in component.SpeedModifierThresholds)
         {
             if (total >= thres.Key && thres.Key > closest)

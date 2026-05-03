@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Shared.Trigger.Components.Triggers;
 using Robust.Shared.Timing;
 using Content.Shared.Inventory.Events;
@@ -57,7 +53,7 @@ public sealed class TriggerOnEquipmentSystem : TriggerOnXSystem
         if ((ent.Comp.SlotFlags & args.SlotFlags) == 0)
             return;
 
-        Trigger.Trigger(ent.Owner, args.Equipee, ent.Comp.KeyOut);
+        Trigger.Trigger(ent.Owner, args.EquipTarget, ent.Comp.KeyOut);
     }
 
     private void OnGotUnequipped(Entity<TriggerOnGotUnequippedComponent> ent, ref GotUnequippedEvent args)
@@ -68,6 +64,6 @@ public sealed class TriggerOnEquipmentSystem : TriggerOnXSystem
         if ((ent.Comp.SlotFlags & args.SlotFlags) == 0)
             return;
 
-        Trigger.Trigger(ent.Owner, args.Equipee, ent.Comp.KeyOut);
+        Trigger.Trigger(ent.Owner, args.EquipTarget, ent.Comp.KeyOut);
     }
 }

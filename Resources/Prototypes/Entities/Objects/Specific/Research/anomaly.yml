@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 - type: entity
   parent: BaseItem
   id: AnomalyScanner
@@ -72,6 +68,18 @@
     - ScannersAndVessels
   - type: Item
     storedRotation: -90
+
+- type: entity
+  parent: AnomalyScanner
+  id: AnomalyScannerAdmin
+  name: admin anomaly scanner
+  description: A hand-held scanner built to collect information on various anomalous objects. This one seems to have a few extra features.
+  suffix: Admin
+  components:
+  - type: AnomalyScanner
+    ignoreSecret: true
+  - type: Sprite
+    sprite: Objects/Specific/Research/adminanomalyscanner.rsi
 
 - type: entity
   id: AnomalyLocatorUnpowered

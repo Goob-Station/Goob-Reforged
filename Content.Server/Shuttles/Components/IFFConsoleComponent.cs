@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using Content.Server.Shuttles.Systems;
 using Content.Shared.Shuttles.Components;
 
@@ -15,4 +11,10 @@ public sealed partial class IFFConsoleComponent : Component
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite), DataField("allowedFlags")]
     public IFFFlags AllowedFlags = IFFFlags.HideLabel;
+
+    /// <summary>
+    /// If true, automatically applies all supported IFF flags to the console's grid on MapInitEvent.
+    /// </summary>
+    [DataField]
+    public bool HideOnInit = false;
 }

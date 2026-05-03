@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2025 Space Station 14 Contributors
-#
-# SPDX-License-Identifier: MIT-WIZARDS
-
 sandbox-window-title = Sandbox Panel
 
 sandbox-window-map-editing-label = Editing
@@ -23,3 +19,4 @@ sandbox-window-toggle-suicide-button = Suicide
 sandbox-window-show-spawns-button = Show Spawns
 sandbox-window-show-bb-button = Show BB
 sandbox-window-show-npc-button = Show NPC
+sandbox-window-toggle-thermal-vision = Toggle Thermal Vision
