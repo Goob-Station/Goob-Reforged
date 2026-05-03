@@ -1,0 +1,16 @@
+name: Template
+id: template
+version: 1.0.0
+
+projects:
+  - path: Content.Template.Shared
+    role: Shared
+
+  - path: Content.Template.Client
+    role: Client
+
+  - path: Content.Template.Server
+    role: Server
+
+  - path: Content.Template.Common
+    role: Common

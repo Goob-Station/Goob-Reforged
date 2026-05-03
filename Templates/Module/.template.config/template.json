@@ -1,0 +1,24 @@
+{
+  "author": "Goobstation",
+  "classifications": [ "Module" ],
+  "name": "SS14 Module Template",
+  "identity": "Content.Template",
+  "shortName": "content-mod",
+  "tags": {
+    "language": "C#"
+  },
+  "sourceName": "Template", 
+  "preferNameDirectory": true,
+  "symbols":{
+    "moduleId": {
+      "type": "parameter",
+      "defaultValue": "template",
+      "replaces":"IdHere"
+    },
+    "moduleVersion": {
+      "type": "parameter",
+      "defaultValue": "1.0.0",
+      "replaces":"VersionHere"
+    }
+  }
+}
