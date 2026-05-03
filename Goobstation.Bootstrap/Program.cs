@@ -1,57 +1,54 @@
 using System.Diagnostics;
 using Goobstation.Bootstrap;
 
-await BootstrapBuilder.BuildAll();
+var repoRoot = BootstrapBuilder.FindRepoRoot();
+Environment.CurrentDirectory = repoRoot;
 
-var command = args.Length > 0 ? args[0].ToLowerInvariant() : null;
+if (!CommandLineArgs.TryParse(args, out var parsed))
+    return 0;
 
-switch (command)
+if (parsed.Client && parsed.Server)
 {
-    case null:
-        var server = StartProject("Content.Server/Content.Server.csproj");
-        var client = StartProject("Content.Client/Content.Client.csproj");
-        if (server == null || client == null)
-            return 1;
-        server.WaitForExit();
-        client.WaitForExit();
-        return 0;
-
-    case "run-client":
-        return RunProject("Content.Client/Content.Client.csproj");
-
-    case "run-server":
-        return RunProject("Content.Server/Content.Server.csproj");
-
-    default:
-        PrintUsage();
+    await BootstrapBuilder.BuildAll();
+    var server = StartProject("Content.Server/Content.Server.csproj", parsed.ShellExecute);
+    var client = StartProject("Content.Client/Content.Client.csproj", parsed.ShellExecute);
+    if (server == null || client == null)
         return 1;
+    server.WaitForExit();
+    client.WaitForExit();
+    return 0;
 }
 
-static void PrintUsage()
+if (parsed.Client)
 {
-    Console.WriteLine("Usage: Goobstation.Bootstrap [command]");
-    Console.WriteLine();
-    Console.WriteLine("  (no args)    - Build and run client + server");
-    Console.WriteLine("  run-client   - Build and run the client only");
-    Console.WriteLine("  run-server   - Build and run the server only");
+    await BootstrapBuilder.BuildClient();
+    return RunProject("Content.Client/Content.Client.csproj", parsed.ShellExecute);
 }
 
-static int RunProject(string projectPath)
+if (parsed.Server)
 {
-    using var process = StartProject(projectPath);
+    await BootstrapBuilder.BuildServer();
+    return RunProject("Content.Server/Content.Server.csproj", parsed.ShellExecute);
+}
+
+return 1;
+
+static int RunProject(string projectPath, bool useShellExecute)
+{
+    using var process = StartProject(projectPath, useShellExecute);
     if (process == null)
         return 1;
     process.WaitForExit();
     return process.ExitCode;
 }
 
-static Process? StartProject(string projectPath)
+static Process? StartProject(string projectPath, bool useShellExecute)
 {
     var process = Process.Start(new ProcessStartInfo
     {
         FileName = BootstrapBuilder.DotnetPath,
         Arguments = $"run --project {projectPath}",
-        UseShellExecute = false
+        UseShellExecute = useShellExecute,
     });
 
     if (process == null)

@@ -1,6 +1,6 @@
 @echo off
 cd ../../
 
-call dotnet run --project Modules\GoobStation\Content.Goobstation.Client --no-build %*
+call dotnet run --project Goobstation.Bootstrap client --skip-build %*
 
 pause
