@@ -1,6 +1,6 @@
 @echo off
 cd ../../
 
-call dotnet run --project Goobstation.Bootstrap server --skip-build %*
+call dotnet run --project Content.Server --no-build %*
 
 pause

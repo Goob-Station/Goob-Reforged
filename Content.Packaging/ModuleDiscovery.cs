@@ -6,13 +6,13 @@ public static class ModuleDiscovery
 {
     public record ModuleInfo(string Name, string ProjectPath, ModuleRole Type);
 
-    public static string GetModuleOutputDir(string projectPath)
+    public static string GetModuleOutputDir(string projectPath, string configuration = "Debug")
     {
         var projectDir = Path.GetDirectoryName(projectPath)!;
-        var withTfm = Path.Combine(projectDir, "bin", "Debug", "net10.0");
+        var withTfm = Path.Combine(projectDir, "bin", configuration, "net10.0");
         if (Directory.Exists(withTfm))
             return withTfm;
-        return Path.Combine(projectDir, "bin", "Debug");
+        return Path.Combine(projectDir, "bin", configuration);
     }
 
     /// <summary>

@@ -23,4 +23,20 @@
   </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\XamlIL.targets" />
+
+  <!-- Module loading -->
+  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+    <ItemGroup>
+      <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(ModuleProjects)"
+             Properties="Configuration=$(Configuration);Platform=$(Platform);BuildProjectReferences=false;IsBuildingModules=true"
+             BuildInParallel="true">
+      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
+    </MSBuild>
+
+    <Copy SourceFiles="@(ModuleAssemblies)"
+          DestinationFolder="$(OutDir)" />
+  </Target>
 </Project>

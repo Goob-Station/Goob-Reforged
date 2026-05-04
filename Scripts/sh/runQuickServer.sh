@@ -6,4 +6,4 @@ if [ "$(dirname $0)" != "." ]; then
 fi
 
 cd ../../
-dotnet run --project Goobstation.Bootstrap server --skip-build
+dotnet run --project Content.Server --no-build
