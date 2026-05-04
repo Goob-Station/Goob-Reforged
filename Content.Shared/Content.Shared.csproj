@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Content.Shared.Database\Content.Shared.Database.csproj" />
     <!-- THIS COMMENT IS A MARKER FOR SCRIPTS TO ADD COMMON REFERENCES -->
+    <ProjectReference Include="../Modules/Lavaland/Content.Lavaland.Common/Content.Lavaland.Common.csproj" />
     <ProjectReference Include="../Modules/GoobStation/Content.Goobstation.Common/Content.Goobstation.Common.csproj" />
   </ItemGroup>
 
@@ -22,21 +23,6 @@
   <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
 
   <!-- Module loading -->
-  <!-- Common is loaded first -->
-  <Target Name="CompileAndCopyModulesCommon" AfterTargets="Build">
-    <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.Common.csproj" />
-    </ItemGroup>
-
-    <MSBuild Projects="@(ModuleProjects)"
-             Properties="Configuration=$(Configuration);Platform=$(Platform);BuildProjectReferences=false;IsBuildingModules=true"
-             BuildInParallel="true">
-      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
-    </MSBuild>
-
-    <Copy SourceFiles="@(ModuleAssemblies)"
-          DestinationFolder="$(OutDir)" />
-  </Target>
   <Target Name="CompileAndCopyModulesShared" AfterTargets="Build">
     <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
