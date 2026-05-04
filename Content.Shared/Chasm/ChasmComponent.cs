@@ -14,4 +14,11 @@ public sealed partial class ChasmComponent : Component
     /// </summary>
     [DataField("fallingSound")]
     public SoundSpecifier FallingSound = new SoundPathSpecifier("/Audio/Effects/falling.ogg");
+
+    /// <summary>
+    /// Goobstation
+    /// A list of entities that are currently falling into the chasm.
+    /// </summary>
+    [DataField]
+    public List<EntityUid> Falling = new();
 }

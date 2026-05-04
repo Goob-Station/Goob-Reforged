@@ -11,7 +11,7 @@ namespace Content.Shared.Chasm;
 /// <summary>
 ///     Handles making entities fall into chasms when stepped on.
 /// </summary>
-public sealed class ChasmSystem : EntitySystem
+public sealed partial class ChasmSystem : EntitySystem // Goobstation edit - partial
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
@@ -42,7 +42,7 @@ public sealed class ChasmSystem : EntitySystem
             if (_timing.CurTime < chasm.NextDeletionTime)
                 continue;
 
-            QueueDel(uid);
+            StopFalling((uid, chasm)); // Goobstation edit - Replaced QueueDel with events and remove component
         }
     }
 
@@ -60,6 +60,10 @@ public sealed class ChasmSystem : EntitySystem
         var falling = AddComp<ChasmFallingComponent>(tripper);
 
         falling.NextDeletionTime = _timing.CurTime + falling.DeletionTime;
+        // Goobstation edit start
+        falling.FallChasm = chasm;
+        component.Falling.Add(tripper);
+        // Goobstation edit end
         _blocker.UpdateCanMove(tripper);
 
         if (playSound)
