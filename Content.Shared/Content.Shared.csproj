@@ -21,20 +21,4 @@
 
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
-
-  <!-- Module loading -->
-  <Target Name="CompileAndCopyModulesShared" AfterTargets="Build">
-    <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
-    </ItemGroup>
-
-    <MSBuild Projects="@(ModuleProjects)"
-             Properties="Configuration=$(Configuration);Platform=$(Platform);BuildProjectReferences=false;IsBuildingModules=true"
-             BuildInParallel="true">
-      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
-    </MSBuild>
-
-    <Copy SourceFiles="@(ModuleAssemblies)"
-          DestinationFolder="$(OutDir)" />
-  </Target>
 </Project>
