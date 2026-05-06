@@ -31,23 +31,9 @@
     <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Common.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
-    </ItemGroup>
-
-    <MSBuild Projects="@(ModuleProjects)"
-             Properties="BuildProjectReferences=false;IsBuildingModules=true"
-             BuildInParallel="true">
-      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
-    </MSBuild>
-
-    <Copy SourceFiles="@(ModuleAssemblies)"
-          DestinationFolder="$(OutDir)" />
-  </Target>
-  <Target Name="CompileAndCopyDatabase" AfterTargets="Build">
-    <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
     </ItemGroup>
 
     <MSBuild Projects="@(ModuleProjects)"
