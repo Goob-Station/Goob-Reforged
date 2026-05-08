@@ -31,13 +31,13 @@
     <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Common.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
     </ItemGroup>
 
     <MSBuild Projects="@(ModuleProjects)"
-             Properties="Configuration=$(Configuration);Platform=$(Platform);BuildProjectReferences=false;IsBuildingModules=true"
+             Properties="BuildProjectReferences=false;IsBuildingModules=true"
              BuildInParallel="true">
       <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
     </MSBuild>

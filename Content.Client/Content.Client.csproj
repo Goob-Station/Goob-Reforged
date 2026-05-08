@@ -30,8 +30,8 @@
       <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
     </ItemGroup>
 
-    <MSBuild Projects="@(ModuleProjects)"
-             Properties="Configuration=$(Configuration);Platform=$(Platform);BuildProjectReferences=false;IsBuildingModules=true"
+<MSBuild Projects="@(ModuleProjects)"
+             Properties="BuildProjectReferences=false;IsBuildingModules=true"
              BuildInParallel="true">
       <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
     </MSBuild>
