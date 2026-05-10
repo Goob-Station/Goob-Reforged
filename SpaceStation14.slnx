@@ -19,7 +19,6 @@
     <Project Path="Modules/GoobStation/Content.Goobstation.Common/Content.Goobstation.Common.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Server.Database/Content.Goobstation.Server.Database.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Server/Content.Goobstation.Server.csproj" />
-    <Project Path="Modules/GoobStation/Content.Goobstation.Shared.Database/Content.Goobstation.Shared.Database.csproj"/>
     <Project Path="Modules/GoobStation/Content.Goobstation.Shared/Content.Goobstation.Shared.csproj" />
     <File Path="Modules/GoobStation/module.yml" />
   </Folder>
