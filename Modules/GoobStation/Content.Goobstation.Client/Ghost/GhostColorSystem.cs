@@ -3,9 +3,9 @@ using Robust.Client.GameObjects;
 
 namespace Content.Goobstation.Client.Ghost;
 
-public sealed class GhostColorSystem : EntitySystem
+public sealed partial class GhostColorSystem : EntitySystem
 {
-    [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {

@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Server.Database;
 using Content.Goobstation.Common.LinkAccount;
+using Content.Goobstation.Server.Database;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
@@ -10,13 +11,13 @@ using Color = System.Drawing.Color;
 
 namespace Content.Goobstation.Server.LinkAccount;
 
-public sealed class LinkAccountManager : IPostInjectInit
+public sealed partial class LinkAccountManager : IPostInjectInit
 {
-    [Dependency] private readonly IServerDbManager _db = default!;
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly UserDbDataManager _userDb = default!;
+    [Dependency] private IGoobstationDbManager _db = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private UserDbDataManager _userDb = default!;
 
     private readonly Dictionary<NetUserId, TimeSpan> _lastRequest = new();
     private readonly TimeSpan _minimumWait = TimeSpan.FromSeconds(0.5);
@@ -178,6 +179,8 @@ public sealed class LinkAccountManager : IPostInjectInit
             _allPatrons.Add(new SharedRMCPatron(patron.Player.LastSeenUserName, patron.Tier.Name));
         }
 
+        _allPatrons.Add(new SharedRMCPatron("Rouden", "Maintainer"));
+        _lobbyMessages.Add(("Hey this works just fine! Even with super super long messages!", "Rouden"));
         _lobbyMessages.AddRange(messages);
         _shoutouts.AddRange(shoutouts);
 
