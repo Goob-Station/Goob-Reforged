@@ -4,6 +4,16 @@ This is a fork from the primary repo for Space Station 14 called Goob Station. T
 
 If you want to host or create content for SS14, go to the [Space Station 14 repository](https://github.com/space-wizards/space-station-14) as it contains both RobustToolbox and the content pack for development of new content packs and is the base for your fork.
 
+> [!WARNING]
+>
+> WIP
+>
+> This project is currently a work in progress and is NOT ready for any use.
+>
+> The infrastucture is currently being set up in order to clarify the licensing on the content of the repository.
+>
+> Currently all content PRs are freezed, until CLA and License header workflows are restored.
+
 ## Links
 
 [Goob Station Discord Server](https://discord.gg/goobstation) | [Goob Station Development Discord Server](https://discord.gg/zXk2cyhzPN) | [Goob Station Forum](https://forums.goobstation.com/) | [Goob Station Website](https://goobstation.com)

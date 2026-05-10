@@ -10,9 +10,9 @@ using Robust.Shared.Console;
 namespace Content.Goobstation.Server.Administration.Commands;
 
 [AdminCommand(AdminFlags.Fun)]
-public sealed partial class AddNetspeakWordCommand : IConsoleCommand
+public sealed class AddNetspeakWordCommand : IConsoleCommand
 {
-    [Dependency] private IGoobstationDbManager _db = default!;
+    [Dependency] private readonly IGoobstationDbManager _db = default!;
 
     public string Command => "netspeak_add";
     public string Description => "Adds a netspeak word to the database.";
@@ -35,9 +35,9 @@ public sealed partial class AddNetspeakWordCommand : IConsoleCommand
 }
 
 [AdminCommand(AdminFlags.Fun)]
-public sealed partial class RemoveNetspeakWordCommand : IConsoleCommand
+public sealed class RemoveNetspeakWordCommand : IConsoleCommand
 {
-    [Dependency] private IGoobstationDbManager _db = default!;
+    [Dependency] private readonly IGoobstationDbManager _db = default!;
 
     public string Command => "netspeak_remove";
     public string Description => "Removes a netspeak word from the database.";
@@ -59,9 +59,9 @@ public sealed partial class RemoveNetspeakWordCommand : IConsoleCommand
 }
 
 [AdminCommand(AdminFlags.Fun)]
-public sealed partial class ListNetspeakWordsCommand : IConsoleCommand
+public sealed class ListNetspeakWordsCommand : IConsoleCommand
 {
-    [Dependency] private IGoobstationDbManager _db = default!;
+    [Dependency] private readonly IGoobstationDbManager _db = default!;
 
     public string Command => "netspeak_list";
     public string Description => "Lists all netspeak words in the database.";
