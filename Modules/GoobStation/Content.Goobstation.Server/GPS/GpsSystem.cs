@@ -6,10 +6,10 @@ using Robust.Shared.Random;
 
 namespace Content.Goobstation.Server.GPS;
 
-public sealed class GpsSystem : SharedGpsSystem
+public sealed partial class GpsSystem : SharedGpsSystem
 {
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     public const float UpdateRate = 1f;
 
