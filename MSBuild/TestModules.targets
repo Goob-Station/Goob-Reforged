@@ -1,13 +1,10 @@
 ﻿<Project>
   <!-- Module loading for all Content Test projects -->
 
-  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+  <Target Name="CompileAndCopyModulesShared" AfterTargets="Build">
     <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Common.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
     </ItemGroup>
 
     <MSBuild Projects="@(ModuleProjects)"
@@ -17,6 +14,37 @@
     </MSBuild>
 
     <Copy SourceFiles="@(ModuleAssemblies)"
+          DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+    <ItemGroup>
+      <ModuleProjectsClient Include="../Modules/**/Content.*.Client.csproj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(ModuleProjectsClient)"
+             Properties="BuildProjectReferences=false;IsBuildingModules=true"
+             BuildInParallel="false">
+      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssembliesClient" />
+    </MSBuild>
+
+    <Copy SourceFiles="@(ModuleAssembliesClient)"
+          DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CompileAndCopyModulesServer" AfterTargets="Build">
+    <ItemGroup>
+      <ModuleProjectsServer Include="../Modules/**/Content.*.Server.csproj" />
+      <ModuleProjectsServer Include="../Modules/**/Content.*.Server.Database.csproj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(ModuleProjectsServer)"
+             Properties="BuildProjectReferences=false;IsBuildingModules=true"
+             BuildInParallel="false">
+      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssembliesServer" />
+    </MSBuild>
+
+    <Copy SourceFiles="@(ModuleAssembliesServer)"
           DestinationFolder="$(OutDir)" />
   </Target>
 </Project>
