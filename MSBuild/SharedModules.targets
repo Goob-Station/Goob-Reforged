@@ -1,0 +1,18 @@
+﻿<Project>
+  <!-- Module loading for Content.Shared -->
+
+  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+    <ItemGroup>
+      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(ModuleProjects)"
+             Properties="BuildProjectReferences=false;IsBuildingModules=true"
+             BuildInParallel="true">
+      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
+    </MSBuild>
+
+    <Copy SourceFiles="@(ModuleAssemblies)"
+          DestinationFolder="$(OutDir)" />
+  </Target>
+</Project>
