@@ -6,6 +6,9 @@ name: GoobStation
 id: goobstation
 version: 1.0.0
 
+resources:
+  - Resources
+
 projects:
   - path: Content.Goobstation.Common
     role: Common

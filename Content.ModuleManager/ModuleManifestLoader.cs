@@ -1,10 +1,9 @@
-using Content.ModuleManager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 using Robust.Shared.Serialization.Markdown.Sequence;
 using Robust.Shared.Serialization.Markdown.Value;
 
-namespace Content.Packaging;
+namespace Content.ModuleManager;
 
 public static class ModuleManifestLoader
 {
@@ -44,6 +43,14 @@ public static class ModuleManifestLoader
 
         if (manifest.Projects.Count == 0)
             throw new InvalidDataException($"Module manifest must contain at least one project: {manifestPath}");
+
+        if (root.TryGet("resources", out var resourcesNode))
+        {
+            if (resourcesNode is not SequenceDataNode resourcesSeq)
+                throw new InvalidDataException($"Field 'resources' must be a list in {manifestPath}");
+
+            manifest.Resources = ParseResources(resourcesSeq, manifestPath);
+        }
 
         return manifest;
     }
@@ -85,6 +92,21 @@ public static class ModuleManifestLoader
         }
 
         return projects;
+    }
+
+    private static List<string> ParseResources(SequenceDataNode resourcesSeq, string manifestPath)
+    {
+        var resources = new List<string>();
+
+        for (var i = 0; i < resourcesSeq.Count; i++)
+        {
+            if (resourcesSeq[i] is not ValueDataNode value || string.IsNullOrWhiteSpace(value.Value))
+                throw new InvalidDataException($"Resource entry {i} must be a non-empty string in {manifestPath}");
+
+            resources.Add(value.Value);
+        }
+
+        return resources;
     }
 
     private static ModuleRole ParseRole(string roleStr, string manifestPath)
