@@ -18,13 +18,9 @@ namespace Content.Goobstation.Server.Database;
 public interface IGoobstationDbManager
 {
     void Init();
-
     void Shutdown();
-
     Task<List<NetspeakWord>> GetNetspeakWordsAsync();
-
     Task AddNetspeakWordAsync(string keyword, string username);
-
     Task RemoveNetspeakWordAsync(string keyword);
 }
 
@@ -41,12 +37,11 @@ public sealed partial class GoobstationDbManager : IGoobstationDbManager
     public void Init()
     {
         _sawmill = _logMgr.GetSawmill("goob.db");
-        _ = _cfg.GetCVar(CCVars.DatabaseEngine).ToLower() switch
-        {
-            "sqlite" => SetupSqlite(),
-            "postgres" => SetupPostgres(),
-            var engine => throw new InvalidDataException($"Unknown database engine: {engine}"),
-        };
+        var _ = _cfg.GetCVar(CCVars.DatabaseEngine).ToLower() switch
+            {
+                "sqlite" => SetupSqlite(), "postgres" => SetupPostgres(),
+                var engine => throw new InvalidDataException($"Unknown database engine: {engine}")
+            };
         using var ctx = CreateContext();
         ctx.Database.Migrate();
     }
@@ -73,17 +68,22 @@ public sealed partial class GoobstationDbManager : IGoobstationDbManager
     {
         _isPostgres = true;
         var (host, port, db, user, pass) =
-            (
-                _cfg.GetCVar(CCVars.DatabasePgHost),
-                _cfg.GetCVar(CCVars.DatabasePgPort),
-                _cfg.GetCVar(CCVars.DatabasePgDatabase),
-                _cfg.GetCVar(CCVars.DatabasePgUsername),
-                _cfg.GetCVar(CCVars.DatabasePgPassword)
+            (_cfg.GetCVar(CCVars.DatabasePgHost)
+                , _cfg.GetCVar(CCVars.DatabasePgPort)
+                , _cfg.GetCVar(CCVars.DatabasePgDatabase)
+                , _cfg.GetCVar(CCVars.DatabasePgUsername)
+                , _cfg.GetCVar(CCVars.DatabasePgPassword)
             );
+
         var connString = new NpgsqlConnectionStringBuilder
             {
-                Host = host, Port = port, Database = db, Username = user, Password = pass
+                Host = host,
+                Port = port,
+                Database = db,
+                Username = user,
+                Password = pass,
             }.ConnectionString;
+
         _sawmill.Debug($"Using Goobstation Postgres schema at {host}:{port}/{db}");
         var builder = new DbContextOptionsBuilder<GoobstationPostgresServerDbContext>();
         builder.UseNpgsql(connString,
