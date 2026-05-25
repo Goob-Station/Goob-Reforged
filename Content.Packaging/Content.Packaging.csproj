@@ -14,7 +14,4 @@
 
   <Import Project="..\RobustToolbox\Imports\Shared.props" />
   <Import Project="..\RobustToolbox\Imports\Packaging.props" />
-
-  <Import Project="../MSBuild/SharedModules.targets" />
-  <Import Project="../MSBuild/TestModules.targets" />
 </Project>
