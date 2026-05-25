@@ -15,7 +15,8 @@ using Robust.Shared.Utility;
 namespace Content.Goobstation.Client.Particles;
 
 /// <summary>
-/// Manages active particle emitters on the client, including their simulation and rendering via <see cref="ParticleOverlay"/>.
+/// Manages active particle emitters on the client, including their simulation and rendering.
+/// Use its API methods to create and remove particle effects from other systems.
 /// </summary>
 public sealed partial class ParticleSystem : EntitySystem
 {

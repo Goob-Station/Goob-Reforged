@@ -4,10 +4,6 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Goobstation.Client.Particles;
 
-/// <summary>
-/// API for <see cref="Trauma.Client.Particles.ParticleSystem"/>.
-/// Use these methods to create and remove particle effects from other systems.
-/// </summary>
 public sealed partial class ParticleSystem
 {
     /// <summary>
