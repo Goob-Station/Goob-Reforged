@@ -4,6 +4,9 @@
     <OutputPath>..\bin\Content.Client\</OutputPath>
     <OutputType Condition="'$(FullRelease)' != 'True'">Exe</OutputType>
     <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
+    <!-- If you a assembly starts with Content. The engines picks it up as a content assembly
+      and tries shipping it with client, which we dont want. -->
+    <AssemblyName>ContentModulesClient</AssemblyName>
   </PropertyGroup>
 
   <Import Project="..\MSBuild\Content.props"/>

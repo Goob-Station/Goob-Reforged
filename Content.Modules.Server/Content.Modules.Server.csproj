@@ -8,7 +8,11 @@
     <NoWarn>1998</NoWarn>
     <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <!-- If you a assembly starts with Content. The engines picks it up as a content assembly
+      and tries shipping it with client, which we dont want. -->
+    <AssemblyName>ContentModulesServer</AssemblyName>
   </PropertyGroup>
+
   <Import Project="..\MSBuild/Content.props" />
 
   <ItemGroup>
