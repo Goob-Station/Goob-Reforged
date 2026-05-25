@@ -6,6 +6,7 @@ public sealed class ModuleManifest
     public string Id { get; set; } = string.Empty;
     public string Version { get; set; } = string.Empty;
     public List<ProjectInfo> Projects { get; set; } = new();
+    public List<string> Resources { get; set; } = new();
 
     public bool Disabled { get; set; }
 

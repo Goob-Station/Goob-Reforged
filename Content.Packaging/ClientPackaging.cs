@@ -86,7 +86,7 @@ public static class ClientPackaging
         if (string.IsNullOrEmpty(path))
             path = ".";
 
-        var modules = new List<string> { "Content.Client", "Content.Shared", "Content.Shared.Database", "Content.ModuleManager" };
+        var modules = new List<string> { "Content.Client", "Content.Shared", "Content.Shared.Database", "ContentModuleManager" };
 
         var coreDepsPath = Path.Combine(path, "bin", "Content.Client", "Content.Client.deps.json");
 
@@ -116,15 +116,18 @@ public static class ClientPackaging
         var graph = new RobustClientAssetGraph();
         pass.Dependencies.Add(new AssetPassDependency(graph.Output.Name));
 
+        var dedupPass = new AssetPassLastWriteWins { Name = "ContentLastWriteWins" };
+        graph.Input.AddDependency(dedupPass);
+
         var dropSvgPass = new AssetPassFilterDrop(f => f.Path.EndsWith(".svg"))
         {
             Name = "DropSvgPass",
         };
         dropSvgPass.AddDependency(graph.Input).AddBefore(graph.PresetPasses);
 
-        AssetGraph.CalculateGraph([pass, dropSvgPass, ..graph.AllPasses], logger);
+        AssetGraph.CalculateGraph([pass, dedupPass, dropSvgPass, ..graph.AllPasses], logger);
 
-        var inputPass = graph.Input;
+        var inputPass = dedupPass;
 
         var modules = FindAllModules(contentDir, configuration);
 
@@ -155,21 +158,16 @@ public static class ClientPackaging
         await DoModularResourceCopy(contentDir, pass, ignoreSet, cancel);
     }
 
-    private static Task DoModularResourceCopy(
+    private static async Task DoModularResourceCopy(
         string contentDir,
         AssetPass pass,
         HashSet<string> ignoreSet,
         CancellationToken cancel = default)
     {
-        var dirs = Directory.GetDirectories(Path.Combine(contentDir, "Modules"));
-        foreach (var dir in dirs)
+        foreach (var (manifest, resourcePath) in ModuleResourceCopier.EnumerateResourcePaths(contentDir))
         {
-            var resourcesPath = Path.Combine(dir, "Resources");
-            if (!Directory.Exists(resourcesPath))
-                continue;
-            RobustSharedPackaging.DoResourceCopy(resourcesPath, pass, ignoreSet, "", cancel);
+            await RobustSharedPackaging.DoResourceCopy(resourcePath, pass, ignoreSet, "", cancel);
         }
-        return Task.CompletedTask;
     }
 
     private static Task WriteClientContentAssemblies(
