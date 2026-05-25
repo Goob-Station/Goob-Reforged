@@ -79,11 +79,11 @@ public static partial class PoolManager
         {
             try
             {
-                var manifest = Packaging.ModuleManifestLoader.LoadFromFile(manifestPath);
+                var manifest = ModuleManager.ModuleManifestLoader.LoadFromFile(manifestPath);
 
                 foreach (var project in manifest.Projects)
                 {
-                    var projectName = Packaging.ModuleManifestLoader.GetProjectName(project);
+                    var projectName = ModuleManager.ModuleManifestLoader.GetProjectName(project);
                     var dllPath = Path.Combine(binDir, $"{projectName}.dll");
 
                     if (File.Exists(dllPath) && !AlreadyLoaded(dllPath))

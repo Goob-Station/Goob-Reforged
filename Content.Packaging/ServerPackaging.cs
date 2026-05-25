@@ -41,6 +41,7 @@ public static class ServerPackaging
         "Npgsql",
         "Microsoft",
         "Concentus",
+        "NetCord",
     };
 
     private static readonly List<string> ServerNotExtraAssemblies = new()
@@ -174,7 +175,7 @@ public static class ServerPackaging
         if (string.IsNullOrEmpty(path))
             path = ".";
 
-        var modules = new List<string> { "Content.Server.Database", "Content.Server", "Content.Shared", "Content.Shared.Database", "Content.ModuleManager" };
+        var modules = new List<string> { "Content.Server.Database", "Content.Server", "Content.Shared", "Content.Shared.Database", "ContentModuleManager" };
 
         var coreDepsPath = Path.Combine(path, "bin", "Content.Server", "Content.Server.deps.json");
 
@@ -228,10 +229,18 @@ public static class ServerPackaging
         pass.Dependencies.Add(new AssetPassDependency(graph.Output.Name));
         passes.Add(pass);
 
+        // Front the resources side of the graph with a global "last write wins" dedup pass.
+        // Loaders feed dedup; dedup re-emits unique paths into InputResources. This lets
+        // modules override main-content resource files without later passes choking on
+        // duplicate VFS paths.
+        var dedupPass = new AssetPassLastWriteWins { Name = "ContentLastWriteWinsResources" };
+        graph.InputResources.AddDependency(dedupPass);
+        passes.Add(dedupPass);
+
         AssetGraph.CalculateGraph(passes, logger);
 
         var inputPassCore = graph.InputCore;
-        var inputPassResources = graph.InputResources;
+        var inputPassResources = dedupPass;
 
         var contentAssemblies = FindAllServerModules(configuration: configuration);
 
@@ -267,6 +276,7 @@ public static class ServerPackaging
             configuration);
 
         await RobustServerPackaging.WriteServerResources(contentDir, inputPassResources, cancel);
+        await DoModularResourceCopy(contentDir, inputPassResources, cancel);
 
         if (hybridAcz)
         {
@@ -275,6 +285,18 @@ public static class ServerPackaging
 
         inputPassCore.InjectFinished();
         inputPassResources.InjectFinished();
+    }
+
+    private static async Task DoModularResourceCopy(
+        string contentDir,
+        AssetPass pass,
+        CancellationToken cancel)
+    {
+        var ignore = RobustSharedPackaging.SharedIgnoredResources.ToHashSet();
+        foreach (var (manifest, resourcePath) in ModuleResourceCopier.EnumerateResourcePaths(contentDir))
+        {
+            await RobustSharedPackaging.DoResourceCopy(resourcePath, pass, ignore, "", cancel);
+        }
     }
 
     private static Task WriteServerContentAssemblies(
