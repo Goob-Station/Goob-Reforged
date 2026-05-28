@@ -1,0 +1,25 @@
+﻿<Project>
+  <!-- Module loading for all Content Test projects -->
+
+  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+    <ItemGroup>
+      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(ModuleProjects)"
+             Properties="BuildProjectReferences=false;IsBuildingModules=true"
+             BuildInParallel="true">
+      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
+    </MSBuild>
+
+    <ItemGroup>
+      <ModuleAssemblies Remove="@(ModuleAssemblies)" Condition="'%(Filename)' == 'Content.ModuleManager'" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(ModuleAssemblies)"
+          DestinationFolder="$(OutDir)" />
+  </Target>
+</Project>

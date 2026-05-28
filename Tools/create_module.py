@@ -54,18 +54,5 @@ def setup_module():
     with open(sln_path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(new_sln_content)
 
-    # Add a project reference to Shared from .Common project
-    shared_path = project_root / "Content.Shared" / "Content.Shared.csproj"
-    with open(shared_path, 'r', encoding='utf-8-sig', errors='ignore') as f:
-        content = f.read()
-
-    marker = "<!-- THIS COMMENT IS A MARKER FOR SCRIPTS TO ADD COMMON REFERENCES -->"
-    reference = f'<ProjectReference Include="../Modules/{module_name}/Content.{module_name}.Common/Content.{module_name}.Common.csproj" />'
-    new_content = content.replace(marker, marker + "\n    " + reference)
-
-    with open(shared_path, 'w', encoding='utf-8', newline='\n') as f:
-        f.write(new_content)
-
-
 if __name__ == "__main__":
     setup_module()
