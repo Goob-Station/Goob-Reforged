@@ -9,10 +9,10 @@ using Robust.Shared.Utility;
 
 namespace Content.Goobstation.Client.UIKit.UserInterface.RichText;
 
-public sealed class IconTag : IMarkupTagHandler
+public sealed partial class IconTag : IMarkupTagHandler
 {
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
-    [Dependency] private readonly IEntitySystemManager _entitySystem = default!;
+    [Dependency] private IPrototypeManager _prototype = default!;
+    [Dependency] private IEntitySystemManager _entitySystem = default!;
     private SpriteSystem? _spriteSystem;
 
     public string Name => "icon";
