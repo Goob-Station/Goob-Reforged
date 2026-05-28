@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\bin\Content.Server\</OutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputType Condition="'$(FullRelease)' != 'True'">Exe</OutputType>
+    <NoWarn>1998</NoWarn>
+    <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <!-- If you a assembly starts with Content. The engines picks it up as a content assembly
+      and tries shipping it with client, which we dont want. -->
+    <AssemblyName>ContentModulesServer</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="..\MSBuild/Content.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="../Modules/**/Content.*.Server.csproj" />
+    <ProjectReference Include="../Modules/**/Content.*.Server.Database.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\RobustToolbox\Imports\Lidgren.props" />
+  <Import Project="..\RobustToolbox\Imports\Server.props" />
+  <Import Project="..\RobustToolbox\Imports\Shared.props" />
+
+  <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+  <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
+
+</Project>
