@@ -16,16 +16,10 @@
     <!-- We don't need to compile .Modules projects unless we target them specifically,
          since they are used only for proper launch -->
     <Project Path="Content.Modules.Client/Content.Modules.Client.csproj">
-      <Build Solution="Debug|*" Project="false" />
-      <Build Solution="DebugOpt|*" Project="false" />
-      <Build Solution="Release|*" Project="false" />
-      <Build Solution="Tools|*" Project="false" />
+      <Build Project="false" />
     </Project>
     <Project Path="Content.Modules.Server/Content.Modules.Server.csproj">
-      <Build Solution="Debug|*" Project="false" />
-      <Build Solution="DebugOpt|*" Project="false" />
-      <Build Solution="Release|*" Project="false" />
-      <Build Solution="Tools|*" Project="false" />
+      <Build Project="false" />
     </Project>
   </Folder>
   <Folder Name="/Modules/GoobStation/">
@@ -47,7 +41,6 @@
     <File Path="MSBuild/Content.props" />
     <File Path="MSBuild/ClientModules.targets" />
     <File Path="MSBuild/ServerModules.targets" />
-    <File Path="MSBuild/SharedModules.targets" />
     <File Path="MSBuild/TestModules.targets" />
   </Folder>
   <Folder Name="/Project Files/">
