@@ -28,5 +28,9 @@
   <Import Project="..\RobustToolbox\Imports\Shared.props" />
   <Import Project="..\RobustToolbox\Imports\Packaging.props" />
 
-  <Import Project="../MSBuild/ServerModules.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\**\Content.*.Shared\Content.*.Shared.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\MSBuild\ServerModules.targets" />
 </Project>
