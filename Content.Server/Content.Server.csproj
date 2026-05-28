@@ -28,21 +28,5 @@
   <Import Project="..\RobustToolbox\Imports\Shared.props" />
   <Import Project="..\RobustToolbox\Imports\Packaging.props" />
 
-  <!-- Module loading -->
-  <Target Name="CompileAndCopyModules" AfterTargets="Build">
-    <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
-    </ItemGroup>
-
-<MSBuild Projects="@(ModuleProjects)"
-             Properties="BuildProjectReferences=false;IsBuildingModules=true"
-             BuildInParallel="true">
-      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
-    </MSBuild>
-
-    <Copy SourceFiles="@(ModuleAssemblies)"
-          DestinationFolder="$(OutDir)" />
-  </Target>
+  <Import Project="../MSBuild/ServerModules.targets" />
 </Project>

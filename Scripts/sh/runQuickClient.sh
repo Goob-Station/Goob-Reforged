@@ -6,4 +6,4 @@ if [ "$(dirname $0)" != "." ]; then
 fi
 
 cd ../../
-dotnet run --project Content.Client --no-build
+dotnet run --project Content.Modules.Client --no-build
