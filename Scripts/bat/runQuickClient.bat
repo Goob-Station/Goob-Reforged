@@ -1,6 +1,6 @@
 @echo off
 cd ../../
 
-call dotnet run --project Content.Client --no-build %*
+call dotnet run --project Content.Modules.Client --no-build %*
 
 pause

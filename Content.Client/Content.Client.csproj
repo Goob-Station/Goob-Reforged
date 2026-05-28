@@ -25,20 +25,5 @@
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\XamlIL.targets" />
 
-  <!-- Module loading -->
-  <Target Name="CompileAndCopyModules" AfterTargets="Build">
-    <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
-    </ItemGroup>
-
-<MSBuild Projects="@(ModuleProjects)"
-             Properties="BuildProjectReferences=false;IsBuildingModules=true"
-             BuildInParallel="true">
-      <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
-    </MSBuild>
-
-    <Copy SourceFiles="@(ModuleAssemblies)"
-          DestinationFolder="$(OutDir)" />
-  </Target>
+  <Import Project="../MSBuild/ClientModules.targets" />
 </Project>
