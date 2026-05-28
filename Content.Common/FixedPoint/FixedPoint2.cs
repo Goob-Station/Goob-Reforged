@@ -1,8 +1,9 @@
 using System.Globalization;
-using System.Linq;
 using Robust.Shared.Serialization;
+using Robust.Shared.Serialization.Manager.Attributes;
 using Robust.Shared.Utility;
 
+// ReSharper disable once CheckNamespace
 namespace Content.Shared.FixedPoint
 {
     /// <summary>

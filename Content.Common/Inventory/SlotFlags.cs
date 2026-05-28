@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Inventory;

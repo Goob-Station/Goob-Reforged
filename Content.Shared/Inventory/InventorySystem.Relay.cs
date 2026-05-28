@@ -192,22 +192,4 @@ public sealed class InventoryRelayedEvent<TEvent> : EntityEventArgs
     }
 }
 
-public interface IClothingSlots
-{
-    SlotFlags Slots { get; }
-}
-
-/// <summary>
-///     Events that should be relayed to inventory slots should implement this interface.
-/// </summary>
-public interface IInventoryRelayEvent
-{
-    /// <summary>
-    ///     What inventory slots should this event be relayed to, if any?
-    /// </summary>
-    /// <remarks>
-    ///     In general you may want to exclude <see cref="SlotFlags.POCKET"/>, given that those items are not truly
-    ///     "equipped" by the user.
-    /// </remarks>
-    public SlotFlags TargetSlots { get; }
-}
+// Goobstation edit - moved IClothingSlots and IInventoryRelayEvent to Content.Common
