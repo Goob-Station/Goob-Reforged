@@ -13,17 +13,10 @@
   </Folder>
   <Folder Name="/Modules/">
     <File Path="Modules/README.MD" />
-    <!-- We don't need to compile .Modules projects unless we target them specifically,
-         since they are used only for proper launch -->
-    <Project Path="Content.Modules.Client/Content.Modules.Client.csproj">
-      <Build Project="false" />
-    </Project>
-    <Project Path="Content.Modules.Server/Content.Modules.Server.csproj">
-      <Build Project="false" />
-    </Project>
   </Folder>
   <Folder Name="/Modules/GoobStation/">
     <Project Path="Modules/GoobStation/Content.Goobstation.Client/Content.Goobstation.Client.csproj" />
+    <Project Path="Modules/GoobStation/Content.Goobstation.Client.UIKit/Content.Goobstation.Client.UIKit.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Common/Content.Goobstation.Common.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Server.Database/Content.Goobstation.Server.Database.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Server/Content.Goobstation.Server.csproj" />
@@ -138,6 +131,7 @@
   </Folder>
   <Project Path="Content.Benchmarks/Content.Benchmarks.csproj" />
   <Project Path="Content.Client/Content.Client.csproj" />
+  <Project Path="Content.Common/Content.Common.csproj" />
   <Project Path="Content.IntegrationTests/Content.IntegrationTests.csproj" />
   <Project Path="Content.MapRenderer/Content.MapRenderer.csproj" />
   <Project Path="Content.ModuleManager/Content.ModuleManager.csproj" />
