@@ -1,10 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
       <RootNamespace>Content.ModuleManager</RootNamespace>
+      <!-- If you a assembly starts with Content. The engines picks it up as a content assembly
+      and tries shipping it with client, which we dont want. -->
+      <AssemblyName>ContentModuleManager</AssemblyName>
     </PropertyGroup>
+
+    <Import Project="..\MSBuild\Content.props" />
+
+    <Import Project="..\RobustToolbox\Imports\Shared.props" />
+    <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 
 </Project>

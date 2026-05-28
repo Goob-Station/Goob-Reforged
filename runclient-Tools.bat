@@ -1,3 +1,3 @@
 @echo off
-dotnet run --project Content.Client --configuration Tools
+dotnet run --project Content.Modules.Client --configuration Tools
 pause

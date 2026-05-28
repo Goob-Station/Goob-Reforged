@@ -13,6 +13,14 @@
   </Folder>
   <Folder Name="/Modules/">
     <File Path="Modules/README.MD" />
+    <!-- We don't need to compile .Modules projects unless we target them specifically,
+         since they are used only for proper launch -->
+    <Project Path="Content.Modules.Client/Content.Modules.Client.csproj">
+      <Build Project="false" />
+    </Project>
+    <Project Path="Content.Modules.Server/Content.Modules.Server.csproj">
+      <Build Project="false" />
+    </Project>
   </Folder>
   <Folder Name="/Modules/GoobStation/">
     <Project Path="Modules/GoobStation/Content.Goobstation.Client/Content.Goobstation.Client.csproj" />
@@ -31,6 +39,9 @@
   </Folder>
   <Folder Name="/MSBuild/">
     <File Path="MSBuild/Content.props" />
+    <File Path="MSBuild/ClientModules.targets" />
+    <File Path="MSBuild/ServerModules.targets" />
+    <File Path="MSBuild/TestModules.targets" />
   </Folder>
   <Folder Name="/Project Files/">
     <File Path=".editorconfig" />

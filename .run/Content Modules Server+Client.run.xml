@@ -1,0 +1,7 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Content Modules Server+Client" type="CompoundRunConfigurationType">
+    <toRun name="Content.Modules.Client" type="DotNetProject" />
+    <toRun name="Content.Modules.Server" type="DotNetProject" />
+    <method v="2" />
+  </configuration>
+</component>
