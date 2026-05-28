@@ -8,10 +8,10 @@ using System.Numerics;
 namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
 
 [Virtual]
-public sealed class CustomOutputPanel : Control
+public partial class CustomOutputPanel : Control
 {
-    [Dependency] private readonly MarkupTagManager _tagManager = default!;
-    [Dependency] private readonly IEntityManager _entManager = default!;
+    [Dependency] private MarkupTagManager _tagManager = default!;
+    [Dependency] private IEntityManager _entManager = default!;
 
     public const string StylePropertyStyleBox = "stylebox";
 
@@ -30,13 +30,13 @@ public sealed class CustomOutputPanel : Control
     public CustomOutputPanel()
     {
         IoCManager.InjectDependencies(this);
-        MouseFilter = Control.MouseFilterMode.Pass;
+        MouseFilter = MouseFilterMode.Pass;
         RectClipContent = true;
 
         _scrollBar = new VScrollBar
         {
             Name = "_v_scroll",
-            HorizontalAlignment = Control.HAlignment.Right
+            HorizontalAlignment = HAlignment.Right
         };
         AddChild(_scrollBar);
         _scrollBar.OnValueChanged += _ => _isAtBottom = _scrollBar.IsAtEnd;
@@ -46,7 +46,7 @@ public sealed class CustomOutputPanel : Control
 
     public void UpdateLastMessage(FormattedMessage message)
     {
-        var newEnt = new CustomRichTextEntry(message, this, _tagManager, _entManager, null);
+        var newEnt = new CustomRichTextEntry(message, this, _tagManager, _entManager);
         newEnt.Update(_tagManager, _getFont(), _getContentBox().Width, UIScale);
         _entries[_entries.Count - 1] = newEnt;
     }
@@ -101,7 +101,7 @@ public sealed class CustomOutputPanel : Control
 
     public void AddMessage(FormattedMessage message)
     {
-        var entry = new CustomRichTextEntry(message, this, _tagManager, _entManager, null);
+        var entry = new CustomRichTextEntry(message, this, _tagManager, _entManager);
 
         entry.Update(_tagManager, _getFont(), _getContentBox().Width, UIScale);
 
