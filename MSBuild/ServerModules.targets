@@ -5,7 +5,7 @@
     <ItemGroup>
       <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
       <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.*.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
     </ItemGroup>
 
     <MSBuild Projects="@(ModuleProjects)"
