@@ -24,3 +24,6 @@ projects:
 
   - path: Content.Goobstation.Client
     role: Client
+
+  - path: Content.Goobstation.Client.UIKit
+    role: Client
