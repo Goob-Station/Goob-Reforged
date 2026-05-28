@@ -18,6 +18,8 @@ public sealed class EntryPoint : GameClient
 
     public override void Init()
     {
+        ClientGoobContentIoc.Register();
+
         IoCManager.BuildGraph();
         IoCManager.InjectDependencies(this);
     }

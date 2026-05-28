@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
+using Content.Goobstation.Client.LinkAccount;
+
 namespace Content.Goobstation.Client.IoC;
 
 internal static class ClientGoobContentIoc
@@ -9,5 +11,6 @@ internal static class ClientGoobContentIoc
     internal static void Register()
     {
         var instance = IoCManager.Instance!;
+        instance.Register<LinkAccountManager>();
     }
 }
