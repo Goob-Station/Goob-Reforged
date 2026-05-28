@@ -1,3 +1,3 @@
 @echo off
-dotnet run --project Content.Modules.Server
+dotnet run --project Content.Server
 pause
