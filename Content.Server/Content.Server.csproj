@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules\**\Content.*.Shared\Content.*.Shared.csproj" />
+    <ProjectReference Include="..\Modules\**\Content.*.Shared\Content.*.Server.Database.csproj" />
   </ItemGroup>
 
   <Import Project="..\MSBuild\ServerModules.targets" />
