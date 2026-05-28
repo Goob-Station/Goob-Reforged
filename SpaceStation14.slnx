@@ -24,6 +24,7 @@
   </Folder>
   <Folder Name="/Modules/GoobStation/">
     <Project Path="Modules/GoobStation/Content.Goobstation.Client/Content.Goobstation.Client.csproj" />
+    <Project Path="Modules/GoobStation/Content.Goobstation.Client.UIKit/Content.Goobstation.Client.UIKit.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Common/Content.Goobstation.Common.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Server.Database/Content.Goobstation.Server.Database.csproj" />
     <Project Path="Modules/GoobStation/Content.Goobstation.Server/Content.Goobstation.Server.csproj" />
