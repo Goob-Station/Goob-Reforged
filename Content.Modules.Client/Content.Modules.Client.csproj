@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\bin\Content.Client\</OutputPath>
+    <OutputType Condition="'$(FullRelease)' != 'True'">Exe</OutputType>
     <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
+    <!-- If you a assembly starts with Content. The engines picks it up as a content assembly
+      and tries shipping it with client, which we dont want. -->
+    <AssemblyName>ContentModulesClient</AssemblyName>
   </PropertyGroup>
-  <Import Project="../MSBuild/Content.props" />
+
+  <Import Project="..\MSBuild\Content.props"/>
+
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
-    <PackageReference Include="YamlDotNet" />
+    <ProjectReference Include="../Modules/**/Content.*.Client.csproj" />
   </ItemGroup>
 
   <Import Project="..\RobustToolbox\Imports\Lidgren.props" />
+  <Import Project="..\RobustToolbox\Imports\Client.props" />
   <Import Project="..\RobustToolbox\Imports\Shared.props" />
-
-  <ItemGroup>
-    <ProjectReference Include="..\Content.Shared.Database\Content.Shared.Database.csproj" />
-    <ProjectReference Include="../Modules/**/Content.*.Common/Content.*.Common.csproj" />
-  </ItemGroup>
 
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
-
-
 </Project>
