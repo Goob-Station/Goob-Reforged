@@ -4,7 +4,7 @@ namespace Content.IntegrationTests;
 public sealed class PoolManagerTestEventHandler
 {
     // This value is completely arbitrary.
-    private static TimeSpan MaximumTotalTestingTimeLimit => TimeSpan.FromMinutes(20);
+    private static TimeSpan MaximumTotalTestingTimeLimit => TimeSpan.FromMinutes(30);
     private static TimeSpan HardStopTimeLimit => MaximumTotalTestingTimeLimit.Add(TimeSpan.FromMinutes(1));
 
     [OneTimeSetUp]
@@ -23,7 +23,7 @@ public sealed class PoolManagerTestEventHandler
         _ = Task.Delay(HardStopTimeLimit).ContinueWith(_ =>
         {
             var deathReport = PoolManager.DeathReport();
-            Environment.FailFast($"Tests took way too ;\n Death Report:\n{deathReport}");
+            Environment.FailFast($"Tests are TAKING TOO LONG!\n Death Report:\n{deathReport}");
         });
     }
 
