@@ -146,6 +146,7 @@ public sealed partial class StepTriggerSystem : EntitySystem
         var msg = new StepTriggerAttemptEvent { Source = uid, Tripper = otherUid };
 
         RaiseLocalEvent(uid, ref msg);
+        RaiseLocalEvent(otherUid, ref msg); // Goobstation edit
 
         return msg.Continue && !msg.Cancelled;
     }

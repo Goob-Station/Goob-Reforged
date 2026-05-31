@@ -1,0 +1,9 @@
+- type: entity
+  parent: CrateBaseWeldable
+  id: CrateBingle
+  name: bingle crate
+  components:
+  - type: Icon
+    sprite: Objects/Storage/binglecrate.rsi
+  - type: Sprite
+    sprite: Objects/Storage/binglecrate.rsi

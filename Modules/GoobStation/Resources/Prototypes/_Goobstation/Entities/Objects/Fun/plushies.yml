@@ -1,0 +1,80 @@
+- type: entity
+  parent: BasePlushie
+  id: BaseBinglePlushie
+  abstract: true
+  components:
+  - type: EmitSoundOnUse
+    sound:
+      path: /Audio/Effects/falling.ogg
+  - type: EmitSoundOnActivate
+    sound:
+      path: /Audio/Effects/falling.ogg
+  - type: EmitSoundOnTrigger
+    sound:
+      path: /Audio/Effects/falling.ogg
+  - type: EmitSoundOnCollide
+    sound:
+      path: /Audio/Effects/falling.ogg
+  - type: Edible
+    requiresSpecialDigestion: true
+    useSound:
+      path: /Audio/Effects/falling.ogg
+  - type: MeleeWeapon
+    wideAnimationRotation: 180
+    soundHit:
+      path: /Audio/Effects/falling.ogg
+
+- type: entity
+  parent: BaseBinglePlushie
+  id: PlushieBingle
+  name: full size bingle plushie
+  description: A cute stuffed toy that resembles a blue alien. You feel a strange compulsion to say bingle.
+  components:
+  - type: Sprite
+    sprite: Mobs/Bingle/bingle.rsi
+    state: alive
+    noRot: true
+
+- type: entity
+  parent: BaseBinglePlushie
+  id: PlushieBingleSmall
+  name: bingle plushie
+  description: A cute stuffed toy that resembles a blue alien. You feel a strange compulsion to say bingle.
+  components:
+  - type: Sprite
+    sprite: Objects/Fun/toys.rsi
+    state: bingleing
+    noRot: true
+
+- type: entity
+  parent: BaseBinglePlushie
+  id: PlushieBingleYakub
+  name: yakub bingle plushie
+  description: A cute stuffed toy that resembles a blue alien. You feel a strange compulsion to say bingle.
+  components:
+  - type: Sprite
+    sprite: Objects/Fun/yakub_bingle.rsi
+    state: yakubbingle
+    noRot: true
+
+- type: entity
+  parent: BasePlushie
+  id: PlushieBongle
+  name: bongle plushie
+  description: A cute stuffed toy that resembles a red alien. You feel a strange compulsion to say bongle
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: Objects/Fun/toys.rsi
+    state: bongle
+
+- type: entity
+  parent: BaseBinglePlushie
+  id: PlushieBinglePony
+  name: bingle pony plushie
+  description: A cute stuffed toy that resembles a blue alien. You feel a strange compulsion to say bingle.
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: Objects/Fun/toys.rsi
+    state: bingle_pony
