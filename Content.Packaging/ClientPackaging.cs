@@ -85,7 +85,7 @@ public static class ClientPackaging
         if (string.IsNullOrEmpty(path))
             path = ".";
 
-        var modules = new List<string> { "Content.Client", "Content.Shared", "Content.Shared.Database", "ContentModuleManager" };
+        var modules = new List<string> { "Content.Client", "Content.Shared", "Content.Common", "Content.Shared.Database", "ContentModuleManager" };
 
         var coreDepsPath = Path.Combine(path, "bin", "Content.Client", "Content.Client.deps.json");
 
