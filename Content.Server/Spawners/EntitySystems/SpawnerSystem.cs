@@ -1,3 +1,4 @@
+using Content.Goobstation.Common.Spawner;
 using Content.Server.Spawners.Components;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -49,7 +50,12 @@ public sealed partial class SpawnerSystem : EntitySystem
         for (var i = 0; i < number; i++)
         {
             var entity = _random.Pick(component.Prototypes);
-            SpawnAtPosition(entity, coordinates);
+            var spawned = SpawnAtPosition(entity, coordinates); // Goobstation edit - saved in variable
+
+            // Goobstation edit start
+            var spawnedEv = new SpawnerActivationEvent(spawned);
+            RaiseLocalEvent(uid, ref spawnedEv);
+            // Goobstation edit end
         }
     }
 }

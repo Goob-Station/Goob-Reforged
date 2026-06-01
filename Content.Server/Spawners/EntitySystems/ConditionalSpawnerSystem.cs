@@ -1,3 +1,4 @@
+using Content.Goobstation.Common.Spawner;
 using Content.Server.GameTicking;
 using Content.Server.Spawners.Components;
 using Content.Shared.EntityTable;
@@ -99,7 +100,12 @@ namespace Content.Server.Spawners.EntitySystems
             var coords = _xform.GetMapCoordinates(uid, xform);
             var rotation = _xform.GetWorldRotation(xform);
 
-            Spawn(_robustRandom.Pick(component.Prototypes), coords, rotation: rotation);
+            var spawned = Spawn(_robustRandom.Pick(component.Prototypes), coords, rotation: rotation); // Goobstation edit - saved in variable
+
+            // Goobstation edit start
+            var spawnedEv = new SpawnerActivationEvent(spawned);
+            RaiseLocalEvent(uid, ref spawnedEv);
+            // Goobstation edit end
         }
 
         private void Spawn(EntityUid uid, RandomSpawnerComponent component)
@@ -117,7 +123,12 @@ namespace Content.Server.Spawners.EntitySystems
             var coords = _xform.GetMapCoordinates(uid, xform).Offset(vOffset);
             var rotation = _xform.GetWorldRotation(xform);
 
-            Spawn(proto, coords, rotation: rotation);
+            var spawned = Spawn(proto, coords, rotation: rotation); // Goobstation edit - saved in variable
+
+            // Goobstation edit start
+            var spawnedEv = new SpawnerActivationEvent(spawned);
+            RaiseLocalEvent(uid, ref spawnedEv);
+            // Goobstation edit end
         }
 
         private EntProtoId? GetPrototype(Entity<RandomSpawnerComponent> spawner)
@@ -168,7 +179,12 @@ namespace Content.Server.Spawners.EntitySystems
                 var vOffset = _robustRandom.NextVector2(-offset, offset);
                 var trueCoords = coords.Offset(vOffset);
 
-                Spawn(proto, trueCoords, rotation: rotation);
+                var spawned = Spawn(proto, trueCoords, rotation: rotation); // Goobstation edit - saved in variable
+
+                // Goobstation edit start
+                var spawnedEv = new SpawnerActivationEvent(spawned);
+                RaiseLocalEvent(ent.Owner, ref spawnedEv);
+                // Goobstation edit end
             }
         }
     }

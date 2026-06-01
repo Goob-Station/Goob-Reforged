@@ -8,6 +8,7 @@ using Content.Shared.Trigger;
 using Content.Shared.Trigger.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Goobstation.Shared.Trigger;
@@ -29,7 +30,6 @@ public sealed partial class GoobTriggerSystem : EntitySystem
         SubscribeLocalEvent<TileReplaceOnTriggerComponent, TriggerEvent>(OnTriggerTileReplace);
         SubscribeLocalEvent<TriggerOnTriggerComponent, TriggerEvent>(OnTriggerTrigger);
         SubscribeLocalEvent<TriggerCounterLimitComponent, AttemptTriggerEvent>(OnTriggerLimitCounter);
-        SubscribeLocalEvent<TriggerOnCounterComponent, TriggerEvent>(OnTriggerOnCounterTrigger);
     }
 
     private void OnTriggerCounter(Entity<TriggerCounterComponent> ent, ref TriggerEvent args)
@@ -68,16 +68,17 @@ public sealed partial class GoobTriggerSystem : EntitySystem
 
         while (tileEnumerator.MoveNext(out var tile))
         {
+            var random = SharedRandomExtensions.PredictedRandom(
+                _timing,
+                new NetEntity(SharedRandomExtensions.HashCodeCombine(tile.X, tile.Y, tile.Tile.TypeId)));
+
             if (tile.Tile.TypeId == convertTile.TileId
                 || _turf.GetContentTileDefinition(tile).Name == convertTile.Name
-                || !SharedRandomExtensions.PredictedProb(
-                    _timing,
-                    ent.Comp.Prob,
-                    new NetEntity(SharedRandomExtensions.HashCodeCombine(tile.X, tile.Y, tile.Tile.TypeId))))
+                || !random.Prob(ent.Comp.Prob))
                 continue;
 
             _tile.ReplaceTile(tile, convertTile);
-            _tile.PickVariant(convertTile);
+            _tile.PickVariant(convertTile, random);
         }
     }
 
@@ -109,26 +110,6 @@ public sealed partial class GoobTriggerSystem : EntitySystem
         foreach (var key in ent.Comp.KeysOut)
         {
             _trigger.Trigger(ent.Owner, args.User, key, args.Predicted);
-        }
-    }
-
-    private void OnTriggerOnCounterTrigger(Entity<TriggerOnCounterComponent> ent, ref TriggerEvent args)
-    {
-        if (args.Key != null && !ent.Comp.KeysIn.Contains(args.Key)
-            || !TryComp(ent.Owner, out TriggerCounterComponent? counter))
-            return;
-
-        foreach (var (keyOut, (keyIn, range, reset)) in ent.Comp.Counts)
-        {
-            if (!counter.Counts.TryGetValue(keyIn, out var count)
-                || range.Min < count
-                || range.Max > count)
-                continue;
-
-            _trigger.Trigger(ent.Owner, args.User, keyOut, args.Predicted);
-
-            if (reset)
-                counter.Counts[keyIn] = 0;
         }
     }
 }

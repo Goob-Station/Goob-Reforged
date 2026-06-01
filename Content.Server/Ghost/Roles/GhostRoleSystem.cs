@@ -786,6 +786,7 @@ public sealed partial class GhostRoleSystem : EntitySystem
 
         var spawnedEvent = new GhostRoleSpawnerUsedEvent(uid, mob);
         RaiseLocalEvent(mob, spawnedEvent);
+        RaiseLocalEvent(uid, spawnedEvent); // Goobstation edit
 
         if (ghostRole.MakeSentient)
             _mindSystem.MakeSentient(mob, ghostRole.AllowMovement, ghostRole.AllowSpeech);

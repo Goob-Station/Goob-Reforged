@@ -11,8 +11,14 @@
     mindRoles:
     - MindRoleGhostRoleTeamAntagonist
     raffle: null # no raffle for spammed role fuck you
-  - type: GhostRoleMobSpawner
-    prototype: MobBingleRandom
+  - type: GhostRoleTableSpawner
+    table: !type:GroupSelector
+      children:
+      - id: MobBingle
+        weight: 49    # 49/50
+      - id: MobTurkle
+        weight: 1     # 01/50
+  - type: LinkedEntityTransfer
   - type: Sprite
     layers:
     - state: green

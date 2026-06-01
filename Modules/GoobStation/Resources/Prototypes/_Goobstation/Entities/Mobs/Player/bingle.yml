@@ -1,20 +1,3 @@
-- type: entity
-  id: MobBingleRandom
-  parent: MarkerBase
-  name: bingle
-  suffix: Random
-  components:
-  - type: Sprite
-    sprite: Mobs/Bingle/bingle.rsi
-    state: alive
-  - type: EntityTableSpawner
-    table: !type:GroupSelector
-      children:
-      - id: MobBingle
-        weight: 49    # 49/50
-      - id: MobTurkle
-        weight: 1     # 01/50
-
 # Base bingle
 - type: entity
   name: bingle
@@ -39,10 +22,7 @@
     layers:
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: alive
-    #- map: ["enum.BingleVisual.Upgraded"]
-    #  state: Upgraded
-    #  visible: false
-    - map: ["enum.CombatModeVisuals.Combat"]
+    - map: ["enum.CombatModeLayers.Layer"]
       state: combat
       visible: false
   - type: MobThresholds
@@ -136,21 +116,30 @@
     whitelist:
       tags:
       - BinglePit
+  - type: CombatModeVisuals
+  - type: GenericVisualizer
+    visuals:
+      enum.CombatModeVisuals.Combat:
+        enum.CombatModeLayers.Layer:
+          True: { visible: true }
+          False: { visible: false }
+  - type: Tag
+    tags:
+    - DoorBumpOpener
+    - Bingle
 
 - type: entity
   id: MobBingleUpgraded
   parent: MobBingle
   suffix: Upgraded
   components:
-  #- type: Bingle
-  #  upgraded: true
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Bingle/bingle.rsi
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base", "movement" ]
       state: Upgraded
-    - map: [ "enum.CombatModeVisuals.Combat" ]
+    - map: [ "enum.CombatModeLayers.Layer" ]
       state: combat
       visible: false
   - type: DamageStateVisuals
@@ -173,6 +162,16 @@
   - type: Damageable
     damageModifierSet: BingleUpgraded
 
+- type: polymorph
+  id: BingleUpgraded
+  configuration:
+    entity: MobBingleUpgraded
+    forced: true
+    inventory: None
+    revertOnCrit: false
+    revertOnDeath: false
+    polymorphPopup: null
+
 # Skin - turkle
 - type: entity
   name: turkle
@@ -180,18 +179,13 @@
   parent: MobBingle
   description: A bingle from foreign lands lost to time. Seems very proud of their homeland.
   components:
-  #- type: Bingle
-  #  upgradedID: MobTurkleUpgraded
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Bingle/turkle.rsi
     layers:
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: alive
-    #- map: ["enum.BingleVisual.Upgraded"]
-    #  state: Upgraded
-    #  visible: false
-    - map: ["enum.CombatModeVisuals.Combat"]
+    - map: ["enum.CombatModeLayers.Layer"]
       state: combat
       visible: false
   #- type: NightVision
@@ -202,20 +196,32 @@
     radius: 1.2
     energy: 2
     color: "#ad2a33"
+  - type: Tag
+    tags:
+    - DoorBumpOpener
+    - Turkle
 
 - type: entity
   id: MobTurkleUpgraded
   parent: MobBingleUpgraded
   suffix: Upgraded
   components:
-  #- type: Bingle
-  #  upgraded: true
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Bingle/turkle.rsi
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base", "movement" ]
       state: Upgraded
-    - map: [ "enum.CombatModeVisuals.Combat" ]
+    - map: [ "enum.CombatModeLayers.Layer" ]
       state: combat
       visible: false
+
+- type: polymorph
+  id: TurkleUpgraded
+  configuration:
+    entity: MobTurkleUpgraded
+    forced: true
+    inventory: None
+    revertOnCrit: false
+    revertOnDeath: false
+    polymorphPopup: null

@@ -1,3 +1,4 @@
+using Content.Goobstation.Common.Spawner;
 using Content.Shared.GameTicking;
 using Content.Shared.Trigger.Components.Effects;
 using Content.Shared.Trigger.Components.Triggers;
@@ -68,13 +69,15 @@ public sealed partial class TriggerSystem
     /// <param name="predicted">Whether to use predicted spawning.</param>
     private void SpawnTriggerHelper(Entity<TransformComponent> target, EntProtoId proto, bool useMapCoords, bool predicted)
     {
+        EntityUid? spawned = null; // Goobstation edit - saved in variable
+
         if (useMapCoords)
         {
             var mapCoords = _transform.GetMapCoordinates(target);
             if (predicted)
-                EntityManager.PredictedSpawn(proto, mapCoords);
+                spawned = EntityManager.PredictedSpawn(proto, mapCoords); // Goobstation edit - saved in variable
             else if (_net.IsServer)
-                Spawn(proto, mapCoords);
+                spawned = Spawn(proto, mapCoords); // Goobstation edit - saved in variable
         }
 
         else
@@ -84,10 +87,18 @@ public sealed partial class TriggerSystem
                 return;
 
             if (predicted)
-                PredictedSpawnAttachedTo(proto, coords);
+                spawned = PredictedSpawnAttachedTo(proto, coords); // Goobstation edit - saved in variable
             else if (_net.IsServer)
-                SpawnAttachedTo(proto, coords);
+                spawned = SpawnAttachedTo(proto, coords); // Goobstation edit - saved in variable
         }
+
+        // Goobstation edit start
+        if (spawned == null)
+            return;
+
+        var spawnedEv = new SpawnerActivationEvent(spawned.Value);
+        RaiseLocalEvent(target.Owner, ref spawnedEv);
+        // Goobstation edit end
     }
 
     private void HandleDeleteOnTrigger(Entity<DeleteOnTriggerComponent> ent, ref TriggerEvent args)

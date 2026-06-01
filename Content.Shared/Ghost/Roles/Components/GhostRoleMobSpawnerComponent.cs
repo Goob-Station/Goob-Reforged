@@ -1,3 +1,4 @@
+using Content.Shared.EntityTable.EntitySelectors;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Ghost.Roles.Components

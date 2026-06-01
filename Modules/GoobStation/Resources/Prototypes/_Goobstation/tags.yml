@@ -1,2 +1,8 @@
 - type: Tag
+  id: Bingle
+
+- type: Tag
   id: BinglePit
+
+- type: Tag
+  id: Turkle

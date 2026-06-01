@@ -91,38 +91,52 @@
     - trigger
     - spawn
     - growth
-  - type: TriggerOnCounter
+  - type: TriggerOnCondition
     keysIn: # Triggers the checks
     - trigger
-    counts:
-    # Triggers 10 times -> spawns a bingle and resets "spawn"
-    - keyOut: spawn
-      count:
+    triggers:
+      # Triggers 10 times -> spawns a bingle and resets "spawn"
+      spawn:
+      - !type:TriggerCountCondition
         key: spawn
-        reset: true
-        range:
+        count:
           min: 10
           max: 10
-    # Triggers 100 times -> grows in size and resets "growth"
-    - keyOut: growth
-      count:
+      # Triggers 100 times -> grows in size and resets "growth"
+      growth:
+      - !type:TriggerCountCondition
         key: growth
-        reset: true
-        range:
+        count:
           min: 100
           max: 100
-    # Triggers 500 times -> ascension announcement
-    - keyOut: announce
-      count:
+      # Triggers 200 times -> upgrade all bingles
+      upgrade:
+      - !type:TriggerCountCondition
         key: trigger # Triggers only once, so tracks the default key
-        range:
+        count:
+          min: 200
+          max: 200
+      # Triggers 500 times -> ascension announcement
+      announce:
+      - !type:TriggerCountCondition
+        key: trigger # Triggers only once, so tracks the default key
+        count:
           min: 500
           max: 500
+  - type: ResetCounterOnTrigger
+    keysIn:
+    - spawn
+    - growth
+    reset:
+      spawn:
+      - spawn
+      growth:
+      - growth
   - type: SpawnOnTrigger
     keysIn:
     - spawn
     proto: SpawnPointGhostBingle
-    predicted: true
+  - type: SpawnerLink
   - type: AnnounceOnTrigger
     keysIn:
     - announce
@@ -137,13 +151,29 @@
     effects:
     - !type:ScaleSprite
       scale: 1.25, 1.25
+  - type: LinkedEntityEffectOnTrigger
+    keysIn:
+    - upgrade
+    effects:
+    - !type:Polymorph
+      prototype: BingleUpgraded
+      conditions:
+      - !type:MobStateCondition
+      - !type:TagCondition
+        tag: Bingle
+    - !type:Polymorph
+      prototype: TurkleUpgraded
+      conditions:
+      - !type:MobStateCondition
+      - !type:TagCondition
+        tag: Turkle
   - type: TileReplaceOnTrigger
     keysIn:
     - trigger
     tile: FloorBingle
     radiusCounterScaling: true
     radiusCounterModifier: 0.05
-    prob: 0.04
+    prob: 0.02
   - type: EmitSoundOnSpawn
     sound:
       path: /Audio/Weapons/Guns/Gunshots/rocket_launcher.ogg
