@@ -1,4 +1,4 @@
-﻿using Content.Shared.Trigger.Systems;
+﻿using Content.Shared.Trigger.Components.Effects;
 using Robust.Shared.GameStates;
 
 namespace Content.Goobstation.Shared.Trigger.Components.Counter;
@@ -7,13 +7,13 @@ namespace Content.Goobstation.Shared.Trigger.Components.Counter;
 /// Counts the total amount of triggers that this entity had in its entire lifetime.
 /// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-public sealed partial class TriggerCounterComponent : Component
+public sealed partial class TriggerCounterComponent : BaseXOnTriggerComponent
 {
     /// <summary>
     /// Keys to count when they are triggered.
     /// </summary>
     [DataField(required: true)]
-    public HashSet<string> Keys;
+    public HashSet<string> CountKeys;
 
     /// <summary>
     /// Amount of triggers per each trigger key.

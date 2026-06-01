@@ -17,7 +17,7 @@ public sealed partial class GoobStepTriggerSystem : EntitySystem
 
     private void OnImmuneTrigger(Entity<StepTriggerImmuneComponent> ent, ref StepTriggerAttemptEvent args)
     {
-        if (_whitelist.CheckBoth(args.Tripper, ent.Comp.Blacklist, ent.Comp.Whitelist))
+        if (_whitelist.CheckBoth(args.Source, ent.Comp.Blacklist, ent.Comp.Whitelist))
             args.Cancelled = true;
     }
 

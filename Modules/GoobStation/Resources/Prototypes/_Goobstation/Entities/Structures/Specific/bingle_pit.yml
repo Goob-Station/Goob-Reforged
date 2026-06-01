@@ -52,9 +52,10 @@
             max: 1
   - type: PassiveDamage #passive Healing
     damage:
-      groups:
-        Brute: -3
       types:
+        Blunt: -1
+        Slash: -1
+        Piercing: -1
         Heat: -1
         Shock: -1
         Structural: -1
@@ -79,18 +80,49 @@
     containerId: chasm
   - type: ContainerComponentGrant
     components:
-    - type: Stunned
+    - type: Stunned # Prevents anyone from destroying the bingle pit from the inside
+  - type: AntiRottingContainer
   - type: TriggerOnInsertedIntoContainer
     containerId: chasm
   - type: TriggerCounter
-    keys:
+    keysIn:
     - trigger
+    countKeys:
+    - trigger
+    - spawn
+    - growth
   - type: TriggerOnCounter
-    keyOut: announce
-    ranges:
-      trigger:
-        min: 500
-        max: 500
+    keysIn: # Triggers the checks
+    - trigger
+    counts:
+    # Triggers 10 times -> spawns a bingle and resets "spawn"
+    - keyOut: spawn
+      count:
+        key: spawn
+        reset: true
+        range:
+          min: 10
+          max: 10
+    # Triggers 100 times -> grows in size and resets "growth"
+    - keyOut: growth
+      count:
+        key: growth
+        reset: true
+        range:
+          min: 100
+          max: 100
+    # Triggers 500 times -> ascension announcement
+    - keyOut: announce
+      count:
+        key: trigger # Triggers only once, so tracks the default key
+        range:
+          min: 500
+          max: 500
+  - type: SpawnOnTrigger
+    keysIn:
+    - spawn
+    proto: SpawnPointGhostBingle
+    predicted: true
   - type: AnnounceOnTrigger
     keysIn:
     - announce
@@ -99,6 +131,12 @@
     sound:
       path: /Audio/Ambience/Antag/Heretic/ascend_flesh.ogg
     color: Pink
+  - type: EntityEffectOnTrigger
+    keysIn:
+    - growth
+    effects:
+    - !type:ScaleSprite
+      scale: 1.25, 1.25
   - type: TileReplaceOnTrigger
     keysIn:
     - trigger
@@ -106,7 +144,6 @@
     radiusCounterScaling: true
     radiusCounterModifier: 0.05
     prob: 0.04
-  - type: AntiRottingContainer
   - type: EmitSoundOnSpawn
     sound:
       path: /Audio/Weapons/Guns/Gunshots/rocket_launcher.ogg

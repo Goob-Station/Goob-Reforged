@@ -25,7 +25,6 @@ public sealed partial class GoobTriggerSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<TriggerCounterComponent, MapInitEvent>(OnTriggerCounterInit);
         SubscribeLocalEvent<TriggerCounterComponent, TriggerEvent>(OnTriggerCounter);
         SubscribeLocalEvent<TileReplaceOnTriggerComponent, TriggerEvent>(OnTriggerTileReplace);
         SubscribeLocalEvent<TriggerOnTriggerComponent, TriggerEvent>(OnTriggerTrigger);
@@ -33,26 +32,22 @@ public sealed partial class GoobTriggerSystem : EntitySystem
         SubscribeLocalEvent<TriggerOnCounterComponent, TriggerEvent>(OnTriggerOnCounterTrigger);
     }
 
-    private void OnTriggerCounterInit(Entity<TriggerCounterComponent> ent, ref MapInitEvent args)
-    {
-        foreach (var key in ent.Comp.Keys)
-        {
-            ent.Comp.Counts.Add(key, 0);
-        }
-    }
-
     private void OnTriggerCounter(Entity<TriggerCounterComponent> ent, ref TriggerEvent args)
     {
-        if (args.Key != null
-            && ent.Comp.Counts.TryGetValue(args.Key, out var value))
-            ent.Comp.Counts[args.Key] = ++value;
+        if (!_timing.IsFirstTimePredicted
+            || args.Key != null
+            && !ent.Comp.KeysIn.Contains(args.Key))
+            return;
+
+        foreach (var key in ent.Comp.CountKeys)
+        {
+            ent.Comp.Counts.TryAdd(key, 0);
+            ent.Comp.Counts[key] += 1;
+        }
     }
 
     private void OnTriggerTileReplace(Entity<TileReplaceOnTriggerComponent> ent, ref TriggerEvent args)
     {
-        if (!_timing.IsFirstTimePredicted)
-            return;
-
         var tgtPos = Transform(ent.Owner);
         if (tgtPos.GridUid is not { } gridUid || !TryComp(gridUid, out MapGridComponent? mapGrid))
             return;
@@ -78,7 +73,6 @@ public sealed partial class GoobTriggerSystem : EntitySystem
                 || !SharedRandomExtensions.PredictedProb(
                     _timing,
                     ent.Comp.Prob,
-                    GetNetEntity(ent.Owner),
                     new NetEntity(SharedRandomExtensions.HashCodeCombine(tile.X, tile.Y, tile.Tile.TypeId))))
                 continue;
 
@@ -120,14 +114,21 @@ public sealed partial class GoobTriggerSystem : EntitySystem
 
     private void OnTriggerOnCounterTrigger(Entity<TriggerOnCounterComponent> ent, ref TriggerEvent args)
     {
-        if (args.Key == null
-            || !ent.Comp.Ranges.TryGetValue(args.Key, out var range)
-            || !TryComp(ent.Owner, out TriggerCounterComponent? counter)
-            || !counter.Counts.TryGetValue(args.Key, out var count)
-            || range.Min < count
-            || range.Max > count)
+        if (args.Key != null && !ent.Comp.KeysIn.Contains(args.Key)
+            || !TryComp(ent.Owner, out TriggerCounterComponent? counter))
             return;
 
-        _trigger.Trigger(ent.Owner, args.User, ent.Comp.KeyOut, args.Predicted);
+        foreach (var (keyOut, (keyIn, range, reset)) in ent.Comp.Counts)
+        {
+            if (!counter.Counts.TryGetValue(keyIn, out var count)
+                || range.Min < count
+                || range.Max > count)
+                continue;
+
+            _trigger.Trigger(ent.Owner, args.User, keyOut, args.Predicted);
+
+            if (reset)
+                counter.Counts[keyIn] = 0;
+        }
     }
 }

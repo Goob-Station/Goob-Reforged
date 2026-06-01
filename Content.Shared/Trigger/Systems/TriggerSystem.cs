@@ -1,3 +1,4 @@
+using Content.Goobstation.Common.Trigger;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Database;
 using Content.Shared.DeviceLinking;
@@ -78,6 +79,12 @@ public sealed partial class TriggerSystem : EntitySystem
 
         var triggerEvent = new TriggerEvent(user, key, predicted);
         RaiseLocalEvent(trigger, ref triggerEvent, true);
+
+        // Goobstation edit start
+        var afterTriggerEvent = new AfterTriggerEvent(user, key, predicted, triggerEvent.Handled);
+        RaiseLocalEvent(trigger, ref afterTriggerEvent, true);
+        // Goobstation edit end
+
         return triggerEvent.Handled;
     }
 

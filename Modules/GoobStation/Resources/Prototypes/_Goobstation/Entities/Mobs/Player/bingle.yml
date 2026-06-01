@@ -171,7 +171,6 @@
         Structural: 28
         Ion: 7
   - type: Damageable
-    damageContainer: Biological
     damageModifierSet: BingleUpgraded
 
 # Skin - turkle
