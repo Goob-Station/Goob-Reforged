@@ -22,7 +22,7 @@
     layers:
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: alive
-    - map: ["enum.CombatModeLayers.Layer"]
+    - map: ["enum.CombatModeVisuals.Layer"]
       state: combat
       visible: false
   - type: MobThresholds
@@ -120,7 +120,7 @@
   - type: GenericVisualizer
     visuals:
       enum.CombatModeVisuals.Combat:
-        enum.CombatModeLayers.Layer:
+        enum.CombatModeVisuals.Layer:
           True: { visible: true }
           False: { visible: false }
   - type: Tag
@@ -139,7 +139,7 @@
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base", "movement" ]
       state: Upgraded
-    - map: [ "enum.CombatModeLayers.Layer" ]
+    - map: [ "enum.CombatModeVisuals.Layer" ]
       state: combat
       visible: false
   - type: DamageStateVisuals
@@ -185,7 +185,7 @@
     layers:
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: alive
-    - map: ["enum.CombatModeLayers.Layer"]
+    - map: ["enum.CombatModeVisuals.Layer"]
       state: combat
       visible: false
   #- type: NightVision
@@ -212,7 +212,7 @@
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base", "movement" ]
       state: Upgraded
-    - map: [ "enum.CombatModeLayers.Layer" ]
+    - map: [ "enum.CombatModeVisuals.Layer" ]
       state: combat
       visible: false
 

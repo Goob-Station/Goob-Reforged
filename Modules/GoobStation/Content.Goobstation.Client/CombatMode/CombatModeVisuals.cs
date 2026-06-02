@@ -3,9 +3,5 @@
 public enum CombatModeVisuals
 {
     Combat,
-}
-
-public enum CombatModeLayers
-{
     Layer,
 }
