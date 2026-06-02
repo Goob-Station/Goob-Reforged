@@ -28,5 +28,5 @@
   <Import Project="..\RobustToolbox\Imports\Shared.props" />
   <Import Project="..\RobustToolbox\Imports\Testing.props" />
 
-  <Import Project="..\MSBuild\TestModules.targets" />
+  <Import Project="..\MSBuild\AllModules.targets" />
 </Project>

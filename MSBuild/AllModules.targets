@@ -1,9 +1,12 @@
 ﻿<Project>
-  <!-- Module loading for all Content Test projects -->
+  <!-- Module loading for all modules -->
 
   <Target Name="CompileAndCopyModules" AfterTargets="Build">
     <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.IntegrationTests.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
     </ItemGroup>
 
     <MSBuild Projects="@(ModuleProjects)"

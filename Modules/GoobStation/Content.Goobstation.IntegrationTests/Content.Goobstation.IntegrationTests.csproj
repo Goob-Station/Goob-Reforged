@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputPath>..\..\..\bin\Content.IntegrationTests\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <Import Project="../../../MSBuild/Content.props" />
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Content.IntegrationTests\Content.IntegrationTests.csproj" />
@@ -12,10 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Content.Goobstation.Client\Content.Goobstation.Client.csproj" />
-    <ProjectReference Include="..\Content.Goobstation.Client.UIKit\Content.Goobstation.Client.UIKit.csproj" />
     <ProjectReference Include="..\Content.Goobstation.Server\Content.Goobstation.Server.csproj" />
-    <ProjectReference Include="..\Content.Goobstation.Server.Database\Content.Goobstation.Server.Database.csproj" />
-    <ProjectReference Include="..\Content.Goobstation.Shared\Content.Goobstation.Shared.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />

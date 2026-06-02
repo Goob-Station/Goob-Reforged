@@ -35,6 +35,7 @@
     <File Path="MSBuild/Content.props" />
     <File Path="MSBuild/ClientModules.targets" />
     <File Path="MSBuild/ServerModules.targets" />
+    <File Path="MSBuild/AllModules.targets" />
     <File Path="MSBuild/TestModules.targets" />
   </Folder>
   <Folder Name="/Project Files/">
