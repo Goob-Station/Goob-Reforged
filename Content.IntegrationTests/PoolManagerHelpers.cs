@@ -1,20 +1,13 @@
-using Content.Benchmarks;
-using Content.IntegrationTests;
+﻿namespace Content.IntegrationTests;
 
-namespace Content.Goobstation.IntegrationTests;
-
-[SetUpFixture]
-public sealed class PoolManagerTestEventHandler
+public static class PoolManagerHelpers
 {
     // This value is completely arbitrary.
     private static TimeSpan MaximumTotalTestingTimeLimit => TimeSpan.FromMinutes(30);
     private static TimeSpan HardStopTimeLimit => MaximumTotalTestingTimeLimit.Add(TimeSpan.FromMinutes(1));
 
-    [OneTimeSetUp]
-    public void Setup()
+    public static void Setup()
     {
-        // TODO generalize this code for all modular integration tests
-        IntegrationTestHelpers.ChangeRootDir("../../../");
         PoolManager.Startup();
         // If the tests seem to be stuck, we try to end it semi-nicely
         _ = Task.Delay(MaximumTotalTestingTimeLimit).ContinueWith(_ =>
@@ -30,11 +23,5 @@ public sealed class PoolManagerTestEventHandler
             var deathReport = PoolManager.DeathReport();
             Environment.FailFast($"Tests are TAKING TOO LONG!\n Death Report:\n{deathReport}");
         });
-    }
-
-    [OneTimeTearDown]
-    public void TearDown()
-    {
-        PoolManager.Shutdown();
     }
 }
