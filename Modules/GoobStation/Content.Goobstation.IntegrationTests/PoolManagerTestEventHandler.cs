@@ -1,3 +1,4 @@
+using Content.Benchmarks;
 using Content.IntegrationTests;
 
 namespace Content.Goobstation.IntegrationTests;
@@ -12,6 +13,8 @@ public sealed class PoolManagerTestEventHandler
     [OneTimeSetUp]
     public void Setup()
     {
+        // TODO this is a super dumb hack in order to be able to launch from /Modules folder
+        IntegrationTestHelpers.ChangeRootDir("../../../");
         PoolManager.Startup();
         // If the tests seem to be stuck, we try to end it semi-nicely
         _ = Task.Delay(MaximumTotalTestingTimeLimit).ContinueWith(_ =>

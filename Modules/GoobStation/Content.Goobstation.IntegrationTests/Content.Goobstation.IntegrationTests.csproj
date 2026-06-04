@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Content.Benchmarks\Content.Benchmarks.csproj" />
     <ProjectReference Include="..\..\..\Content.IntegrationTests\Content.IntegrationTests.csproj" />
   </ItemGroup>
 

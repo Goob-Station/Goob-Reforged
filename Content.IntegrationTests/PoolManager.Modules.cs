@@ -68,7 +68,13 @@ public static partial class PoolManager
         var dir = Path.GetDirectoryName(CurrentAssembly.Location);
         if (string.IsNullOrEmpty(dir))
             return;
-        var modulesPath = Path.Combine(dir, "..", "..", "Modules");
+
+        // If we are already in the Modules/ folder, the path should be different
+        var isModule = File.Exists(Path.Combine(dir, "..", "..", "..", "module.yml"));
+        var modulesPath = isModule
+                ? Path.Combine(dir, "..", "..", "..", "..", "..", "Modules")
+                : Path.Combine(dir, "..", "..", "Modules");
+
         if (Directory.Exists(modulesPath))
             LoadModulesFromDirectory(modulesPath, dir);
     }
