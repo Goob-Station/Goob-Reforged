@@ -1137,7 +1137,7 @@
 
 - type: entity
   abstract: true
-  parent: BaseMobRuminant
+  parent: [BaseMobRuminant, BaseSlicingRefinable]
   id: MobSheepBase
   name: sheepBase
   description: A sheep.
@@ -1220,8 +1220,8 @@
     solution: wool
     requiresSpecialDigestion: true
     requireDead: false
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 4
   - type: Grammar
