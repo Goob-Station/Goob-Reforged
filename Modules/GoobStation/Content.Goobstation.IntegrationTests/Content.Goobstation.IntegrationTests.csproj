@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Content.Benchmarks\Content.Benchmarks.csproj" />
-    <ProjectReference Include="..\..\..\Content.IntegrationTests\Content.IntegrationTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,5 +28,6 @@
   <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
   <Import Project="..\..\..\RobustToolbox\Imports\Testing.props" />
 
+  <Import Project="..\..\..\MSBuild\AllModules.targets" />
   <Import Project="..\..\..\MSBuild\TestModules.targets" />
 </Project>
