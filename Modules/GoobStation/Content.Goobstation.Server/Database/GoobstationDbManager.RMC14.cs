@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Content.Server.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Content.Goobstation.Server.Database;
 
 public sealed partial class GoobstationDbManager
 {
-public async Task<Guid?> GetLinkingCode(Guid player)
+    public async Task<Guid?> GetLinkingCode(Guid player)
     {
         await using var ctx = CreateContext();
         var linking = await ctx.RMCLinkingCodes.FirstOrDefaultAsync(l => l.PlayerId == player);

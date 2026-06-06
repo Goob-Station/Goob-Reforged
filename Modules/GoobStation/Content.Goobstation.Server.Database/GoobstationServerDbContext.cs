@@ -32,7 +32,7 @@ public abstract class GoobstationServerDbContext : DbContext
         // RMC14
         modelBuilder.Entity<RMCLinkedAccount>()
             .HasOne(l => l.Player)
-            .WithOne(p => p.LinkedAccount)
+            .WithOne()
             .HasForeignKey<RMCLinkedAccount>(l => l.PlayerId)
             .HasPrincipalKey<Player>(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
@@ -46,7 +46,7 @@ public abstract class GoobstationServerDbContext : DbContext
 
         modelBuilder.Entity<RMCPatron>()
             .HasOne(p => p.Player)
-            .WithOne(p => p.Patron)
+            .WithOne()
             .HasForeignKey<RMCPatron>(p => p.PlayerId)
             .HasPrincipalKey<Player>(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
@@ -64,14 +64,14 @@ public abstract class GoobstationServerDbContext : DbContext
 
         modelBuilder.Entity<RMCLinkingCodes>()
             .HasOne(l => l.Player)
-            .WithOne(p => p.LinkingCodes)
+            .WithOne()
             .HasForeignKey<RMCLinkingCodes>(l => l.PlayerId)
             .HasPrincipalKey<Player>(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<RMCLinkedAccountLogs>()
             .HasOne(l => l.Player)
-            .WithMany(p => p.LinkedAccountLogs)
+            .WithMany()
             .HasForeignKey(l => l.PlayerId)
             .HasPrincipalKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);

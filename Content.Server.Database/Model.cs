@@ -539,12 +539,6 @@ namespace Content.Server.Database
         public List<Ban> AdminServerBansCreated { get; set; } = null!;
         public List<Ban> AdminServerBansLastEdited { get; set; } = null!;
         public List<RoleWhitelist> JobWhitelists { get; set; } = null!;
-
-        // RMC14
-        public RMCLinkedAccount? LinkedAccount { get; set; }
-        public RMCPatron? Patron { get; set; }
-        public RMCLinkingCodes? LinkingCodes { get; set; }
-        public List<RMCLinkedAccountLogs> LinkedAccountLogs { get; set; } = default!;
     }
 
     [Table("whitelist")]
