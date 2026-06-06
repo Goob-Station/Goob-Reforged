@@ -174,7 +174,7 @@ public static class ServerPackaging
         if (string.IsNullOrEmpty(path))
             path = ".";
 
-        var modules = new List<string> { "Content.Server.Database", "Content.Server", "Content.Shared", "Content.Shared.Database", "ContentModuleManager" };
+        var modules = new List<string> { "Content.Server.Database", "Content.Server", "Content.Shared", "Content.Common", "Content.Shared.Database", "ContentModuleManager" };
 
         var coreDepsPath = Path.Combine(path, "bin", "Content.Server", "Content.Server.deps.json");
 
