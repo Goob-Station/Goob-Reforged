@@ -4,12 +4,12 @@ using Robust.Shared.Network;
 
 namespace Content.Goobstation.Shared.EntityEffects.Effects.Visuals;
 
-public sealed partial class ScaleSpriteEntityEffectSystem : EntityEffectSystem<TransformComponent, ScaleSprite>
+public sealed partial class ScaleSpriteEntityEffectSystem : EntityEffectSystem<MetaDataComponent, ScaleSprite>
 {
     [Dependency] private SharedScaleVisualsSystem _scale = default!;
     [Dependency] private INetManager _net = default!;
 
-    protected override void Effect(Entity<TransformComponent> entity, ref EntityEffectEvent<ScaleSprite> args)
+    protected override void Effect(Entity<MetaDataComponent> entity, ref EntityEffectEvent<ScaleSprite> args)
     {
         if (!_net.IsServer)
             return; // It breaks in prediction
