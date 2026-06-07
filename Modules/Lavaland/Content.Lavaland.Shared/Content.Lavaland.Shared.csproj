@@ -10,7 +10,7 @@
   <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" />
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>
