@@ -1,6 +1,6 @@
 using Robust.Shared.GameStates;
 
-namespace Content.Goobstation.Shared.GPS.Components;
+namespace Content.GoobStation.Shared.GPS.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true, true)]
 public sealed partial class GPSComponent : Component

@@ -1,6 +1,6 @@
 using Robust.Client;
 
-namespace Content.Goobstation.Client.UIKit;
+namespace Content.GoobStation.Client.UIKit;
 
 internal sealed class Program
 {

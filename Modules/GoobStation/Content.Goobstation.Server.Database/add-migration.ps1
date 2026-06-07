@@ -8,5 +8,5 @@ if ($name -eq "")
     exit
 }
 
-dotnet ef migrations add --context GoobstationSqliteServerDbContext -o Migrations/Sqlite $name
-dotnet ef migrations add --context GoobstationPostgresServerDbContext -o Migrations/Postgres $name
+dotnet ef migrations add --context GoobStationSqliteServerDbContext -o Migrations/Sqlite $name
+dotnet ef migrations add --context GoobStationPostgresServerDbContext -o Migrations/Postgres $name

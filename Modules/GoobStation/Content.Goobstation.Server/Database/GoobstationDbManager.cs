@@ -10,12 +10,12 @@ using Npgsql;
 using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
 
-namespace Content.Goobstation.Server.Database;
+namespace Content.GoobStation.Server.Database;
 
 /// <summary>
 /// Your shitty database-related ideas, now in goobmod!
 /// </summary>
-public interface IGoobstationDbManager
+public interface IGoobStationDbManager
 {
     void Init();
     void Shutdown();
@@ -24,7 +24,7 @@ public interface IGoobstationDbManager
     Task RemoveNetspeakWordAsync(string keyword);
 }
 
-public sealed partial class GoobstationDbManager : IGoobstationDbManager
+public sealed partial class GoobStationDbManager : IGoobStationDbManager
 {
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IResourceManager _res = default!;
@@ -55,8 +55,8 @@ public sealed partial class GoobstationDbManager : IGoobstationDbManager
         var finalPath = _res.UserData.RootDir is { } root
                 ? Path.Combine(root, path)
                 : ":memory:";
-        _sawmill.Debug($"Goobstation DB running on {finalPath}");
-        var builder = new DbContextOptionsBuilder<GoobstationSqliteServerDbContext>();
+        _sawmill.Debug($"GoobStation DB running on {finalPath}");
+        var builder = new DbContextOptionsBuilder<GoobStationSqliteServerDbContext>();
         builder.UseSqlite($"Data Source={finalPath}",
                 sqliteOptions =>
                     sqliteOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory"));
@@ -84,8 +84,8 @@ public sealed partial class GoobstationDbManager : IGoobstationDbManager
                 Password = pass,
             }.ConnectionString;
 
-        _sawmill.Debug($"Using Goobstation Postgres schema at {host}:{port}/{db}");
-        var builder = new DbContextOptionsBuilder<GoobstationPostgresServerDbContext>();
+        _sawmill.Debug($"Using GoobStation Postgres schema at {host}:{port}/{db}");
+        var builder = new DbContextOptionsBuilder<GoobStationPostgresServerDbContext>();
         builder.UseNpgsql(connString,
                 npgsqlOptions =>
                     npgsqlOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory", "goobstation"));
@@ -93,10 +93,10 @@ public sealed partial class GoobstationDbManager : IGoobstationDbManager
         return true;
     }
 
-    private GoobstationServerDbContext CreateContext() => _isPostgres switch
+    private GoobStationServerDbContext CreateContext() => _isPostgres switch
     {
-        true => new GoobstationPostgresServerDbContext((DbContextOptions<GoobstationPostgresServerDbContext>)_options!),
-        false => new GoobstationSqliteServerDbContext((DbContextOptions<GoobstationSqliteServerDbContext>)_options!)
+        true => new GoobStationPostgresServerDbContext((DbContextOptions<GoobStationPostgresServerDbContext>)_options!),
+        false => new GoobStationSqliteServerDbContext((DbContextOptions<GoobStationSqliteServerDbContext>)_options!)
     };
 
     public async Task<List<NetspeakWord>> GetNetspeakWordsAsync()

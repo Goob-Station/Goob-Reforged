@@ -1,6 +1,6 @@
 ﻿using Robust.Shared.ContentPack;
 
-namespace Content.Goobstation.Common.Entry;
+namespace Content.GoobStation.Common.Entry;
 
 public sealed class EntryPoint : GameShared
 {

@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Content.Goobstation.Client\Content.Goobstation.Client.csproj" />
-    <ProjectReference Include="..\Content.Goobstation.Server\Content.Goobstation.Server.csproj" />
+    <ProjectReference Include="..\Content.GoobStation.Client\Content.GoobStation.Client.csproj" />
+    <ProjectReference Include="..\Content.GoobStation.Server\Content.GoobStation.Server.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />

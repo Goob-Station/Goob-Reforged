@@ -4,7 +4,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
 
-namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
+namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
 
 public sealed class TooltipTextureRect : TextureRect
 {

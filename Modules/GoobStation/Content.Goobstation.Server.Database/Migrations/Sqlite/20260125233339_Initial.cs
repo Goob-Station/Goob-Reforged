@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Content.Goobstation.Server.Database.Migrations.Sqlite
+namespace Content.GoobStation.Server.Database.Migrations.Sqlite
 {
     /// <inheritdoc />
     public partial class Initial : Migration

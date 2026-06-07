@@ -3,7 +3,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 using Robust.Shared.Utility;
 
-namespace Content.Goobstation.Shared.Particles;
+namespace Content.GoobStation.Shared.Particles;
 
 /// <summary>
 /// Keyframe for a float-over-lifetime curve. Time is normalised 0–1.

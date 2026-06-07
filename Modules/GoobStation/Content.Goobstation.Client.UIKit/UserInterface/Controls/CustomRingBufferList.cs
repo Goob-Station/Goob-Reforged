@@ -2,7 +2,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using Robust.Shared.Utility;
 
-namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
+namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
 
 public sealed class CustomRingBufferList<T> : IList<T>
 {

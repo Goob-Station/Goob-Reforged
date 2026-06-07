@@ -5,7 +5,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Content.Goobstation.Server.Database;
+namespace Content.GoobStation.Server.Database;
 
 [Table("netspeak_words")]
 public class NetspeakWord

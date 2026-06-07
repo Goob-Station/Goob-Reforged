@@ -1,5 +1,5 @@
 <ui:GpsWindow xmlns="https://spacestation14.io"
-            xmlns:ui="clr-namespace:Content.Goobstation.Client.GPS"
+            xmlns:ui="clr-namespace:Content.GoobStation.Client.GPS"
             xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
             SetWidth="400" SetHeight="670"
             Resizable="False"

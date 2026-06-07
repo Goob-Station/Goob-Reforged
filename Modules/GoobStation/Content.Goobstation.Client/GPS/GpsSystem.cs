@@ -1,7 +1,7 @@
-﻿using Content.Goobstation.Shared.GPS;
-using Content.Goobstation.Shared.GPS.Components;
+﻿using Content.GoobStation.Shared.GPS;
+using Content.GoobStation.Shared.GPS.Components;
 
-namespace Content.Goobstation.Client.GPS;
+namespace Content.GoobStation.Client.GPS;
 
 public sealed class GpsSystem : SharedGpsSystem
 {

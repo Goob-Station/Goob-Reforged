@@ -7,7 +7,7 @@ using Robust.Client.UserInterface.RichText;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
-namespace Content.Goobstation.Client.UIKit.UserInterface.RichText;
+namespace Content.GoobStation.Client.UIKit.UserInterface.RichText;
 
 public sealed partial class IconTag : IMarkupTagHandler
 {

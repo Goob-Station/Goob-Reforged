@@ -4,7 +4,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Input;
 using Robust.Shared.Prototypes;
 
-namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
+namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
 
 public sealed class ThunderdomeWeaponCard : PanelContainer
 {

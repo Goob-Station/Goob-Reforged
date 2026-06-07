@@ -1,6 +1,6 @@
 ﻿using Content.IntegrationTests.Fixtures;
 
-namespace Content.Goobstation.IntegrationTests;
+namespace Content.GoobStation.IntegrationTests;
 
 [TestFixture]
 public sealed partial class GoobTest : GameTest

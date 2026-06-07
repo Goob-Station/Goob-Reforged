@@ -3,7 +3,7 @@ namespace Content.IntegrationTests;
 [SetUpFixture]
 public sealed class PoolManagerTestEventHandler
 {
-    // Goobstation edit - migrated the code to PoolManagerHelpers
+    // GoobStation edit - migrated the code to PoolManagerHelpers
 
     [OneTimeSetUp]
     public void Setup()

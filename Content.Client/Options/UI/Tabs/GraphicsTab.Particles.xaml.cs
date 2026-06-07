@@ -1,4 +1,4 @@
-using Content.Goobstation.Common.ConVars;
+using Content.GoobStation.Common.ConVars;
 using Robust.Shared.Configuration;
 
 namespace Content.Client.Options.UI.Tabs;

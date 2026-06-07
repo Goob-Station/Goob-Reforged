@@ -2,7 +2,7 @@ using System.Numerics;
 using Robust.Client.UserInterface.Controls;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 
-namespace Content.Goobstation.Client.UIKit.UserActions.Controls;
+namespace Content.GoobStation.Client.UIKit.UserActions.Controls;
 
 [Virtual]
 [PublicAPI]

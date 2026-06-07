@@ -1,6 +1,6 @@
-using Content.Goobstation.Shared.Particles;
+using Content.GoobStation.Shared.Particles;
 
-namespace Content.Goobstation.Client.Particles;
+namespace Content.GoobStation.Client.Particles;
 
 /// <summary>
 /// Spawns a particle effect on this client when an entity with

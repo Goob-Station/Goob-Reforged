@@ -10,20 +10,20 @@ resources:
   - Resources
 
 projects:
-  - path: Content.Goobstation.Common
+  - path: Content.GoobStation.Common
     role: Common
 
-  - path: Content.Goobstation.Shared
+  - path: Content.GoobStation.Shared
     role: Shared
 
-  - path: Content.Goobstation.Server
+  - path: Content.GoobStation.Server
     role: Server
 
-  - path: Content.Goobstation.Server.Database
+  - path: Content.GoobStation.Server.Database
     role: Server
 
-  - path: Content.Goobstation.Client
+  - path: Content.GoobStation.Client
     role: Client
 
-  - path: Content.Goobstation.Client.UIKit
+  - path: Content.GoobStation.Client.UIKit
     role: Client

@@ -1,9 +1,9 @@
 using System.Numerics;
-using Content.Goobstation.Shared.Particles;
+using Content.GoobStation.Shared.Particles;
 using Robust.Client.Graphics;
 using Robust.Shared.Map;
 
-namespace Content.Goobstation.Client.Particles;
+namespace Content.GoobStation.Client.Particles;
 
 /// <summary>
 /// A running particle emitter and its live particle pool.

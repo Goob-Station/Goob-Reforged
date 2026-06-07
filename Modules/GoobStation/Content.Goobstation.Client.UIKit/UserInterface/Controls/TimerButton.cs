@@ -1,7 +1,7 @@
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
 
-namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
+namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
 
 public sealed partial class TimerButton : Button
 {

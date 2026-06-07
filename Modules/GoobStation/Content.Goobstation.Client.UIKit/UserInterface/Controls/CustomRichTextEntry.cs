@@ -1,6 +1,6 @@
 using System.Numerics;
 using System.Text;
-using Content.Goobstation.Client.UIKit.UserInterface.RichText;
+using Content.GoobStation.Client.UIKit.UserInterface.RichText;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
@@ -9,7 +9,7 @@ using Robust.Client.UserInterface.RichText;
 using Robust.Shared.Collections;
 using Robust.Shared.Utility;
 
-namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
+namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
 
 internal struct CustomRichTextEntry
 {

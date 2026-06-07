@@ -8,31 +8,31 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using SQLitePCL;
 
-namespace Content.Goobstation.Server.Database;
+namespace Content.GoobStation.Server.Database;
 
-public sealed class GoobstationDesignTimeContextFactoryPostgres : IDesignTimeDbContextFactory<GoobstationPostgresServerDbContext>
+public sealed class GoobStationDesignTimeContextFactoryPostgres : IDesignTimeDbContextFactory<GoobStationPostgresServerDbContext>
 {
-    public GoobstationPostgresServerDbContext CreateDbContext(string[] args)
+    public GoobStationPostgresServerDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<GoobstationPostgresServerDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<GoobStationPostgresServerDbContext>();
         optionsBuilder.UseNpgsql("Server=localhost", npgsqlOptions =>
             npgsqlOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory", "goobstation"));
-        return new GoobstationPostgresServerDbContext(optionsBuilder.Options);
+        return new GoobStationPostgresServerDbContext(optionsBuilder.Options);
     }
 }
 
-public sealed class GoobstationDesignTimeContextFactorySqlite : IDesignTimeDbContextFactory<GoobstationSqliteServerDbContext>
+public sealed class GoobStationDesignTimeContextFactorySqlite : IDesignTimeDbContextFactory<GoobStationSqliteServerDbContext>
 {
-    public GoobstationSqliteServerDbContext CreateDbContext(string[] args)
+    public GoobStationSqliteServerDbContext CreateDbContext(string[] args)
     {
 #if !USE_SYSTEM_SQLITE
         raw.SetProvider(new SQLite3Provider_e_sqlite3());
 #endif
 
-        var optionsBuilder = new DbContextOptionsBuilder<GoobstationSqliteServerDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<GoobStationSqliteServerDbContext>();
         optionsBuilder.UseSqlite("Data Source=:memory:", sqliteOptions =>
             sqliteOptions.MigrationsHistoryTable("__GoobEFMigrationsHistory"));
-        return new GoobstationSqliteServerDbContext(optionsBuilder.Options);
+        return new GoobStationSqliteServerDbContext(optionsBuilder.Options);
     }
 }
 

@@ -5,5 +5,5 @@ if [ -z "$1" ] ; then
     exit 1
 fi
 
-dotnet ef migrations add --context GoobstationSqliteServerDbContext -o Migrations/Sqlite "$1"
-dotnet ef migrations add --context GoobstationPostgresServerDbContext -o Migrations/Postgres "$1"
+dotnet ef migrations add --context GoobStationSqliteServerDbContext -o Migrations/Sqlite "$1"
+dotnet ef migrations add --context GoobStationPostgresServerDbContext -o Migrations/Postgres "$1"
