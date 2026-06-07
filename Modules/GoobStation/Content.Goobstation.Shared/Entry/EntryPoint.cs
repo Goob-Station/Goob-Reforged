@@ -4,10 +4,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.GoobStation.Shared.IoC;
+using Content.Goobstation.Shared.IoC;
 using Robust.Shared.ContentPack;
 
-namespace Content.GoobStation.Shared.Entry;
+namespace Content.Goobstation.Shared.Entry;
 
 public sealed class EntryPoint : GameShared
 {

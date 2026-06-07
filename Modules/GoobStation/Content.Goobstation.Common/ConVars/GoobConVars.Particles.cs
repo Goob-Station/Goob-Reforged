@@ -1,6 +1,6 @@
 ﻿using Robust.Shared.Configuration;
 
-namespace Content.GoobStation.Common.ConVars;
+namespace Content.Goobstation.Common.ConVars;
 
 public sealed partial class GoobConVars
 {

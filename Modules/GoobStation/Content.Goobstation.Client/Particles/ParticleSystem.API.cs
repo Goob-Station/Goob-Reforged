@@ -1,8 +1,8 @@
-using Content.GoobStation.Shared.Particles;
+using Content.Goobstation.Shared.Particles;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
-namespace Content.GoobStation.Client.Particles;
+namespace Content.Goobstation.Client.Particles;
 
 public sealed partial class ParticleSystem
 {

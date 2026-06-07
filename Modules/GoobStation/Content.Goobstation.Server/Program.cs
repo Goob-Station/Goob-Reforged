@@ -4,7 +4,7 @@
 
 using Robust.Server;
 
-namespace Content.GoobStation.Server;
+namespace Content.Goobstation.Server;
 
 internal static class Program
 {

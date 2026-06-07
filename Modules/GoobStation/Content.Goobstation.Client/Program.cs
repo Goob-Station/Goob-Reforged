@@ -4,7 +4,7 @@
 
 using Robust.Client;
 
-namespace Content.GoobStation.Client;
+namespace Content.Goobstation.Client;
 
 internal sealed class Program
 {

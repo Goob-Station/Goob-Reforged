@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Content.GoobStation.Shared.Particles;
+namespace Content.Goobstation.Shared.Particles;
 
 /// <summary>
 /// Per-emitter runtime overrides for <see cref="ParticleEffectPrototype"/> fields.

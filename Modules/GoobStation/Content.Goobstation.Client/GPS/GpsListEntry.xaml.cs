@@ -3,7 +3,7 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 
-namespace Content.GoobStation.Client.GPS;
+namespace Content.Goobstation.Client.GPS;
 
 [GenerateTypedNameReferences]
 public sealed partial class GpsListEntry : Button

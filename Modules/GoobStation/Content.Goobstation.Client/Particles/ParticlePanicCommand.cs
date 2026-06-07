@@ -1,7 +1,7 @@
 using Content.Shared.Administration;
 using Robust.Shared.Console;
 
-namespace Content.GoobStation.Client.Particles;
+namespace Content.Goobstation.Client.Particles;
 
 /// <summary>
 /// Immediately kills all active particle emitters and their live particles.

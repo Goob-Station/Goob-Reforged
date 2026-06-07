@@ -1,6 +1,6 @@
 using Robust.Client.UserInterface.RichText;
 
-namespace Content.GoobStation.Client.UIKit.UserInterface.RichText;
+namespace Content.Goobstation.Client.UIKit.UserInterface.RichText;
 
 public sealed class ExamineBorderTag : IMarkupTagHandler
 {

@@ -21,7 +21,7 @@ using Content.Shared.Damage.Components;
 
 namespace Content.Server.Shuttles.Systems;
 
-// shuttle impact damage ported from GoobStation (AGPLv3) with agreement of all coders involved
+// shuttle impact damage ported from Goobstation (AGPLv3) with agreement of all coders involved
 public sealed partial class ShuttleSystem
 {
     [Dependency] private EntityQuery<DamageableComponent> _damageableQuery = default!;

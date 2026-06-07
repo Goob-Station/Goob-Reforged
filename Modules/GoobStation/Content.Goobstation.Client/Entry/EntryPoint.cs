@@ -7,11 +7,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.GoobStation.Client.IoC;
+using Content.Goobstation.Client.IoC;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Timing;
 
-namespace Content.GoobStation.Client.Entry;
+namespace Content.Goobstation.Client.Entry;
 
 public sealed class EntryPoint : GameClient
 {

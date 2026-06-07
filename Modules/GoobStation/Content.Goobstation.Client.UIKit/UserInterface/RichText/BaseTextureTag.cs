@@ -1,12 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using Content.GoobStation.Client.UIKit.UserInterface.Controls;
+using Content.Goobstation.Client.UIKit.UserInterface.Controls;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Shared.Prototypes;
 
-namespace Content.GoobStation.Client.UIKit.UserInterface.RichText;
+namespace Content.Goobstation.Client.UIKit.UserInterface.RichText;
 
 public abstract partial class BaseTextureTag
 {

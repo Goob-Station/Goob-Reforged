@@ -58,11 +58,11 @@ jobs:
         $env:DOTNET_gcServer=1
         dotnet test --no-build --configuration Debug Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 
-    - name: Run Content.GoobStation.IntegrationTests
+    - name: Run Content.Goobstation.IntegrationTests
       shell: pwsh
       run: |
         $env:DOTNET_gcServer=1
-        dotnet test --no-build --configuration Debug Modules/GoobStation/Content.GoobStation.IntegrationTests/Content.GoobStation.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+        dotnet test --no-build --configuration Debug Modules/Goobstation/Content.Goobstation.IntegrationTests/Content.Goobstation.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 
     - name: Run Content.Lavaland.IntegrationTests
       shell: pwsh

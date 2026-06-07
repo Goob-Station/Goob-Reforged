@@ -1,6 +1,6 @@
 using System.Numerics;
-using Content.GoobStation.Common.ConVars;
-using Content.GoobStation.Shared.Particles;
+using Content.Goobstation.Common.ConVars;
+using Content.Goobstation.Shared.Particles;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
@@ -12,7 +12,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Serialization.TypeSerializers.Implementations;
 using Robust.Shared.Utility;
 
-namespace Content.GoobStation.Client.Particles;
+namespace Content.Goobstation.Client.Particles;
 
 /// <summary>
 /// Manages active particle emitters on the client, including their simulation and rendering.

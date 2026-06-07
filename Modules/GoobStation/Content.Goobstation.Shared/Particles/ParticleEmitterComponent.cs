@@ -1,6 +1,6 @@
 using Robust.Shared.Prototypes;
 
-namespace Content.GoobStation.Shared.Particles;
+namespace Content.Goobstation.Shared.Particles;
 
 /// <summary>
 /// Spawns a particle effect on this entity when it initializes.

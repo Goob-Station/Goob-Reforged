@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-namespace Content.GoobStation.Client.IoC;
+namespace Content.Goobstation.Client.IoC;
 
 internal static class ClientGoobContentIoc
 {

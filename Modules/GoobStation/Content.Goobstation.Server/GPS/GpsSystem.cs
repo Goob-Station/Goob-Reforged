@@ -1,10 +1,10 @@
 using Content.Shared.Pinpointer;
-using Content.GoobStation.Shared.GPS;
-using Content.GoobStation.Shared.GPS.Components;
+using Content.Goobstation.Shared.GPS;
+using Content.Goobstation.Shared.GPS.Components;
 using System.Linq;
 using Robust.Shared.Random;
 
-namespace Content.GoobStation.Server.GPS;
+namespace Content.Goobstation.Server.GPS;
 
 public sealed partial class GpsSystem : SharedGpsSystem
 {

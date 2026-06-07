@@ -1,12 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using Content.GoobStation.Client.UIKit.UserInterface.Controls;
+using Content.Goobstation.Client.UIKit.UserInterface.Controls;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.RichText;
 using Robust.Shared.Map;
 using Robust.Shared.Utility;
 
-namespace Content.GoobStation.Client.UIKit.UserInterface.RichText;
+namespace Content.Goobstation.Client.UIKit.UserInterface.RichText;
 
 public sealed partial class ButtonTag : IMarkupTagHandler
 {

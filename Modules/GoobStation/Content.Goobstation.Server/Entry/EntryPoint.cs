@@ -5,16 +5,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.GoobStation.Server.Database;
-using Content.GoobStation.Server.IoC;
+using Content.Goobstation.Server.Database;
+using Content.Goobstation.Server.IoC;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Timing;
 
-namespace Content.GoobStation.Server.Entry;
+namespace Content.Goobstation.Server.Entry;
 
 public sealed class EntryPoint : GameServer
 {
-    private IGoobStationDbManager _db = default!;
+    private IGoobstationDbManager _db = default!;
 
     public override void Init()
     {
@@ -22,7 +22,7 @@ public sealed class EntryPoint : GameServer
         ServerGoobContentIoC.Register();
         IoCManager.BuildGraph();
 
-        _db = IoCManager.Resolve<IGoobStationDbManager>();
+        _db = IoCManager.Resolve<IGoobstationDbManager>();
         _db.Init();
     }
 

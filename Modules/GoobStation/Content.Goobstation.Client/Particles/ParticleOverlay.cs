@@ -3,7 +3,7 @@ using Robust.Client.Graphics;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
 
-namespace Content.GoobStation.Client.Particles;
+namespace Content.Goobstation.Client.Particles;
 
 /// <summary>
 /// Draws all live particles for every active emitter each frame.

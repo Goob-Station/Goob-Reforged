@@ -4,7 +4,7 @@
 
 using Robust.Shared.Configuration;
 
-namespace Content.GoobStation.Common.ConVars;
+namespace Content.Goobstation.Common.ConVars;
 
 [CVarDefs]
 public sealed partial class GoobConVars

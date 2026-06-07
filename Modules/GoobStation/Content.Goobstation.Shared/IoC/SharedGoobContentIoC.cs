@@ -1,4 +1,4 @@
-﻿namespace Content.GoobStation.Shared.IoC;
+﻿namespace Content.Goobstation.Shared.IoC;
 
 internal static class SharedGoobContentIoC
 {

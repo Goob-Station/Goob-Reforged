@@ -5,7 +5,7 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Shared.Utility;
 
-namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
+namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
 
 [Virtual]
 public class StaticSpriteView : Control

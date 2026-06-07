@@ -1,10 +1,10 @@
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
-using Content.GoobStation.Shared.Particles;
+using Content.Goobstation.Shared.Particles;
 using Robust.Client.GameObjects;
 using Robust.Shared.Prototypes;
 
-namespace Content.GoobStation.Client.Particles.Visuals;
+namespace Content.Goobstation.Client.Particles.Visuals;
 
 /// <summary>
 /// Particles when entities are on fire.

@@ -2,7 +2,7 @@ using System.Text;
 using Robust.Client.Graphics;
 using Robust.Shared.Utility;
 
-namespace Content.GoobStation.Client.UIKit.UserInterface.Controls;
+namespace Content.Goobstation.Client.UIKit.UserInterface.Controls;
 
 /// <summary>
 /// Helper utility struct for word-wrapping calculations.

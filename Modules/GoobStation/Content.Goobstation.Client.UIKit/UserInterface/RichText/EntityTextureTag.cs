@@ -3,7 +3,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.RichText;
 using Robust.Shared.Utility;
 
-namespace Content.GoobStation.Client.UIKit.UserInterface.RichText;
+namespace Content.Goobstation.Client.UIKit.UserInterface.RichText;
 
 public sealed class EntityTextureTag : BaseTextureTag, IMarkupTagHandler
 {

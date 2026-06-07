@@ -1,7 +1,7 @@
 using Content.Shared.EntityEffects;
 using Robust.Shared.Prototypes;
 
-namespace Content.GoobStation.Shared.Particles;
+namespace Content.Goobstation.Shared.Particles;
 
 /// <summary>
 /// Spawns particles at the current position of the entity.

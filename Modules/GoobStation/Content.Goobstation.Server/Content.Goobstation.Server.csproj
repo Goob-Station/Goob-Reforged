@@ -16,9 +16,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Content.Server\Content.Server.csproj" />
-    <ProjectReference Include="..\Content.GoobStation.Common\Content.GoobStation.Common.csproj" />
-    <ProjectReference Include="..\Content.GoobStation.Server.Database\Content.GoobStation.Server.Database.csproj" />
-    <ProjectReference Include="..\Content.GoobStation.Shared\Content.GoobStation.Shared.csproj" />
+    <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />
+    <ProjectReference Include="..\Content.Goobstation.Server.Database\Content.Goobstation.Server.Database.csproj" />
+    <ProjectReference Include="..\Content.Goobstation.Shared\Content.Goobstation.Shared.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\..\RobustToolbox\Imports\Lidgren.props" />

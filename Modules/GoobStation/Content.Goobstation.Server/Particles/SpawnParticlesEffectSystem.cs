@@ -1,5 +1,5 @@
-using Content.GoobStation.Shared.Particles;
+using Content.Goobstation.Shared.Particles;
 
-namespace Content.GoobStation.Server.Particles;
+namespace Content.Goobstation.Server.Particles;
 
 public sealed class SpawnParticlesEffectSystem : SharedSpawnParticlesEffectSystem;

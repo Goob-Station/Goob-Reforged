@@ -192,4 +192,4 @@ public sealed class InventoryRelayedEvent<TEvent> : EntityEventArgs
     }
 }
 
-// GoobStation edit - moved IClothingSlots and IInventoryRelayEvent to Content.Common
+// Goobstation edit - moved IClothingSlots and IInventoryRelayEvent to Content.Common

@@ -1,7 +1,7 @@
-using Content.GoobStation.Shared.GPS.Components;
+using Content.Goobstation.Shared.GPS.Components;
 using Content.Shared.UserInterface;
 
-namespace Content.GoobStation.Shared.GPS;
+namespace Content.Goobstation.Shared.GPS;
 
 public abstract partial class SharedGpsSystem : EntitySystem
 {

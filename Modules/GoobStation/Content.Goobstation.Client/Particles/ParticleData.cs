@@ -1,7 +1,7 @@
 using System.Numerics;
-using Content.GoobStation.Shared.Particles;
+using Content.Goobstation.Shared.Particles;
 
-namespace Content.GoobStation.Client.Particles;
+namespace Content.Goobstation.Client.Particles;
 
 /// <summary>
 /// A single live particle. Class so it can be pooled in place.

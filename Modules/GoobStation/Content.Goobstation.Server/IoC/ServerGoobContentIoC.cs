@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-using Content.GoobStation.Server.Database;
+using Content.Goobstation.Server.Database;
 
-namespace Content.GoobStation.Server.IoC;
+namespace Content.Goobstation.Server.IoC;
 
 internal static class ServerGoobContentIoC
 {
     internal static void Register()
     {
         var instance = IoCManager.Instance!;
-        instance.Register<IGoobStationDbManager, GoobStationDbManager>();
+        instance.Register<IGoobstationDbManager, GoobstationDbManager>();
     }
 }

@@ -33,7 +33,7 @@ We are not currently accepting translations of the game on our main repository. 
 
 1. Clone this repo.
 2. Run `RUN_THIS.py` to init submodules and download the engine.
-3. <b style="color:crimson;">Different from other SS14 projects! </b>Compile the solution with `dotnet run --project GoobStation.Bootstrap`
+3. <b style="color:crimson;">Different from other SS14 projects! </b>Compile the solution with `dotnet run --project Goobstation.Bootstrap`
 
 [More detailed instructions on building the project.](https://docs.goobstation.com/en/general-development/setup.html)
 

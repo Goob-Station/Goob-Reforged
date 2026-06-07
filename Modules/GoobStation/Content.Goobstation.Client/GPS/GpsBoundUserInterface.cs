@@ -1,8 +1,8 @@
-using Content.GoobStation.Shared.GPS;
+using Content.Goobstation.Shared.GPS;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
-namespace Content.GoobStation.Client.GPS;
+namespace Content.Goobstation.Client.GPS;
 
 [UsedImplicitly]
 public sealed class GpsBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
