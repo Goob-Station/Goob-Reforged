@@ -14,7 +14,7 @@ public sealed partial class LinkedEntityEffectOnTriggerComponent : BaseXOnTrigge
     /// <summary>
     /// The effects to apply.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [DataField]
     public EntityEffect[] Effects;
 
     /// <summary>
