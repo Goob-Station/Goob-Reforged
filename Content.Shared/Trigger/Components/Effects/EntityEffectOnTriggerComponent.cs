@@ -13,7 +13,7 @@ public sealed partial class EntityEffectOnTriggerComponent : BaseXOnTriggerCompo
     /// <summary>
     /// The effects to apply.
     /// </summary>
-    [DataField]
+    [DataField] // GoobStation edit - removed AutoNetworkedField
     public EntityEffect[] Effects;
 
     /// <summary>
