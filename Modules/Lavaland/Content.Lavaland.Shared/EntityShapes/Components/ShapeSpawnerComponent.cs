@@ -22,5 +22,5 @@ public sealed partial class ShapeSpawnerComponent : Component
     /// is located on the edge between 2 or more tiles.
     /// </summary>
     [DataField]
-    public bool AlignCoords;
+    public bool AlignCoords = true;
 }

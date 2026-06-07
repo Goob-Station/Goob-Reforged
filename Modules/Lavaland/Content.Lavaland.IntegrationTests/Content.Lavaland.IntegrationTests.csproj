@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <Import Project="../../../MSBuild/Content.props" />
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Content.Benchmarks\Content.Benchmarks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Content.Lavaland.Client\Content.Lavaland.Client.csproj" />
+    <ProjectReference Include="..\Content.Lavaland.Server\Content.Lavaland.Server.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
+
+  <Import Project="..\..\..\RobustToolbox\Imports\Client.props" />
+  <Import Project="..\..\..\RobustToolbox\Imports\Server.props" />
+  <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
+  <Import Project="..\..\..\RobustToolbox\Imports\Testing.props" />
+
+  <Import Project="..\..\..\MSBuild\AllModules.targets" />
+  <Import Project="..\..\..\MSBuild\TestModules.targets" />
+</Project>
