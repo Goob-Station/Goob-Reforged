@@ -5,11 +5,11 @@
     <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
   </PropertyGroup>
 
+  <Import Project="..\..\..\MSBuild\Content.props"/>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
   </ItemGroup>
-
-  <Import Project="..\..\..\MSBuild\Content.props"/>
 
   <ItemGroup>
     <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />

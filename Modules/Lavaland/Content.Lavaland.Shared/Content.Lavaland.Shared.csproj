@@ -10,6 +10,10 @@
   <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\Content.Lavaland.Common\Content.Lavaland.Common.csproj" />
     <ProjectReference Include="..\..\..\Content.Shared\Content.Shared.csproj" />
   </ItemGroup>

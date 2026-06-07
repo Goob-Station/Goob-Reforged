@@ -6,6 +6,9 @@ name: Lavaland
 id: lavaland
 version: 1.0.0
 
+resources:
+- Resources
+
 projects:
   - path: Content.Lavaland.Shared
     role: Shared

@@ -1,0 +1,100 @@
+using Content.Lavaland.Shared.Damage.Components;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
+using Content.Shared.Whitelist;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Map.Components;
+using Robust.Shared.Network;
+using Robust.Shared.Timing;
+
+namespace Content.Lavaland.Shared.Damage;
+
+/// <summary>
+///     We have to use our own system even for the damage field because WIZDEN SYSTEMS FUCKING SUUUUUUUUUUUCKKKKKKKKKKKKKKK
+/// </summary>
+public sealed partial class DamageSquareSystem : EntitySystem
+{
+    [Dependency] private DamageableSystem _damage = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedMapSystem _map = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private INetManager _net = default!;
+
+    private EntityQuery<DamageableComponent> _damageQuery;
+    private EntityQuery<DamageSquareImmunityComponent> _immuneQuery;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<DamageSquareComponent, ComponentStartup>(OnMapInit);
+
+        _damageQuery = GetEntityQuery<DamageableComponent>();
+        _immuneQuery = GetEntityQuery<DamageSquareImmunityComponent>();
+    }
+
+    private void OnMapInit(Entity<DamageSquareComponent> ent, ref ComponentStartup args)
+        => ent.Comp.DamageTime = _timing.CurTime + TimeSpan.FromSeconds(ent.Comp.DamageDelay);
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var immuneQuery = EntityQueryEnumerator<DamageSquareImmunityComponent>();
+        while (immuneQuery.MoveNext(out var uid, out var immune))
+        {
+            if (immune.ImmunityEndTime == null
+                || _timing.CurTime < immune.ImmunityEndTime)
+                continue;
+
+            RemComp(uid, immune);
+        }
+
+        var query = EntityQueryEnumerator<DamageSquareComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var damage, out _))
+        {
+            if (_timing.CurTime < damage.DamageTime)
+                continue;
+
+            Damage((uid, damage));
+        }
+    }
+
+    private void Damage(Entity<DamageSquareComponent> field)
+    {
+        var xform = Transform(field);
+        if (xform.GridUid == null)
+        {
+            RemComp(field, field.Comp);
+            return;
+        }
+
+        var grid = xform.GridUid.Value;
+        var tile = _map.GetTileRef(grid, Comp<MapGridComponent>(grid), xform.Coordinates);
+
+        var lookup = _lookup.GetLocalEntitiesIntersecting(tile, 0f);
+
+        foreach (var target in lookup)
+        {
+            if (!_damageQuery.TryComp(target, out var damageable)
+                || _immuneQuery.HasComp(target)
+                || _whitelist.CheckBoth(target, field.Comp.DamageBlacklist, field.Comp.DamageWhitelist))
+                continue;
+
+            if (_net.IsServer) // Movement prediction is wonky and doesn't compensate for lag
+            {
+                _audio.PlayPvs(field.Comp.Sound, target);
+                _damage.TryChangeDamage((target, damageable),
+                    field.Comp.Damage,
+                    origin: field.Owner);
+            }
+
+            EnsureComp<DamageSquareImmunityComponent>(target).ImmunityEndTime =
+                _timing.CurTime + TimeSpan.FromSeconds(field.Comp.ImmunityTime);
+        }
+
+        RemComp(field, field.Comp);
+    }
+}

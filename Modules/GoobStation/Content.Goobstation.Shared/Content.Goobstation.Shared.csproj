@@ -1,19 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-      <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-      <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
-    </PropertyGroup>
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <WarningsAsErrors>RA0032;nullable</WarningsAsErrors>
+  </PropertyGroup>
 
-    <Import Project="..\..\..\MSBuild\Content.props"/>
+  <Import Project="..\..\..\MSBuild\Content.props"/>
 
-    <Import Project="..\..\..\RobustToolbox\Imports\Lidgren.props" />
-    <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
+  <Import Project="..\..\..\RobustToolbox\Imports\Lidgren.props" />
+  <Import Project="..\..\..\RobustToolbox\Imports\Shared.props" />
 
-    <ItemGroup>
-      <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />
-      <ProjectReference Include="..\..\..\Content.Shared\Content.Shared.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+  </ItemGroup>
 
-    <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
-    <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />
+    <ProjectReference Include="..\..\..\Content.Shared\Content.Shared.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
 </Project>
