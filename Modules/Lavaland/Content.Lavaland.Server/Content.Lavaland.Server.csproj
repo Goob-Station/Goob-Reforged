@@ -11,6 +11,10 @@
   <Import Project="..\..\..\MSBuild/Content.props" />
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Content.Server\Content.Server.csproj" />
     <ProjectReference Include="..\Content.Lavaland.Common\Content.Lavaland.Common.csproj" />
     <ProjectReference Include="..\Content.Lavaland.Shared\Content.Lavaland.Shared.csproj" />

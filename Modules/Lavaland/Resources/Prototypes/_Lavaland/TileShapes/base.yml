@@ -1,0 +1,41 @@
+- type: entityShape
+  id: BoxFilled
+  shape: !type:BoxEntityShape
+
+- type: entityShape
+  id: BoxHollow
+  shape: !type:BoxEntityShape
+    hollow: true
+
+- type: entityShape
+  id: Cross
+  shape: !type:AllEntityShape
+    children:
+    - !type:LineEntityShape
+      direction: 1.0,0.0
+    - !type:LineEntityShape
+      direction: 0.0,1.0
+    - !type:LineEntityShape
+      direction: -1.0,0.0
+    - !type:LineEntityShape
+      direction: 0.0,-1.0
+
+- type: entityShape
+  id: CrossDiagonal
+  shape: !type:AllEntityShape
+    children:
+    - !type:LineEntityShape
+      direction: 1.0,1.0
+    - !type:LineEntityShape
+      direction: -1.0,-1.0
+    - !type:LineEntityShape
+      direction: -1.0,1.0
+    - !type:LineEntityShape
+      direction: 1.0,-1.0
+
+- type: entityShape
+  id: CrossCombined
+  shape: !type:AllEntityShape
+    children:
+    - id: Cross
+    - id: CrossDiagonal

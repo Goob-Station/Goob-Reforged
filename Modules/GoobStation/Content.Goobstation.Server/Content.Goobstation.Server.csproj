@@ -11,6 +11,10 @@
   <Import Project="..\..\..\MSBuild/Content.props" />
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Content.Server\Content.Server.csproj" />
     <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />
     <ProjectReference Include="..\Content.Goobstation.Server.Database\Content.Goobstation.Server.Database.csproj" />
