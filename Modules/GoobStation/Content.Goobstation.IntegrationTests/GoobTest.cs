@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Content.IntegrationTests.Fixtures;
-using NUnit.Framework;
+﻿using Content.IntegrationTests.Fixtures;
 
 namespace Content.Goobstation.IntegrationTests;
 
