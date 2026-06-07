@@ -85,6 +85,7 @@
 - type: entityShape
   id: DebugOptionsTest
   shape: !type:AllEntityShape
+    size: 10
     children:
     - id: DebugBoxFilled1
       group: First
@@ -94,11 +95,11 @@
       group: Third
     options:
       First:
-        groupSize: 5
+        groupSize: 10
         offset: 0,10
       Second:
-        groupSize: 3
+        groupSize: 10
         offset: 0,-10
       Third:
-        groupSize: 5
+        groupSize: 10
         offset: 10,0

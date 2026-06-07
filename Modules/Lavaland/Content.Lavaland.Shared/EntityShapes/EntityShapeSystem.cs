@@ -15,6 +15,7 @@ public sealed partial class EntityShapeSystem : EntitySystem
     [Dependency] private IPrototypeManager _protoMan = default!;
     [Dependency] private INetManager _net = default!;
     [Dependency] private IMapManager _mapMan = default!;
+    [Dependency] private SharedTransformSystem _xform = default!;
 
     private EntityQuery<ShapeSpawnerComponent> _spawnerQuery;
     private EntityQuery<ShapeSpawnerCounterComponent> _counterQuery;
@@ -56,20 +57,22 @@ public sealed partial class EntityShapeSystem : EntitySystem
         }
     }
 
-    public void SpawnEntityShape(EntityShape shape, EntityUid target, EntProtoId spawnId, out List<EntityUid> spawned, bool alignTile = false)
+    public void SpawnEntityShape(EntityShape shape, EntityUid target, EntProtoId? spawnId, out List<EntityUid> spawned, bool alignTile = false, Angle? angle = null)
     {
+        var xform = Transform(target);
         var coords = alignTile
-            ? Transform(target).Coordinates.AlignWithClosestGridTile(1.5f, EntityManager, _mapMan)
-            : Transform(target).Coordinates;
+            ? xform.Coordinates.AlignWithClosestGridTile(1.5f, EntityManager, _mapMan)
+            : xform.Coordinates;
+        var worldAngle = xform.LocalRotation;
 
-        SpawnEntityShape(shape, coords, spawnId, out spawned);
+        SpawnEntityShape(shape, coords, spawnId, out spawned, angle ?? worldAngle);
     }
 
     /// <remarks>
     /// Use this only if you need to get all spawned entities by this shape,
     /// otherwise it's better to spawn an entity with ShapeSpawnerComponent.
     /// </remarks>
-    public void SpawnEntityShape(EntityShape shape, EntityCoordinates coords, EntProtoId spawnId, out List<EntityUid> spawned)
+    public void SpawnEntityShape(EntityShape shape, EntityCoordinates coords, EntProtoId? spawnId, out List<EntityUid> spawned, Angle? angle = null)
     {
         spawned = new List<EntityUid>();
 
@@ -88,6 +91,7 @@ public sealed partial class EntityShapeSystem : EntitySystem
         {
             var coord = new EntityCoordinates(coords.EntityId, pos);
             var ent = PredictedSpawnAtPosition(spawnId, coord);
+            _xform.SetLocalRotation(ent, angle ?? Angle.Zero);
             spawned.Add(ent);
         }
     }
