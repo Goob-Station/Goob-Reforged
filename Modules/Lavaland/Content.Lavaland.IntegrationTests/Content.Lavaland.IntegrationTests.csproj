@@ -20,10 +20,6 @@
     <ProjectReference Include="..\Content.Lavaland.Server\Content.Lavaland.Server.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Tests\Damage\" />
-  </ItemGroup>
-
   <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
 
