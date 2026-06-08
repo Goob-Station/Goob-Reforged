@@ -29,8 +29,8 @@
   <Import Project="..\RobustToolbox\Imports\Packaging.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\Modules\**\Content.*.Shared\Content.*.Shared.csproj" />
-    <ProjectReference Include="..\Modules\**\Content.*.Server.Database\Content.*.Server.Database.csproj" />
+    <ProjectReference Include="..\Modules\**\Content.*.Shared\Content.*.Shared.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Modules\**\Content.*.Server.Database\Content.*.Server.Database.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <Import Project="..\MSBuild\ServerModules.targets" />

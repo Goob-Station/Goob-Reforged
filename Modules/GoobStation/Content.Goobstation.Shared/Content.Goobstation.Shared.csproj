@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Content.Goobstation.Common\Content.Goobstation.Common.csproj" />
     <ProjectReference Include="..\..\..\Content.Shared\Content.Shared.csproj" />
   </ItemGroup>
 
