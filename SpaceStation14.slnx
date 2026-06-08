@@ -34,10 +34,9 @@
   </Folder>
   <Folder Name="/MSBuild/">
     <File Path="MSBuild/Content.props" />
-    <File Path="MSBuild/ClientModules.targets" />
-    <File Path="MSBuild/ServerModules.targets" />
-    <File Path="MSBuild/AllModules.targets" />
-    <File Path="MSBuild/TestModules.targets" />
+    <File Path="MSBuild/BuildCopyClientModules.targets" />
+    <File Path="MSBuild/BuildCopyServerModules.targets" />
+    <File Path="MSBuild/BuildCopyAllModules.targets" />
   </Folder>
   <Folder Name="/Project Files/">
     <File Path=".editorconfig" />

@@ -33,5 +33,5 @@
     <ProjectReference Include="..\Modules\**\Content.*.Server.Database\Content.*.Server.Database.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <Import Project="..\MSBuild\ServerModules.targets" />
+  <Import Project="..\MSBuild\BuildCopyServerModules.targets" />
 </Project>
