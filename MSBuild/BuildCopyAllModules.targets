@@ -1,23 +1,17 @@
 ﻿<Project>
-  <!-- Module loading for all modules -->
-
-  <Target Name="CompileAndCopyModules" AfterTargets="Build">
+  <Target Name="BuildCopyAllModules" AfterTargets="Build">
     <ItemGroup>
-      <ModuleProjects Include="../Modules/**/Content.*.Shared.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Server.Database.csproj" />
-      <ModuleProjects Include="../Modules/**/Content.*.Client.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Shared/Content.*.Shared.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server/Content.*.Server.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Server.Database/Content.*.Server.Database.csproj" />
+      <ModuleProjects Include="../Modules/**/Content.*.Client/Content.*.Client.csproj" />
     </ItemGroup>
 
     <MSBuild Projects="@(ModuleProjects)"
-             Properties="BuildProjectReferences=false;IsBuildingModules=true"
+             Properties="BuildProjectReferences=false"
              BuildInParallel="true">
       <Output TaskParameter="TargetOutputs" ItemName="ModuleAssemblies" />
     </MSBuild>
-
-    <ItemGroup>
-      <ModuleAssemblies Remove="@(ModuleAssemblies)" Condition="'%(Filename)' == 'Content.ModuleManager'" />
-    </ItemGroup>
 
     <Copy SourceFiles="@(ModuleAssemblies)"
           DestinationFolder="$(OutDir)" />
