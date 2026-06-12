@@ -2,14 +2,17 @@ using Content.Goobstation.Common.Damage;
 using Content.Shared.Destructible;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Whitelist;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Physics.Events;
+using Robust.Shared.Timing;
 
 namespace Content.Goobstation.Shared.Damage;
 
 public sealed partial class SharedDestroyInteractinngSystem : EntitySystem
 {
+    [Dependency] private IGameTiming _timing = default!;
     [Dependency] private SharedAudioSystem _audioSystem = default!;
     [Dependency] private SharedDestructibleSystem _destructibleSystem = default!;
     [Dependency] private SharedHandsSystem _handsSystem = default!;
@@ -22,6 +25,7 @@ public sealed partial class SharedDestroyInteractinngSystem : EntitySystem
         SubscribeLocalEvent<DestroyInteractingsComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<DestroyInteractingsComponent, InteractHandEvent>(OnInteractHand);
         SubscribeLocalEvent<DestroyInteractingsComponent, StartCollideEvent>(OnCollide);
+        SubscribeLocalEvent<DestroyInteractingsComponent, AttackedEvent>(OnAttacked);
     }
 
     private bool TryDestroyEntity(EntityUid entity, Entity<DestroyInteractingsComponent> destructor, out EntityUid? spawned, EntityUid? user = null)
@@ -61,6 +65,11 @@ public sealed partial class SharedDestroyInteractinngSystem : EntitySystem
     {
         if (destructor.Comp.RespectContacts)
             TryDestroyEntity(args.OtherEntity, destructor, out _);
+    }
+
+    private void OnAttacked(Entity<DestroyInteractingsComponent> destructor, ref AttackedEvent args)
+    {
+        TryDestroyEntity(args.Used, destructor, out _, user: args.User);
     }
 
     #endregion
