@@ -1,0 +1,50 @@
+#Contains the entity objects of gases
+- type: entity
+  id: BaseGas
+  name: gas
+  description: Just a gas!
+  
+- type: entity
+  parent: BaseGas
+  id: Oxygen
+  name: oxygen gas
+
+- type: entity
+  parent: BaseGas
+  id: Nitrogen
+  name: nitrogen gas
+
+- type: entity
+  parent: BaseGas
+  id: Frezon
+  name: frezon gas
+
+- type: entity
+  parent: BaseGas
+  id: NitrousOxide
+  name: nitrous oxide gas
+
+- type: entity
+  parent: BaseGas
+  id: Plasma
+  name: plasma gas
+
+- type: entity
+  parent: BaseGas
+  id: Ammonia
+  name: ammonia gas
+
+- type: entity
+  parent: BaseGas
+  id: Tritium
+  name: tritium gas
+
+- type: entity
+  parent: BaseGas
+  id: CarbonDioxide
+  name: carbon dioxide gas
+
+- type: entity
+  parent: BaseGas
+  id: WaterVapor
+  name: water vapor gas
