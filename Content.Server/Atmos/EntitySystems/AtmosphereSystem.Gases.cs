@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Content.Server.Atmos.Reactions;
@@ -278,14 +279,23 @@ namespace Content.Server.Atmos.EntitySystems
         }
 
         [PublicAPI]
+        // Goobstation - Added override method without gasesToReact parameter to ensure inherence from shared system 
         public override ReactionResult React(GasMixture mixture, IGasMixtureHolder? holder)
+        {
+            // Goobstation - Sends list of standard reactions to react
+            var standardReactions = GasReactions.Where(x => x.IsStandardReaction);
+            return React(mixture, holder, standardReactions);
+        }
+
+        // Goobstation - Added gasesToReact parameter to add specific set of reactions to react
+        public ReactionResult React(GasMixture mixture, IGasMixtureHolder? holder, IEnumerable<GasReactionPrototype> gasesToReact)
         {
             var reaction = ReactionResult.NoReaction;
             var temperature = mixture.Temperature;
             var energy = GetThermalEnergy(mixture);
 
             // Goobstation - Added check for standard reactions
-            foreach (var prototype in GasReactions.Where(x => x.IsStandardReaction))
+            foreach (var prototype in gasesToReact)
             {
                 if (energy < prototype.MinimumEnergyRequirement ||
                     temperature < prototype.MinimumTemperatureRequirement ||
@@ -308,7 +318,7 @@ namespace Content.Server.Atmos.EntitySystems
                     continue;
 
                 reaction = prototype.React(mixture, holder, this, HeatScale);
-                if(reaction.HasFlag(ReactionResult.StopReactions))
+                if (reaction.HasFlag(ReactionResult.StopReactions))
                     break;
             }
 

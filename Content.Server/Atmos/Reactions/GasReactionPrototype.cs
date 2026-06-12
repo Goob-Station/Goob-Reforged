@@ -44,7 +44,7 @@ namespace Content.Server.Atmos.Reactions
         public int Priority { get; private set; } = int.MinValue;
 
         /// <summary>
-        ///     Goobstation
+        ///     Goobstation: 
         ///     True if it's standard reaction that happens in atmosphere and not require conditions to try React.
         /// </summary>
         [DataField]
