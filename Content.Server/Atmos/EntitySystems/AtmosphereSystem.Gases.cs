@@ -284,7 +284,8 @@ namespace Content.Server.Atmos.EntitySystems
             var temperature = mixture.Temperature;
             var energy = GetThermalEnergy(mixture);
 
-            foreach (var prototype in GasReactions)
+            // Goobstation - Added check for standard reactions
+            foreach (var prototype in GasReactions.Where(x => x.IsStandardReaction))
             {
                 if (energy < prototype.MinimumEnergyRequirement ||
                     temperature < prototype.MinimumTemperatureRequirement ||

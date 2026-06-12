@@ -44,6 +44,13 @@ namespace Content.Server.Atmos.Reactions
         public int Priority { get; private set; } = int.MinValue;
 
         /// <summary>
+        ///     Goobstation
+        ///     True if it's standard reaction that happens in atmosphere and not require conditions to try React.
+        /// </summary>
+        [DataField]
+        public bool IsStandardReaction { get; private set; } = true;
+
+        /// <summary>
         ///     A list of effects this will produce.
         /// </summary>
         [DataField("effects")] private List<IGasReactionEffect> _effects = new();
