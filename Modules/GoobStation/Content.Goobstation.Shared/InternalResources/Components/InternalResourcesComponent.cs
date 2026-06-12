@@ -18,7 +18,7 @@ public sealed partial class InternalResourcesComponent : Component
     /// </summary>
     [ViewVariables]
     [AutoNetworkedField]
-    public List<InternalResourcesData> CurrentInternalResources = new();
+    public List<InternalResourcesData> CurrentInternalResources = [];
 
     public bool HasResourceData(string protoId, [NotNullWhen(true)] out InternalResourcesData? data)
     {

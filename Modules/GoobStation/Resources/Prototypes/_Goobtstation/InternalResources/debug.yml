@@ -2,7 +2,7 @@
   id: DebugInteralResources
   name: internal-resources-debug-name
   description: internal-resources-debug-desc
-  alert: Health
+  alert: DebugInternalResourcesAlert 
   maxAmount: 100
   regenerationRate: 1
   startingAmount: 50

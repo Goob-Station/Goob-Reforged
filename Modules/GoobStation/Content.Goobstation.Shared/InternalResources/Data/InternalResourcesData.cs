@@ -1,6 +1,5 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Goobstation.Shared.InternalResources.Data;
 
@@ -8,6 +7,7 @@ namespace Content.Goobstation.Shared.InternalResources.Data;
 /// Data structure for storing and changing inner resource in entities
 /// </summary>
 [Serializable, NetSerializable]
+[DataDefinition]
 public sealed partial class InternalResourcesData
 {
     /// <summary>
@@ -34,7 +34,11 @@ public sealed partial class InternalResourcesData
     [DataField(required: true)]
     public ProtoId<InternalResourcesPrototype> InternalResourcesType;
 
-    public InternalResourcesData(float maxAmount, float regenerationRate, float startingAmount, string protoId)
+    public InternalResourcesData(
+        float maxAmount,
+        float regenerationRate,
+        float startingAmount,
+        string protoId)
     {
         CurrentAmount = startingAmount;
         MaxAmount = maxAmount;
