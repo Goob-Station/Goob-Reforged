@@ -39,7 +39,9 @@ public sealed partial class SharedDestroyInteractinngSystem : EntitySystem
             return false;
 
         _audioSystem.PlayPredicted(destructor.Comp.DestructionSound, destructor, user);
-        spawned = PredictedSpawnAtPosition(destructor.Comp.SpawnOnDestruction, position);
+
+        if (destructor.Comp.SpawnOnDestruction != string.Empty)
+            spawned = PredictedSpawnAtPosition(destructor.Comp.SpawnOnDestruction, position);
 
         return true;
     }
