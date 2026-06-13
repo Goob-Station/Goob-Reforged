@@ -1,12 +1,11 @@
+using Content.Goobstation.Shared.Alert.Events;
 using Content.Goobstation.Shared.InternalResources.Components;
 using Content.Goobstation.Shared.InternalResources.Data;
 using Content.Goobstation.Shared.InternalResources.Events;
 using Content.Shared.Alert;
-using Content.Shared.Rounding;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Content.Goobstation.Shared.InternalResources.EntitySystems;
 
@@ -22,6 +21,7 @@ public sealed partial class SharedInternalResourcesSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<InternalResourcesComponent, InternalResourcesAmountChangedEvent>(OnInternalResourcesAmountChanged);
+        SubscribeLocalEvent<InternalResourcesComponent, GetValueRelatedAlertValuesEvent>(OnAlertGetValues);
         SubscribeLocalEvent<InternalResourcesComponent, InternalResourcesCapacityChangedEvent>(OnInternalResourcesCapacityChanged);
     }
 
@@ -43,15 +43,33 @@ public sealed partial class SharedInternalResourcesSystem : EntitySystem
         if (!_protoMan.TryIndex(protoId, out var proto))
             return;
 
-        if (!entity.Comp.HasResourceData(proto.ID, out var data))
+        if (!entity.Comp.HasResourceData(proto.ID, out _))
         {
             _alertsSystem.ClearAlert(entity.Owner, proto.AlertPrototype);
             return;
         }
 
-        var severity = ContentHelpers.RoundToLevels(MathF.Max(0f, data.CurrentAmount), data.MaxAmount, _alertsSystem.GetMaxSeverity(proto.AlertPrototype));
+        _alertsSystem.ShowAlert(entity.Owner, proto.AlertPrototype);
+    }
 
-        _alertsSystem.ShowAlert(entity.Owner, proto.AlertPrototype, (short)severity);
+
+    /// <summary>
+    /// Updates Alert information.
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="args"></param>
+    private void OnAlertGetValues(Entity<InternalResourcesComponent> entity, ref GetValueRelatedAlertValuesEvent args)
+    {
+        foreach (var type in entity.Comp.CurrentInternalResources)
+        {
+            if (_protoMan.Index(type.InternalResourcesType).AlertPrototype != args.Alert.ID)
+                continue;
+
+            args.CurrentValue = type.CurrentAmount;
+            args.MaxValue = type.MaxAmount;
+
+            return;
+        }
     }
 
     /// <summary>
