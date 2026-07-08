@@ -68,7 +68,7 @@
     head: ClothingHeadHatOutlawHat
     outerClothing: ClothingOuterArmorBasicSlim
     back: ClothingBackpackSatchel
-    pocket1: BaseUplinkRadio25TC
+    pocket1: BaseUplinkRadio125TC # Reforged - Large price changes - TC redenomination (5:1)
     pocket2: EnergySword
 
 # Nanotrasen Paramilitary Unit Gear

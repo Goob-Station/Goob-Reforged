@@ -1,0 +1,66 @@
+- type: entity
+  parent: Telecrystal
+  id: Telecrystal25
+  suffix: 25 TC
+  components:
+  - type: Stack
+    count: 25
+
+- type: entity
+  parent: Telecrystal
+  id: Telecrystal50
+  suffix: 50 TC
+  components:
+  - type: Stack
+    count: 50
+
+- type: entity
+  parent: Telecrystal
+  id: Telecrystal100
+  suffix: 100 TC
+  components:
+  - type: Stack
+    count: 100
+
+#Uplinks
+- type: entity
+  parent: BaseUplinkRadio
+  id: BaseUplinkRadio100TC
+  suffix: 100 TC
+  components:
+  - type: Store
+    balance:
+      Telecrystal: 100
+
+- type: entity
+  parent: BaseUplinkRadio
+  id: BaseUplinkRadio125TC
+  suffix: 125 TC
+  components:
+  - type: Store
+    balance:
+      Telecrystal: 125
+
+- type: entity
+  parent: BaseUplinkRadio
+  id: BaseUplinkRadio200TC
+  suffix: 200 TC, NukeOps
+  components:
+  - type: Store
+    balance:
+      Telecrystal: 200
+  - type: Tag
+    tags:
+    - NukeOpsUplink
+
+- type: entity
+  parent: BaseUplinkRadio
+  id: BaseUplinkRadio300TC
+  suffix: 300 TC, LoneOps
+  components:
+  - type: Store
+    balance:
+      Telecrystal: 300
+  - type: Tag
+    tags:
+    - NukeOpsUplink

@@ -56,7 +56,7 @@
   - AccessBreaker
   - Lighter
   - CigPackSyndicate
-  - Telecrystal10 #The thief cannot use them, but it may induce communication with traitors
+  - Telecrystal50 #Goobstation - TC redenomination (5:1)
 
 - type: thiefBackpackSet
   id: SleeperSet

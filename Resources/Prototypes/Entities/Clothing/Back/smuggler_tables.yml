@@ -448,7 +448,7 @@
     children:
     - id: SpaceCash100
       weight: 50
-    - id: Telecrystal1
+    - id: Telecrystal10 # Reforged - Large price changes - TC redenomination (5:1)
       amount: !type:RangeNumberSelector
         range: 1, 3
     - id: GatfruitSeeds
