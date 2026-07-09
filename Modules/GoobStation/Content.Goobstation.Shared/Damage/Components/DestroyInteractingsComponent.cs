@@ -38,6 +38,12 @@ public sealed partial class DestroyInteractingsComponent : Component
     [DataField]
     public bool RespectHandInteraction = true;
 
+    /// <summary>
+    /// The colliding fixture 
+    /// </summary>
+    [DataField]
+    public string FixtureId = "bzzz";
+
     #endregion
 
     #region Visuals and Sounds

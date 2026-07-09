@@ -65,7 +65,7 @@ public sealed partial class SharedDestroyInteractinngSystem : EntitySystem
 
     private void OnCollide(Entity<DestroyInteractingsComponent> destructor, ref StartCollideEvent args)
     {
-        if (destructor.Comp.RespectContacts)
+        if (destructor.Comp.RespectContacts && destructor.Comp.FixtureId == args.OurFixtureId && args.OtherFixture.Hard && args.OurFixture.Hard)
             TryDestroyEntity(args.OtherEntity, destructor, out _);
     }
 
