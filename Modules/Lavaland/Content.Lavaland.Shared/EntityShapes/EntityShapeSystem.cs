@@ -14,7 +14,6 @@ public sealed partial class EntityShapeSystem : EntitySystem
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private IPrototypeManager _protoMan = default!;
     [Dependency] private INetManager _net = default!;
-    [Dependency] private IMapManager _mapMan = default!;
     [Dependency] private SharedTransformSystem _xform = default!;
 
     private EntityQuery<ShapeSpawnerComponent> _spawnerQuery;
@@ -61,7 +60,7 @@ public sealed partial class EntityShapeSystem : EntitySystem
     {
         var xform = Transform(target);
         var coords = alignTile
-            ? xform.Coordinates.AlignWithClosestGridTile(1.5f, EntityManager, _mapMan)
+            ? xform.Coordinates.AlignWithClosestGridTile(1.5f, EntityManager)
             : xform.Coordinates;
         var worldAngle = xform.LocalRotation;
 
@@ -81,7 +80,7 @@ public sealed partial class EntityShapeSystem : EntitySystem
         if (_net.IsClient)
             return;
 
-        var result = shape.GetShape(_random.GetRandom(), _protoMan);
+        var result = shape.GetShape(_random, _protoMan);
         for (int i = 0; i < result.Count; i++)
         {
             result[i] += coords.Position;
@@ -113,10 +112,10 @@ public sealed partial class EntityShapeSystem : EntitySystem
             spawner.Shape.DefaultOffset = comp.CounterOffset.Value * args.Counter;
 
         if (comp.CounterSize != null)
-            spawner.Shape.DefaultSize = (int) Math.Round(comp.CounterSize.Value * args.Counter);
+            spawner.Shape.DefaultSize = (int)Math.Round(comp.CounterSize.Value * args.Counter);
 
         if (comp.CounterStepSize != null)
-            spawner.Shape.DefaultStepSize = (int) Math.Round(comp.CounterStepSize.Value * args.Counter);
+            spawner.Shape.DefaultStepSize = (int)Math.Round(comp.CounterStepSize.Value * args.Counter);
 
         SpawnEntityShape(spawner.Shape, uid, spawner.Spawn, out _, spawner.AlignCoords);
     }
