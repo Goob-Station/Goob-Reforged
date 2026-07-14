@@ -19,9 +19,6 @@ projects:
   - path: Content.Goobstation.Server
     role: Server
 
-  - path: Content.Goobstation.Server.Database
-    role: Server
-
   - path: Content.Goobstation.Client
     role: Client
 
