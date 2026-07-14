@@ -10,7 +10,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Goobstation.Shared.Damage;
 
-public sealed partial class DestroyInteractingSystem : EntitySystem
+public sealed partial class SharedDestroyInteractingSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private SharedAudioSystem _audioSystem = default!;
@@ -28,7 +28,10 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
         SubscribeLocalEvent<DestroyInteractingsComponent, AttackedEvent>(OnAttacked);
     }
 
-    private bool TryDestroyEntity(EntityUid entity, Entity<DestroyInteractingsComponent> destructor, out EntityUid? spawned, EntityUid? user = null)
+    private bool TryDestroyEntity(EntityUid entity,
+        Entity<DestroyInteractingsComponent> destructor,
+        out EntityUid? spawned,
+        EntityUid? user = null)
     {
         spawned = null;
         if (!_whitelistSystem.CheckBoth(entity, destructor.Comp.DestroyBlacklist, destructor.Comp.DestroyWhitelist))
@@ -40,13 +43,12 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
 
         _audioSystem.PlayPredicted(destructor.Comp.DestructionSound, destructor, user);
 
-        if (destructor.Comp.SpawnOnDestruction != string.Empty)
-            spawned = PredictedSpawnAtPosition(destructor.Comp.SpawnOnDestruction, position);
+        if (destructor.Comp.SpawnOnDestruction is { } protoId)
+            spawned = PredictedSpawnAtPosition(protoId, position);
 
         return true;
     }
 
-    #region Event Handlers
     private void OnInteractUsing(Entity<DestroyInteractingsComponent> destructor, ref InteractUsingEvent args)
     {
         var target = destructor.Comp.RespectHandInteraction ? args.Used : args.User;
@@ -65,7 +67,10 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
 
     private void OnCollide(Entity<DestroyInteractingsComponent> destructor, ref StartCollideEvent args)
     {
-        if (destructor.Comp.RespectContacts && destructor.Comp.FixtureId == args.OurFixtureId && args.OtherFixture.Hard && args.OurFixture.Hard)
+        if (destructor.Comp.RespectContacts
+            && destructor.Comp.FixtureId == args.OurFixtureId
+            && args.OtherFixture.Hard
+            && args.OurFixture.Hard)
             TryDestroyEntity(args.OtherEntity, destructor, out _);
     }
 
@@ -73,6 +78,4 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
     {
         TryDestroyEntity(args.Used, destructor, out _, user: args.User);
     }
-
-    #endregion
 }
