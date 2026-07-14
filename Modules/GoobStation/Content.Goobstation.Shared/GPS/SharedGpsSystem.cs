@@ -1,5 +1,4 @@
 using Content.Goobstation.Shared.GPS.Components;
-using Content.Goobstation.Shared.Particles;
 using Content.Shared.UserInterface;
 
 namespace Content.Goobstation.Shared.GPS;
@@ -7,8 +6,6 @@ namespace Content.Goobstation.Shared.GPS;
 public abstract partial class SharedGpsSystem : EntitySystem
 {
     [Dependency] protected SharedUserInterfaceSystem UiSystem = default!;
-    [Dependency] private SharedParticleSystem _particleSystem = default!;
-    [Dependency] private SharedTransformSystem _transformSystem = default!;
 
     public override void Initialize()
     {
@@ -46,7 +43,6 @@ public abstract partial class SharedGpsSystem : EntitySystem
         ent.Comp.GpsName = args.GpsName;
         DirtyField(ent.Owner, ent.Comp, nameof(GPSComponent.GpsName));
         UpdateUi(ent);
-        _particleSystem.CreateParticleOnCoords("SfGibMist", _transformSystem.GetMapCoordinates(ent.Owner));
     }
 
     private void OnSetInDistress(Entity<GPSComponent> ent, ref GpsSetInDistressMessage args)
