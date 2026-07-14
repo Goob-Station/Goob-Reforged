@@ -10,7 +10,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Goobstation.Shared.Damage;
 
-public sealed partial class SharedDestroyInteractingSystem : EntitySystem
+public sealed partial class DestroyInteractingSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private SharedAudioSystem _audioSystem = default!;
