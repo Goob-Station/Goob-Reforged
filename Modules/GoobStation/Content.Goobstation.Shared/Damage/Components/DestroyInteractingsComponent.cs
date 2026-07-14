@@ -2,18 +2,15 @@ using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Goobstation.Common.Damage;
 
 /// <summary>
-/// Goobstation
 /// Make entity destroy other entities on interaction
 /// </summary>
 [RegisterComponent, NetworkedComponent]
 public sealed partial class DestroyInteractingsComponent : Component
 {
-    #region Logic Handlers
     /// <summary>
     /// Whitelist entities that this entity can destroy
     /// </summary>
@@ -39,14 +36,11 @@ public sealed partial class DestroyInteractingsComponent : Component
     public bool RespectHandInteraction = true;
 
     /// <summary>
-    /// The colliding fixture 
+    /// The destroy on collide fixture 
     /// </summary>
-    [DataField]
-    public string FixtureId = "bzzz";
+    [DataField(required: true)]
+    public string FixtureId;
 
-    #endregion
-
-    #region Visuals and Sounds
     /// <summary>
     /// Sound that should be played on destruction coordinates
     /// </summary>
@@ -56,9 +50,8 @@ public sealed partial class DestroyInteractingsComponent : Component
     /// <summary>
     /// Entity that should instead of destroyed entity
     /// </summary>
-    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string SpawnOnDestruction = string.Empty;
+    [DataField]
+    public EntProtoId? SpawnOnDestruction;
 
     //TODO:Particles
-    #endregion
 }
