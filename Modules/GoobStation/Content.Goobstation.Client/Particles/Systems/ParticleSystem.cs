@@ -18,7 +18,7 @@ namespace Content.Goobstation.Client.Particles;
 /// Manages active particle emitters on the client, including their simulation and rendering.
 /// Use its API methods to create and remove particle effects from other systems.
 /// </summary>
-public sealed partial class ParticleSystem : EntitySystem
+public sealed partial class ParticleSystem : SharedParticleSystem
 {
     [Dependency] private IOverlayManager _overlay = default!;
     [Dependency] private IPrototypeManager _proto = default!;

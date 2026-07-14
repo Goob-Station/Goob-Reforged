@@ -41,6 +41,19 @@ public sealed partial class ParticleSystem
     }
 
     /// <summary>
+    /// Used to CreateParticle on client from shared systems
+    /// </summary>
+    /// <param name="effectId"></param>
+    /// <param name="coordinates"></param>
+    /// <param name="colorOverride"></param>
+    public override void CreateParticleOnCoords(ProtoId<ParticleEffectPrototype> effectId,
+        MapCoordinates coordinates,
+        Color? colorOverride = null)
+    {
+        CreateParticle(effectId, coordinates, colorOverride);
+    }
+
+    /// <summary>
     /// Stops and removes a particle emitter by its <see cref="ActiveEmitter"/> reference. Nullable.
     /// </summary>
     public void RemoveParticle(ActiveEmitter? emitter)
