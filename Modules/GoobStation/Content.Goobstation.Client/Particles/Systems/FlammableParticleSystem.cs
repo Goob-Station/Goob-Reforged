@@ -4,7 +4,7 @@ using Content.Goobstation.Shared.Particles;
 using Robust.Client.GameObjects;
 using Robust.Shared.Prototypes;
 
-namespace Content.Goobstation.Client.Particles.Visuals;
+namespace Content.Goobstation.Client.Particles.Systems;
 
 /// <summary>
 /// Particles when entities are on fire.

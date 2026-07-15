@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Goobstation.Common.ConVars;
 using Content.Goobstation.Shared.Particles;
+using Content.Goobstation.Shared.Particles.Systems;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;

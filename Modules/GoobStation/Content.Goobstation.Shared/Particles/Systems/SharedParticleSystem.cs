@@ -1,7 +1,7 @@
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
-namespace Content.Goobstation.Shared.Particles;
+namespace Content.Goobstation.Shared.Particles.Systems;
 
 /// <summary>
 /// Does not have server-sided logic. Exist only to allow shared system to create particles without creating separate client systems.
