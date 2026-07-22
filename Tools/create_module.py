@@ -54,5 +54,30 @@ def setup_module():
     with open(sln_path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(new_sln_content)
 
+    # Add server and client projects to the run configuration so they build automatically
+    run_path_client = project_root / ".run/Content.Client.run.xml"
+    run_path_server = project_root / ".run/Content.Server.run.xml"
+
+    with open(run_path_client, 'r', encoding='utf-8-sig', errors='ignore') as f:
+        client_content = f.read()
+
+    with open(run_path_server, 'r', encoding='utf-8-sig', errors='ignore') as f:
+        server_content = f.read()
+
+    run_marker = '      <option name="Build" />' # Adding it to the end because whatever I don't want to mess with XML librarbies
+
+    run_config_client = f'	  <option name="Build" default="false" projectName="Content.{module_name}.Client" projectPath="$PROJECT_DIR$/Modules/{module_name}/Content.{module_name}.Client/Content.{module_name}.Client.csproj" />'
+
+    run_config_server = f'	  <option name="Build" default="false" projectName="Content.{module_name}.Server" projectPath="$PROJECT_DIR$/Modules/{module_name}/Content.{module_name}.Server/Content.{module_name}.Server.csproj" />'
+
+    new_run_client_content = client_content.replace(run_marker, run_config_client + "\n" + run_marker)
+    new_run_server_content = server_content.replace(run_marker, run_config_server + "\n" + run_marker)
+
+    with open(run_path_client, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(new_run_client_content)
+
+    with open(run_path_server, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(new_run_server_content)
+
 if __name__ == "__main__":
     setup_module()
