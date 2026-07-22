@@ -143,7 +143,7 @@ public static class ShapeHelpers
     public static IEnumerable<Vector2> MakeBoxChanceRandom(
         Vector2 center,
         int range,
-        System.Random random,
+        IRobustRandom random,
         float filledSquareChance = 0.3f,
         float stepSize = 1)
     {
@@ -164,7 +164,7 @@ public static class ShapeHelpers
     public static IEnumerable<Vector2> MakeBoxCountRandom(
         Vector2 center,
         int range,
-        System.Random random,
+        IRobustRandom random,
         int removeAmount = 0,
         float stepSize = 1)
     {
