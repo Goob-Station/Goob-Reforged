@@ -39,7 +39,6 @@ using Content.Shared.Chat;
 using Content.Shared.Damage.Components;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.Temperature.Components;
-using Content.Shared.IdentityManagement;
 
 namespace Content.Server.Kitchen.EntitySystems
 {
@@ -63,6 +62,7 @@ namespace Content.Server.Kitchen.EntitySystems
         [Dependency] private HandsSystem _handsSystem = default!;
         [Dependency] private SharedItemSystem _item = default!;
         [Dependency] private SharedStackSystem _stack = default!;
+        [Dependency] private IPrototypeManager _prototype = default!;
         [Dependency] private IAdminLogManager _adminLogger = default!;
         [Dependency] private SharedSuicideSystem _suicide = default!;
         [Dependency] private SharedPowerStateSystem _powerState = default!;
@@ -238,7 +238,7 @@ namespace Content.Server.Kitchen.EntitySystems
                         // If an entity has a stack component, use the stacktype instead of prototype id
                         if (TryComp<StackComponent>(item, out var stackComp))
                         {
-                            itemID = ProtoMan.Index(stackComp.StackTypeId).Spawn;
+                            itemID = _prototype.Index(stackComp.StackTypeId).Spawn;
                         }
                         else
                         {
@@ -304,10 +304,11 @@ namespace Content.Server.Kitchen.EntitySystems
 
             var victim = args.Victim;
 
+            var othersMessage = Loc.GetString("microwave-component-suicide-others-message", ("victim", victim));
             var selfMessage = Loc.GetString("microwave-component-suicide-message");
-            var othersMessage = Loc.GetString("microwave-component-suicide-others-message", ("victim", Identity.Entity(victim, EntityManager)));
 
-            _popupSystem.PopupEntity(selfMessage, othersMessage, victim, victim);
+            _popupSystem.PopupEntity(othersMessage, victim, Filter.PvsExcept(victim), true);
+            _popupSystem.PopupEntity(selfMessage, victim, victim);
 
             _audio.PlayPvs(ent.Comp.ClickSound, ent.Owner, AudioParams.Default.WithVolume(-2));
             ent.Comp.CurrentCookTimerTime = 10;
@@ -557,7 +558,7 @@ namespace Content.Server.Kitchen.EntitySystems
                 // If a microwave recipe uses a stacked item, use the default stack prototype id instead of prototype id
                 if (TryComp<StackComponent>(item, out var stackComp))
                 {
-                    solidID = ProtoMan.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
+                    solidID = _prototype.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
                     amountToAdd = stackComp.Count;
                 }
                 else
@@ -704,7 +705,7 @@ namespace Content.Server.Kitchen.EntitySystems
         {
             foreach (ProtoId<FoodRecipePrototype> recipeId in ent.Comp.ProvidedRecipes)
             {
-                if (ProtoMan.Resolve(recipeId, out var recipeProto))
+                if (_prototype.Resolve(recipeId, out var recipeProto))
                 {
                     args.Recipes.Add(recipeProto);
                 }

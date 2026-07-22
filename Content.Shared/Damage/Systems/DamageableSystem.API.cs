@@ -17,17 +17,6 @@ public sealed partial class DamageableSystem
         return _supportedTypesByContainer[container.Value].Contains(type);
     }
 
-    public DamageModifierSet? GetDamageModifierSet(Entity<DamageableComponent?> entity)
-    {
-        if (!_damageableQuery.Resolve(entity, ref entity.Comp, false)
-            || entity.Comp.DamageModifierSetId is not { } proto
-            || !ProtoMan.Resolve(proto, out var modifierSet)
-           )
-            return null;
-
-        return modifierSet;
-    }
-
     /// <summary>
     ///     Directly sets the damage in a damageable component.
     /// </summary>
@@ -143,7 +132,10 @@ public sealed partial class DamageableSystem
         // Apply resistances
         if (!ignoreResistances)
         {
-            if (GetDamageModifierSet(ent) is { } modifierSet)
+            if (
+                ent.Comp.DamageModifierSetId != null &&
+                _prototypeManager.Resolve(ent.Comp.DamageModifierSetId, out var modifierSet)
+            )
                 damage = DamageSpecifier.ApplyModifierSet(damage, modifierSet);
 
             // TODO DAMAGE
@@ -302,7 +294,7 @@ public sealed partial class DamageableSystem
     public DamageSpecifier GetPositiveDamage(Entity<DamageableComponent> ent, ProtoId<DamageGroupPrototype> group)
     {
         // No damage if no group exists...
-        if (!ProtoMan.Resolve(group, out var groupProto))
+        if (!_prototypeManager.Resolve(group, out var groupProto))
             return new DamageSpecifier();
 
         var damage = new DamageSpecifier();

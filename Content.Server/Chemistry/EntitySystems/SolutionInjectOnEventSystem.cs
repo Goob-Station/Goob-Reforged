@@ -10,7 +10,6 @@ using Content.Shared.Tag;
 using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Collections;
 using Robust.Shared.Prototypes;
-using Content.Shared.IdentityManagement;
 
 namespace Content.Server.Chemistry.EntitySystems;
 
@@ -78,7 +77,7 @@ public sealed partial class SolutionInjectOnCollideSystem : EntitySystem
     /// </list>
     /// </remarks>
     /// <returns>true if at least one target was successfully injected, otherwise false</returns>
-    private bool TryInjectTargets(Entity<BaseSolutionInjectOnEventComponent> injector, IReadOnlyList<EntityUid> targets, EntityUid? user = null)
+    private bool TryInjectTargets(Entity<BaseSolutionInjectOnEventComponent> injector, IReadOnlyList<EntityUid> targets, EntityUid? source = null)
     {
         // Make sure we have at least one target
         if (targets.Count == 0)
@@ -100,14 +99,8 @@ public sealed partial class SolutionInjectOnCollideSystem : EntitySystem
             if (!injector.Comp.PierceArmor && _inventory.TryGetSlotEntity(target, "outerClothing", out var suit) && _tag.HasTag(suit.Value, HardsuitTag))
             {
                 // Only show popup to attacker
-                _popup.PopupEntity(
-                    Loc.GetString(
-                        injector.Comp.BlockedByHardsuitPopupMessage,
-                        ("weapon", injector.Owner),
-                        ("target", Identity.Entity(target, EntityManager))),
-                    target,
-                    user,
-                    PopupType.SmallCaution);
+                if (source != null)
+                    _popup.PopupEntity(Loc.GetString(injector.Comp.BlockedByHardsuitPopupMessage, ("weapon", injector.Owner), ("target", target)), target, source.Value, PopupType.SmallCaution);
 
                 continue;
             }

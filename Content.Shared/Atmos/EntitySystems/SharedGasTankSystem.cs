@@ -65,9 +65,6 @@ public abstract partial class SharedGasTankSystem : GasMaxPressureSystem<GasTank
 
     private void OnGetActions(EntityUid uid, GasTankComponent component, GetItemActionsEvent args)
     {
-        if (!HasComp<InternalsComponent>(args.User))
-            return;
-
         args.AddAction(ref component.ToggleActionEntity, component.ToggleAction);
         Dirty(uid, component);
     }

@@ -45,6 +45,7 @@ public sealed partial class MappingState : GameplayStateBase
     [Dependency] private IEntityNetworkManager _entityNetwork = default!;
     [Dependency] private IInputManager _input = default!;
     [Dependency] private ILogManager _log = default!;
+    [Dependency] private IMapManager _mapMan = default!;
     [Dependency] private MappingManager _mapping = default!;
     [Dependency] private IOverlayManager _overlays = default!;
     [Dependency] private IPlacementManager _placement = default!;
@@ -55,7 +56,6 @@ public sealed partial class MappingState : GameplayStateBase
     private EntityMenuUIController _entityMenuController = default!;
 
     private DecalPlacementSystem _decal = default!;
-    private MapSystem _maps = default!;
     private SpriteSystem _sprite = default!;
     private TransformSystem _transform = default!;
     private VerbSystem _verbs = default!;
@@ -207,7 +207,6 @@ public sealed partial class MappingState : GameplayStateBase
         _entityMenuController = UserInterfaceManager.GetUIController<EntityMenuUIController>();
 
         _decal = _entityManager.System<DecalPlacementSystem>();
-        _maps = _entityManager.System<MapSystem>();
         _sprite = _entityManager.System<SpriteSystem>();
         _transform = _entityManager.System<TransformSystem>();
         _verbs = _entityManager.System<VerbSystem>();
@@ -560,7 +559,7 @@ public sealed partial class MappingState : GameplayStateBase
 
                 var placement = new PlacementInformation
                 {
-                    PlacementOption = placementId > 0 ? _placement.AllModeNames[placementId] : entity.PlacementMode,
+                    PlacementOption = placementId > 0 ? EntitySpawnWindow.InitOpts[placementId] : entity.PlacementMode,
                     EntityType = entity.ID,
                     IsTile = false
                 };
@@ -659,7 +658,7 @@ public sealed partial class MappingState : GameplayStateBase
         {
             var placement = new PlacementInformation
             {
-                PlacementOption = _placement.AllModeNames[args.Id],
+                PlacementOption = EntitySpawnWindow.InitOpts[args.Id],
                 EntityType = _placement.CurrentPermission!.EntityType,
                 TileType = _placement.CurrentPermission.TileType,
                 Range = 2,
@@ -796,7 +795,7 @@ public sealed partial class MappingState : GameplayStateBase
         {
             var mapPos = _transform.ToMapCoordinates(coords);
 
-            if (_maps.TryFindGridAt(mapPos, out var gridUid, out var grid) &&
+            if (_mapMan.TryFindGridAt(mapPos, out var gridUid, out var grid) &&
                 _entityManager.System<SharedMapSystem>().TryGetTileRef(gridUid, grid, coords, out var tileRef) &&
                 _allPrototypesDict.TryGetValue(_entityManager.System<TurfSystem>().GetContentTileDefinition(tileRef), out button))
             {

@@ -2,7 +2,7 @@
 # Bun
 
 - type: entity
-  parent: [FoodBreadSliceBase, BaseSlicingRefinableFood]
+  parent: FoodBreadSliceBase
   id: FoodBreadBun
   name: bun
   description: A hamburger bun. Round and convenient to hold.
@@ -11,10 +11,13 @@
     sprite: Objects/Consumable/Food/burger.rsi
     layers:
     - state: bun
-  - type: ToolRefinable
-    refineResult:
-    - id: FoodBreadBunTop
-    - id: FoodBreadBunBottom
+  - type: Butcherable
+    butcherDelay: 1
+    spawned:
+      - id: FoodBreadBunTop
+        amount: 1
+      - id: FoodBreadBunBottom
+        amount: 1
 
 - type: entity
   parent: FoodBreadSliceBase
@@ -1093,9 +1096,9 @@
       - ReagentId: Vitamin
         Quantity: 11
       - ReagentId: TableSalt
-        Quantity: 1
+        Quantity: 5
       - ReagentId: Blackpepper
-        Quantity: 1
+        Quantity: 5
   - type: Sprite
     state: superbite
   - type: Tag

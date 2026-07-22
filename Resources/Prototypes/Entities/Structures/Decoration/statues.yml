@@ -61,6 +61,12 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
+        damage: 150 # Overkill
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+    - trigger:
+        !type:DamageTrigger
         damage: 100
       behaviors:
       - !type:PlaySoundBehavior

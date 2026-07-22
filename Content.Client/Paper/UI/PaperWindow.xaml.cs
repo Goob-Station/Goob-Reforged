@@ -23,9 +23,7 @@ namespace Content.Client.Paper.UI
 
         private static Color DefaultTextColor = new(25, 25, 25);
 
-        // Default color for text which hasn't been changed using markup
-        private Color _writtenTextColor = DefaultTextColor;
-
+        // <summary>
         // Size of resize handles around the paper
         private const int DRAG_MARGIN_SIZE = 16;
 
@@ -154,7 +152,8 @@ namespace Content.Client.Paper.UI
                     visuals.FooterMargin.Right, visuals.FooterMargin.Bottom);
 
             PaperContent.ModulateSelfOverride = visuals.ContentImageModulate;
-            _writtenTextColor = visuals.DefaultTextColor ?? DefaultTextColor;
+            WrittenTextLabel.ModulateSelfOverride = visuals.FontAccentColor;
+            FillStatus.ModulateSelfOverride = visuals.FontAccentColor;
 
             var contentImage = visuals.ContentImagePath != null ? _resCache.GetResource<TextureResource>(visuals.ContentImagePath) : null;
             if (contentImage != null)
@@ -272,7 +271,7 @@ namespace Content.Client.Paper.UI
             {
                 msg.AddMarkupPermissive("\r\n");
             }
-            WrittenTextLabel.SetMessage(msg, UserFormattableTags.BaseAllowedTags, _writtenTextColor);
+            WrittenTextLabel.SetMessage(msg, UserFormattableTags.BaseAllowedTags, DefaultTextColor);
 
             WrittenTextLabel.Visible = !isEditing && state.Text.Length > 0;
             BlankPaperIndicator.Visible = !isEditing && state.Text.Length == 0;

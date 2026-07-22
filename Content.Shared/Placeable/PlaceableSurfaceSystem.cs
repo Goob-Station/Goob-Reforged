@@ -1,16 +1,15 @@
 using System.Numerics;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
-using Content.Shared.Random.Helpers;
 using Content.Shared.Storage;
 using Content.Shared.Storage.Components;
-using Robust.Shared.Timing;
+using Robust.Shared.Random;
 
 namespace Content.Shared.Placeable;
 
 public sealed partial class PlaceableSurfaceSystem : EntitySystem
 {
-    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
     [Dependency] private SharedHandsSystem _handsSystem = default!;
     [Dependency] private SharedTransformSystem _transformSystem = default!;
 
@@ -110,8 +109,7 @@ public sealed partial class PlaceableSurfaceSystem : EntitySystem
 
         foreach (var entity in args.DumpQueue)
         {
-            var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(entity));
-            _transformSystem.SetWorldPositionRotation(entity, targetPos + rand.NextVector2Box() / 4, targetRot);
+            _transformSystem.SetWorldPositionRotation(entity, targetPos + _random.NextVector2Box() / 4, targetRot);
         }
     }
 }

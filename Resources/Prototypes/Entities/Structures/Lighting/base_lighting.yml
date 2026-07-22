@@ -62,6 +62,15 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
+        damage: 200
+      behaviors: #excess damage, don't spawn entities.
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: GlassBreak
+    - trigger:
+        !type:DamageTrigger
         damage: 50
       behaviors:
       - !type:EmptyAllContainersBehaviour
@@ -280,6 +289,12 @@
       thresholds:
       - trigger:
           !type:DamageTrigger
+          damage: 100
+        behaviors: #excess damage, don't spawn entities.
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
           damage: 25
         behaviors:
         - !type:EmptyAllContainersBehaviour
@@ -467,6 +482,15 @@
     node: emergencyLight
   - type: Destructible
     thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors: #excess damage, don't spawn entities.
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: GlassBreak
     - trigger:
         !type:DamageTrigger
         damage: 25

@@ -162,7 +162,10 @@
   - type: TypingIndicator
     proto: vulpkanin
   - type: Vocal
-    emoteSounds: MaleVulpkanin
+    sounds:
+      Male: MaleVulpkanin
+      Female: FemaleVulpkanin
+      Unsexed: MaleVulpkanin
   - type: Damageable
     damageModifierSet: Vulpkanin
   - type: MeleeWeapon
@@ -210,7 +213,7 @@
       state: creampie_vulpkanin
 
 - type: entity
-  parent: OrganBaseOrganic
+  parent: OrganBase
   id: OrganVulpkanin
   abstract: true
   suffix: vulpkanin

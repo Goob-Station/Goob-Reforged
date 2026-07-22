@@ -138,7 +138,6 @@ namespace Content.Server.Light.EntitySystems
                 _nameModifier.RefreshNameModifiers(uid);
                 _stackSystem.ReduceCount((args.Used, stack), 1);
                 UpdateVisualizer((uid, component));
-                args.Handled = true;
                 return;
             }
 

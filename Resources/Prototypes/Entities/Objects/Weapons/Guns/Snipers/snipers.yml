@@ -79,9 +79,8 @@
     solution: melee
   - type: SolutionTransfer
     maxTransferAmount: 2
-  - type: Tool
-    qualities: Slicing
-    speedModifier: 0.5 #It's a bayonet
+  - type: Sharp
+    butcherDelayModifier: 2 #It's a bayonet
   - type: GunRequiresWield
   - type: StaticPrice
     price: 500
@@ -108,9 +107,6 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/sniper.ogg
-  - type: CustomSpriteAmmoCounter
-    loadedAmmoSprite: Interface/ItemStatus/Sniper_Cartriges/not_spent.png
-    spentAmmoSprite: Interface/ItemStatus/Sniper_Cartriges/spent.png
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -133,9 +129,7 @@
   id: Musket
   description: This should've been in a museum long before you were born. Uses .60 anti-materiel ammo.
   components:
-  - type: Tool
-    qualities:
-    - Slicing
+  - type: Sharp
   - type: Item
     size: Large
   - type: Sprite

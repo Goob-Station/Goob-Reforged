@@ -46,16 +46,10 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/RobustToolbox/">
-    <Project Path="RobustToolbox/Avalonia.Base/Avalonia.Base.csproj">
-      <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Release" />
-    </Project>
+    <Project Path="RobustToolbox/Avalonia.Base/Avalonia.Base.csproj" />
     <Project Path="RobustToolbox/Lidgren.Network/Lidgren.Network.csproj" />
     <Project Path="RobustToolbox/Robust.Benchmarks/Robust.Benchmarks.csproj" />
-    <Project Path="RobustToolbox/Robust.Client.Injectors/Robust.Client.Injectors.csproj">
-      <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Release" />
-    </Project>
+    <Project Path="RobustToolbox/Robust.Client.Injectors/Robust.Client.Injectors.csproj" />
     <Project Path="RobustToolbox/Robust.Client.IntegrationTests/Robust.Client.IntegrationTests.csproj" />
     <Project Path="RobustToolbox/Robust.Client.Tests/Robust.Client.Tests.csproj" />
     <Project Path="RobustToolbox/Robust.Client/Robust.Client.csproj" />
@@ -64,7 +58,6 @@
     <Project Path="RobustToolbox/Robust.Server.IntegrationTests/Robust.Server.IntegrationTests.csproj" />
     <Project Path="RobustToolbox/Robust.Server.Testing/Robust.Server.Testing.csproj" />
     <Project Path="RobustToolbox/Robust.Server/Robust.Server.csproj" />
-    <Project Path="RobustToolbox/Robust.Shared.EntitySystemSubscriptionsGenerator/Robust.Shared.EntitySystemSubscriptionsGenerator.csproj" />
     <Project Path="RobustToolbox/Robust.Shared.IntegrationTests/Robust.Shared.IntegrationTests.csproj" />
     <Project Path="RobustToolbox/Robust.Shared.Maths.Testing/Robust.Shared.Maths.Testing.csproj" />
     <Project Path="RobustToolbox/Robust.Shared.Maths.Tests/Robust.Shared.Maths.Tests.csproj" />
@@ -74,10 +67,7 @@
     <Project Path="RobustToolbox/Robust.Shared.Tests/Robust.Shared.Tests.csproj" />
     <Project Path="RobustToolbox/Robust.Shared/Robust.Shared.csproj" />
     <Project Path="RobustToolbox/Robust.UnitTesting/Robust.UnitTesting.csproj" />
-    <Project Path="RobustToolbox/Robust.Xaml/Robust.Xaml.csproj">
-      <BuildType Solution="DebugOpt|*" Project="Debug" />
-      <BuildType Solution="Tools|*" Project="Release" />
-    </Project>
+    <Project Path="RobustToolbox/Robust.Xaml/Robust.Xaml.csproj" />
     <File Path="RobustToolbox/RobustToolbox.slnx" />
   </Folder>
   <Folder Name="/RobustToolbox/.github/" />

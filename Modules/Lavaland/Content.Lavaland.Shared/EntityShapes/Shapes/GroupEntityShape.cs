@@ -2,7 +2,6 @@
 using System.Numerics;
 using Content.Shared.Random.Helpers;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 
 namespace Content.Lavaland.Shared.EntityShapes.Shapes;
 
@@ -14,7 +13,7 @@ public sealed partial class GroupEntityShape : EntityShape
     [DataField(required: true)]
     public List<EntityShape> Children = new();
 
-    protected override List<Vector2> GetShapeImplementation(IRobustRandom rand, IPrototypeManager proto)
+    protected override List<Vector2> GetShapeImplementation(System.Random rand, IPrototypeManager proto)
     {
         var children = new Dictionary<EntityShape, float>(Children.Count);
         foreach (var child in Children)
@@ -25,7 +24,7 @@ public sealed partial class GroupEntityShape : EntityShape
         if (children.Count == 0)
             return Enumerable.Empty<Vector2>().ToList();
 
-        var pick = rand.Pick(children);
+        var pick = SharedRandomExtensions.Pick(children, rand);
         return pick.GetShape(rand, proto, Offset, Size, StepSize);
     }
 }

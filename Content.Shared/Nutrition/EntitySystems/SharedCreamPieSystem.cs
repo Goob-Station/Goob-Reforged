@@ -7,7 +7,6 @@ using Content.Shared.Popups;
 using Content.Shared.Rejuvenate;
 using Content.Shared.Stunnable;
 using Content.Shared.Throwing;
-using Content.Shared.Tools.Systems;
 using Content.Shared.Trigger.Components;
 using Content.Shared.Trigger.Systems;
 using Robust.Shared.Audio.Systems;
@@ -36,7 +35,7 @@ public abstract partial class SharedCreamPieSystem : EntitySystem
         SubscribeLocalEvent<CreamPieComponent, ThrowDoHitEvent>(OnCreamPieHit);
         SubscribeLocalEvent<CreamPieComponent, LandEvent>(OnCreamPieLand);
         SubscribeLocalEvent<CreamPiedComponent, ThrowHitByEvent>(OnCreamPiedHitBy);
-        SubscribeLocalEvent<CreamPieComponent, BeforeToolRefinedEvent>(OnToolRefine);
+        SubscribeLocalEvent<CreamPieComponent, SliceFoodEvent>(OnSlice);
         SubscribeLocalEvent<CreamPiedComponent, RejuvenateEvent>(OnRejuvenate);
     }
 
@@ -118,17 +117,12 @@ public abstract partial class SharedCreamPieSystem : EntitySystem
 
     private void OnCreamPiedHitBy(Entity<CreamPiedComponent> creamPied, ref ThrowHitByEvent args)
     {
-        if (!Exists(args.Thrown) || !TryComp<CreamPieComponent>(args.Thrown, out var creamPie))
-            return;
-
-        _stunSystem.TryUpdateParalyzeDuration(creamPied.Owner, creamPie.ParalyzeTime);
-
-        // Already creamed, no need to spam popups.
-        if (creamPied.Comp.CreamPied)
+        if (creamPied.Comp.CreamPied || !Exists(args.Thrown) || !TryComp<CreamPieComponent>(args.Thrown, out var creamPie))
             return;
 
         // TODO: Check if they even have a head that can be hit.
         SetCreamPied(creamPied.AsNullable(), true);
+        _stunSystem.TryUpdateParalyzeDuration(creamPied.Owner, creamPie.ParalyzeTime);
 
         // Throwing is not predicted, so the thrower is not equal to the client predicting the collision, so we cannot pass in a user.
         // TODO: Make the popup API sane.
@@ -163,7 +157,7 @@ public abstract partial class SharedCreamPieSystem : EntitySystem
     // However, the refactor to IngestionSystem caused the event to not be reached,
     // because eating is blocked if an item is inside the food.
 
-    private void OnToolRefine(Entity<CreamPieComponent> ent, ref BeforeToolRefinedEvent args)
+    private void OnSlice(Entity<CreamPieComponent> ent, ref SliceFoodEvent args)
     {
         ActivatePayload(ent);
     }

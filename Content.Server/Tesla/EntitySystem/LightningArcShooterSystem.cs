@@ -22,10 +22,7 @@ public sealed partial class LightningArcShooterSystem : EntitySystem
 
     private void OnShooterMapInit(EntityUid uid, LightningArcShooterComponent component, ref MapInitEvent args)
     {
-        if (component.Instant)
-            component.NextShootTime = _gameTiming.CurTime;
-        else
-            component.NextShootTime = _gameTiming.CurTime + TimeSpan.FromSeconds(component.ShootMaxInterval);
+        component.NextShootTime = _gameTiming.CurTime + TimeSpan.FromSeconds(component.ShootMaxInterval);
     }
 
     public override void Update(float frameTime)

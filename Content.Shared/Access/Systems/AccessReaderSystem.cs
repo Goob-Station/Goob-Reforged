@@ -25,6 +25,7 @@ namespace Content.Shared.Access.Systems;
 
 public sealed partial class AccessReaderSystem : EntitySystem
 {
+    [Dependency] private IPrototypeManager _prototype = default!;
     [Dependency] private InventorySystem _inventorySystem = default!;
     [Dependency] private IGameTiming _gameTiming = default!;
     [Dependency] private EmagSystem _emag = default!;
@@ -870,7 +871,7 @@ public sealed partial class AccessReaderSystem : EntitySystem
     private bool FindAccessTagsItem(EntityUid uid, out HashSet<ProtoId<AccessLevelPrototype>> tags)
     {
         tags = new();
-        var ev = new GetAccessTagsEvent(tags, ProtoMan);
+        var ev = new GetAccessTagsEvent(tags, _prototype);
         RaiseLocalEvent(uid, ref ev);
 
         return tags.Count != 0;
@@ -962,7 +963,7 @@ public sealed partial class AccessReaderSystem : EntitySystem
             {
                 var accessName = Loc.GetString("access-reader-unknown-id");
 
-                if (ProtoMan.Resolve(access, out var accessProto) && !string.IsNullOrWhiteSpace(accessProto.Name))
+                if (_prototype.Resolve(access, out var accessProto) && !string.IsNullOrWhiteSpace(accessProto.Name))
                     accessName = Loc.GetString(accessProto.Name);
 
                 sb.Append(Loc.GetString("access-reader-access-label", ("access", accessName)));

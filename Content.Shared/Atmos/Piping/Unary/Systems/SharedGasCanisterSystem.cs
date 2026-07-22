@@ -114,8 +114,7 @@ public abstract partial class SharedGasCanisterSystem : GasMaxPressureSystem<Gas
 
         for (var i = 0; i < containedGasArray.Length; i++)
         {
-            if (entity.Comp.Air.GetMoles(i) > 0f)
-                containedGasDict.Add((Gas)i, entity.Comp.Air[i]);
+            containedGasDict.Add((Gas)i, entity.Comp.Air[i]);
         }
 
         AdminLogger.Add(LogType.CanisterValve, impact, $"{ToPrettyString(args.Actor):player} set the valve on {ToPrettyString(entity):canister} to {args.Valve:valveState} while it contained [{string.Join(", ", containedGasDict)}]");

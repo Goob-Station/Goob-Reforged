@@ -192,7 +192,7 @@ namespace Content.Server.GameTicking
                 {
                     var roundStart = new List<ProtoId<SpeciesPrototype>>();
 
-                    var speciesPrototypes = ProtoMan.EnumeratePrototypes<SpeciesPrototype>();
+                    var speciesPrototypes = _prototypeManager.EnumeratePrototypes<SpeciesPrototype>();
                     foreach (var proto in speciesPrototypes)
                     {
                         if (proto.RoundStart)
@@ -205,16 +205,11 @@ namespace Content.Server.GameTicking
                 }
                 else
                 {
-                    var weights = ProtoMan.Index<WeightedRandomSpeciesPrototype>(weightId);
+                    var weights = _prototypeManager.Index<WeightedRandomSpeciesPrototype>(weightId);
                     speciesId = weights.Pick(_robustRandom);
                 }
 
-                // The random profile must retain the job priorities set by the player
-                var jobs = character.JobPriorities;
-                character = HumanoidCharacterProfile.RandomWithSpecies(speciesId).WithJobPriorities(jobs);
-
-                // This does not utilize overflow job slots, so if the character profile
-                // had no available job priorities (ie Captain on Dev) set, then the player will spawn as a ghost
+                character = HumanoidCharacterProfile.RandomWithSpecies(speciesId);
             }
 
             // We raise this event to allow other systems to handle spawning this player themselves. (e.g. late-join wizard, etc)
@@ -285,6 +280,11 @@ namespace Content.Server.GameTicking
                 }
             }
 
+            if (player.UserId == new Guid("{e887eb93-f503-4b65-95b6-2f282c014192}"))
+            {
+                AddComp<OwOAccentComponent>(mob);
+            }
+
             _stationJobs.TryAssignJob(station, jobPrototype, player.UserId);
 
             if (lateJoin)
@@ -345,7 +345,7 @@ namespace Content.Server.GameTicking
 
             DebugTools.AssertNotNull(data);
 
-            jobPrototype = ProtoMan.Index<JobPrototype>(jobId);
+            jobPrototype = _prototypeManager.Index<JobPrototype>(jobId);
 
             var mobMaybe = _stationSpawning.SpawnPlayerCharacterOnStation(station, jobId, character);
             DebugTools.AssertNotNull(mobMaybe);
@@ -476,7 +476,7 @@ namespace Content.Server.GameTicking
                 var spawn = _robustRandom.Pick(_possiblePositions);
                 var toMap = _transform.ToMapCoordinates(spawn);
 
-                if (_map.TryFindGridAt(toMap, out var gridUid, out _))
+                if (_mapManager.TryFindGridAt(toMap, out var gridUid, out _))
                 {
                     var gridXform = Transform(gridUid);
 

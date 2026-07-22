@@ -21,7 +21,7 @@ public sealed class ObjectiveCommandsTest : GameTest
   components:
   - type: Objective
     difficulty: 1
-    issuer: TheSyndicate
+    issuer: objective-issuer-syndicate
     icon:
       sprite: error.rsi
       state: error

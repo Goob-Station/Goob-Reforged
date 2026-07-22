@@ -97,32 +97,8 @@ public abstract partial class SharedBorgSystem
             args.Container != chassisComp.ModuleContainer)
             return;
 
-        if (TryComp<ItemBorgModuleComponent>(module, out var itemModuleComp) &&
-            _container.TryGetContainer(module, itemModuleComp.HoldingContainer, out var container))
-        {
-            _transform.TryGetMapOrGridCoordinates(chassis, out var coordinates);
-            for (var i = 0; i < itemModuleComp.Hands.Count; i++)
-            {
-                var hand = itemModuleComp.Hands[i];
-
-                if (IsItemInHandUnremovable(hand))
-                    continue;
-
-                var handId = $"{GetNetEntity(module.Owner)}-hand-{i}";
-                if (itemModuleComp.StoredItems.TryGetValue(handId, out var item))
-                    _container.Remove(item, container, destination: coordinates);
-            }
-
-            itemModuleComp.StoredItems.Clear();
-        }
-
         UninstallModule((chassis, chassisComp), module.AsNullable());
-
-        // Default modules should not be dropped so let's remove them.
-        if (TryComp<BorgModuleComponent>(module, out var moduleComp) && moduleComp.DefaultModule)
-            PredictedQueueDel(module);
     }
-
     #endregion
 
     #region SelectableBorgModule
@@ -238,7 +214,7 @@ public abstract partial class SharedBorgSystem
             if (item is { } pickUp)
             {
                 _hands.DoPickup(chassis, handId, pickUp, hands);
-                if (IsItemInHandUnremovable(hand))
+                if (!hand.ForceRemovable && hand.Hand.Whitelist == null && hand.Hand.Blacklist == null)
                 {
                     EnsureComp<UnremoveableComponent>(pickUp);
                 }
@@ -247,14 +223,6 @@ public abstract partial class SharedBorgSystem
 
         module.Comp.Spawned = true;
         Dirty(module);
-    }
-
-    /// <summary>
-    /// Determines if the item in the hand is unremovable (permament part of the hand).
-    /// </summary>
-    private static bool IsItemInHandUnremovable(BorgHand hand)
-    {
-        return !hand.ForceRemovable && hand.Hand.Whitelist == null && hand.Hand.Blacklist == null;
     }
 
     private void RemoveProvidedItems(Entity<BorgChassisComponent?> chassis, Entity<ItemBorgModuleComponent?> module)
