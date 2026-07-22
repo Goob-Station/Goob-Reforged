@@ -6,7 +6,6 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Server.Destructible;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Server.NPC.Pathfinding;
-using Content.Shared.Armor;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Camera;
 using Content.Shared.CCVar;
@@ -19,6 +18,7 @@ using Content.Shared.Explosion.EntitySystems;
 using Content.Shared.GameTicking;
 using Content.Shared.Inventory;
 using Content.Shared.Maps;
+using Content.Shared.Projectiles;
 using Content.Shared.Throwing;
 using Robust.Server.GameStates;
 using Robust.Server.Player;
@@ -27,6 +27,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
@@ -35,8 +36,10 @@ namespace Content.Server.Explosion.EntitySystems;
 
 public sealed partial class ExplosionSystem : SharedExplosionSystem
 {
+    [Dependency] private IMapManager _mapManager = default!;
     [Dependency] private IRobustRandom _robustRandom = default!;
     [Dependency] private ITileDefinitionManager _tileDefinitionManager = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IPlayerManager _playerManager = default!;
     [Dependency] private IAdminLogManager _adminLogger = default!;
@@ -61,7 +64,6 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
     [Dependency] private EntityQuery<ActorComponent> _actorQuery = default!;
     [Dependency] private EntityQuery<DestructibleComponent> _destructibleQuery = default!;
     [Dependency] private EntityQuery<DamageableComponent> _damageableQuery = default!;
-    [Dependency] private EntityQuery<ExplosionResistanceComponent> _explosionResistanceQuery = default!;
     [Dependency] private EntityQuery<InjurableComponent> _injurableQuery = default!;
     [Dependency] private EntityQuery<AirtightComponent> _airtightQuery = default!;
     [Dependency] private EntityQuery<TileHistoryComponent> _tileHistoryQuery = default!;
@@ -77,7 +79,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
     {
         base.Initialize();
 
-        DebugTools.Assert(ProtoMan.HasIndex(DefaultExplosionPrototypeId));
+        DebugTools.Assert(_prototypeManager.HasIndex(DefaultExplosionPrototypeId));
 
         // handled in ExplosionSystem.GridMap.cs
         SubscribeLocalEvent<GridRemovalEvent>(OnGridRemoved);
@@ -100,7 +102,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
         InitAirtightMap();
         InitVisuals();
 
-        ProtoMan.PrototypesReloaded += ReloadExplosionPrototypes;
+        _prototypeManager.PrototypesReloaded += ReloadExplosionPrototypes;
     }
 
     private void OnReset(RoundRestartCleanupEvent ev)
@@ -119,7 +121,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
         base.Shutdown();
         _nodeGroupSystem.PauseUpdating = false;
         _pathfindingSystem.PauseUpdating = false;
-        ProtoMan.PrototypesReloaded -= ReloadExplosionPrototypes;
+        _prototypeManager.PrototypesReloaded -= ReloadExplosionPrototypes;
     }
 
     private void RelayedResistance(EntityUid uid, ExplosionResistanceComponent component,
@@ -280,7 +282,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
         if (totalIntensity <= 0 || slope <= 0)
             return;
 
-        if (!ProtoMan.TryIndex<ExplosionPrototype>(typeId, out var type))
+        if (!_prototypeManager.TryIndex<ExplosionPrototype>(typeId, out var type))
         {
             Log.Error($"Attempted to spawn unknown explosion prototype: {type}");
             return;

@@ -11,6 +11,7 @@ using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Coordinates.Helpers;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
+using Content.Shared.Hands.Components;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
@@ -22,11 +23,12 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Database;
 using Content.Shared.EntityEffects;
+using Content.Shared.Kitchen.Components;
 using Content.Shared.Labels.Components;
-using Content.Shared.Tools.Systems;
 
 namespace Content.Server.Botany.Systems;
 
@@ -34,6 +36,7 @@ public sealed partial class PlantHolderSystem : EntitySystem
 {
     [Dependency] private AtmosphereSystem _atmosphere = default!;
     [Dependency] private BotanySystem _botany = default!;
+    [Dependency] private IPrototypeManager _prototype = default!;
     [Dependency] private MutationSystem _mutation = default!;
     [Dependency] private AppearanceSystem _appearance = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
@@ -47,7 +50,6 @@ public sealed partial class PlantHolderSystem : EntitySystem
     [Dependency] private ItemSlotsSystem _itemSlots = default!;
     [Dependency] private ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private SharedEntityEffectsSystem _entityEffects = default!;
-    [Dependency] private SharedToolSystem _tool = default!;
 
     public const float HydroponicsSpeedMultiplier = 1f;
     public const float HydroponicsConsumptionMultiplier = 2f;
@@ -219,7 +221,7 @@ public sealed partial class PlantHolderSystem : EntitySystem
 
             args.Handled = true;
             _popup.PopupCursor(Loc.GetString("plant-holder-component-already-seeded-message",
-                ("name", uid)), args.User, PopupType.Medium);
+                ("name", Comp<MetaDataComponent>(uid).EntityName)), args.User, PopupType.Medium);
             return;
         }
 
@@ -229,9 +231,9 @@ public sealed partial class PlantHolderSystem : EntitySystem
             if (component.WeedLevel > 0)
             {
                 _popup.PopupCursor(Loc.GetString("plant-holder-component-remove-weeds-message",
-                    ("name", uid)), args.User, PopupType.Medium);
+                    ("name", Comp<MetaDataComponent>(uid).EntityName)), args.User, PopupType.Medium);
                 _popup.PopupEntity(Loc.GetString("plant-holder-component-remove-weeds-others-message",
-                    ("otherName", Identity.Entity(args.User, EntityManager))), uid, Filter.PvsExcept(args.User), true);
+                    ("otherName", Comp<MetaDataComponent>(args.User).EntityName)), uid, Filter.PvsExcept(args.User), true);
                 component.WeedLevel = 0;
                 UpdateSprite(uid, component);
             }
@@ -249,15 +251,15 @@ public sealed partial class PlantHolderSystem : EntitySystem
             if (component.Seed != null)
             {
                 _popup.PopupCursor(Loc.GetString("plant-holder-component-remove-plant-message",
-                    ("name", uid)), args.User, PopupType.Medium);
+                    ("name", Comp<MetaDataComponent>(uid).EntityName)), args.User, PopupType.Medium);
                 _popup.PopupEntity(Loc.GetString("plant-holder-component-remove-plant-others-message",
-                    ("name", Identity.Entity(args.User, EntityManager))), uid, Filter.PvsExcept(args.User), true);
+                    ("name", Comp<MetaDataComponent>(args.User).EntityName)), uid, Filter.PvsExcept(args.User), true);
                 RemovePlant(uid, component);
             }
             else
             {
                 _popup.PopupCursor(Loc.GetString("plant-holder-component-no-plant-message",
-                    ("name", uid)), args.User);
+                    ("name", Comp<MetaDataComponent>(uid).EntityName)), args.User);
             }
 
             return;
@@ -321,8 +323,7 @@ public sealed partial class PlantHolderSystem : EntitySystem
             return;
         }
 
-        var harvestToolQuality = entity.Comp.HarvestToolQuality;
-        if (harvestToolQuality.HasValue && _tool.HasQuality(args.Used, harvestToolQuality.Value))
+        if (HasComp<SharpComponent>(args.Used))
         {
             args.Handled = true;
             DoHarvest(uid, args.User, component);
@@ -894,7 +895,7 @@ public sealed partial class PlantHolderSystem : EntitySystem
                 if (entry.Quantity < PlantMetabolismRate)
                     continue;
 
-                var reagentProto = ProtoMan.Index<ReagentPrototype>(entry.Reagent.Prototype);
+                var reagentProto = _prototype.Index<ReagentPrototype>(entry.Reagent.Prototype);
                 _entityEffects.ApplyEffects(uid, reagentProto.PlantMetabolisms.ToArray(), entry.Quantity);
             }
 

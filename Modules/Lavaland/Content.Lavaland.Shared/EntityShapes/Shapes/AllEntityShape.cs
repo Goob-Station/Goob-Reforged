@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Numerics;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 
 namespace Content.Lavaland.Shared.EntityShapes.Shapes;
 
@@ -16,7 +15,7 @@ public sealed partial class AllEntityShape : EntityShape
     [DataField]
     public Dictionary<string, GroupEntityShapeOptions>? Options;
 
-    protected override List<Vector2> GetShapeImplementation(IRobustRandom rand, IPrototypeManager proto)
+    protected override List<Vector2> GetShapeImplementation(System.Random rand, IPrototypeManager proto)
     {
         var result = new List<Vector2>();
         foreach (var child in Children)

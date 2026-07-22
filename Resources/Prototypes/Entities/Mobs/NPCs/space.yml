@@ -1,7 +1,7 @@
 - type: entity
   name: basic
   id: MobSpaceBasic
-  parent: [ SimpleSpaceMobBase, MobNightVision ]
+  parent: SimpleSpaceMobBase
   abstract: true
   description: It looks friendly. Why don't you give it a hug?
   components:
@@ -74,7 +74,7 @@
 - type: entity
   name: space bear
   id: MobBearSpace
-  parent: [MobSpaceBasic, BaseSlicingRefinable]
+  parent: MobSpaceBasic
   description: It looks friendly. Why don't you give it a hug?
   components:
   - type: Sprite
@@ -95,8 +95,8 @@
         Base: bear_dead
       Dead:
         Base: bear_dead
-  - type: ToolRefinable
-    refineResult:
+  - type: Butcherable
+    spawned:
     - id: FoodMeatBear
       amount: 3
     - id: MaterialHideBear
@@ -105,7 +105,8 @@
   - type: ReplacementAccent
     accent: genericAggressive
   - type: Vocal
-    emoteSounds: Bear
+    sounds:
+      Unsexed: Bear
   - type: InteractionPopup
     successChance: 0.25
     interactSuccessString: petting-success-bear
@@ -123,7 +124,7 @@
 - type: entity
   name: space kangaroo
   id: MobKangarooSpace
-  parent: [MobSpaceBasic, StripableInventoryBase, BaseSlicingRefinable]
+  parent: [MobSpaceBasic, StripableInventoryBase]
   description: It looks friendly. Why don't you give it a hug?
   components:
   - type: Sprite
@@ -162,11 +163,12 @@
     speciesId: kangaroo
     templateId: spacekangaroo
   - type: Vocal
-    emoteSounds: Kangaroo
+    sounds:
+      Unsexed: Kangaroo
   - type: ReplacementAccent
     accent: kangaroo
-  - type: ToolRefinable
-    refineResult:
+  - type: Butcherable
+    spawned:
     - id: FoodMeat
       amount: 1
   - type: MobThresholds
@@ -184,7 +186,7 @@
 - type: entity
   name: space spider
   id: MobSpiderSpace
-  parent: [MobSpaceBasic, BaseSlicingRefinable]
+  parent: MobSpaceBasic
   description: It's so glowing, it looks dangerous.
   components:
   - type: Sprite
@@ -209,8 +211,8 @@
         BaseUnshaded: glow
       Dead:
         Base: spacespider_dead
-  - type: ToolRefinable
-    refineResult:
+  - type: Butcherable
+    spawned:
     - id: FoodMeatSpider
       amount: 2
     - id: EggSpider
@@ -264,7 +266,10 @@
     speechSounds: Arachnid
     allowedEmotes: ['Click', 'Chitter']
   - type: Vocal
-    emoteSounds: UnisexArachnid
+    sounds:
+      Male: UnisexArachnid
+      Female: UnisexArachnid
+      Unsexed: UnisexArachnid
   - type: TypingIndicator
     proto: spider
 
@@ -289,7 +294,7 @@
 - type: entity
   name: space cobra
   id: MobCobraSpace
-  parent: [MobSpaceBasic, BaseSlicingRefinable]
+  parent: MobSpaceBasic
   description: Long fangs and a glowing hood, and the alluring look begs to come closer.
   components:
     - type: Sprite
@@ -317,15 +322,15 @@
           BaseUnshaded: glow
         Dead:
           Base: dead_spacecobra
-    - type: ToolRefinable
-      refineResult:
-      - id: FoodMeatSnake
-        amount: 2
-      - id: UraniumOre1
-        amount: 1
-      - id: ClothingShoesSnakeskinBoots
-        amount: 1
-        prob: 0.3
+    - type: Butcherable
+      spawned:
+        - id: FoodMeatSnake
+          amount: 2
+        - id: UraniumOre1
+          amount: 1
+        - id: ClothingShoesSnakeskinBoots
+          amount: 1
+          prob: 0.3
     - type: Bloodstream
       bloodReferenceSolution:
         reagents:
@@ -482,10 +487,13 @@
     speechSounds: SheepSpace
     speechVerb: Sheep
   - type: Vocal
-    emoteSounds: SheepSpace
+    sounds:
+      Female: SheepSpace
+      Male: SheepSpace
+      Unsexed: SheepSpace
 
 - type: entity
-  parent: [SimpleSpaceMobBase, BaseMobAnimal, SolutionVermin, MobNightVision]
+  parent: [SimpleSpaceMobBase, BaseMobAnimal, SolutionVermin]
   id: MobSnail
   name: snail
   description: Revolting unless you're french.

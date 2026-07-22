@@ -1,4 +1,3 @@
-using System.Numerics.Tensors;
 using System.Runtime.CompilerServices;
 using Content.Shared.Atmos.Prototypes;
 using Content.Shared.Atmos.Reactions;
@@ -111,7 +110,7 @@ public abstract partial class SharedAtmosphereSystem
     [PublicAPI]
     public void GetFlammableMoles(GasMixture mixture, float[] buffer)
     {
-        TensorPrimitives.Multiply(mixture.Moles, GasOxidiserFuelMask, buffer);
+        NumericsHelpers.Multiply(mixture.Moles, GasOxidiserFuelMask, buffer);
     }
 
     /// <summary>
@@ -214,7 +213,7 @@ public abstract partial class SharedAtmosphereSystem
             }
         }
 
-        TensorPrimitives.Add(receiver.Moles, giver.Moles, receiver.Moles);
+        NumericsHelpers.Add(receiver.Moles, giver.Moles);
     }
 
     /// <summary>

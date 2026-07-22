@@ -192,8 +192,10 @@
   - name: bounty-item-knife
     amount: 5
     whitelist:
+      components:
+      - Sharp
       tags:
-      - Knife
+      - UtilityKnife # required because retracted utility knives are not Sharp
 
 - type: cargoBounty
   id: BountyLemon
@@ -530,7 +532,7 @@
       - Meat
     blacklist:
       components:
-      - ToolRefinable
+      - SliceableFood
 
 - type: cargoBounty
   id: BountyFruit

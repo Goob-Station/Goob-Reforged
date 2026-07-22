@@ -529,18 +529,18 @@
     solution:
       reagents:
       - ReagentId: Nutriment
-        Quantity: 8
+        Quantity: 7.25
       - ReagentId: Fiber
-        Quantity: 4
+        Quantity: 3.25
       - ReagentId: Vitamin
-        Quantity: 1.4
+        Quantity: 1.05
       - ReagentId: TableSalt
-        Quantity: 0.1
+        Quantity: 0.05
       - ReagentId: Blackpepper
-        Quantity: 0.1
+        Quantity: 0.05
 
 - type: entity
-  parent: [SolutionNormal, FoodBakedBase, BaseSlicingRefinableFood]
+  parent: [SolutionNormal, FoodBakedBase]
   id: FoodBakedBrownieBatch
   name: brownies
   description: A pan of brownies.
@@ -564,10 +564,9 @@
         Quantity: 32
       - ReagentId: Theobromine
         Quantity: 8
-  - type: ToolRefinable
-    refineResult:
-    - id: FoodBakedBrownie
-      amount: 8
+  - type: SliceableFood
+    count: 8
+    slice: FoodBakedBrownie
 
 - type: entity
   name: brownie
@@ -597,7 +596,7 @@
     - Slice
 
 - type: entity
-  parent: [SolutionNormal, FoodBakedBase, BaseSlicingRefinableFood]
+  parent: [SolutionNormal, FoodBakedBase]
   id: FoodBakedCannabisBrownieBatch
   name: special brownies
   description: A pan of "special" brownies.
@@ -624,10 +623,9 @@
         Quantity: 8
       - ReagentId: THC
         Quantity: 16
-  - type: ToolRefinable
-    refineResult:
-    - id: FoodBakedCannabisBrownie
-      amount: 8
+  - type: SliceableFood
+    count: 8
+    slice: FoodBakedCannabisBrownie
 
 - type: entity
   parent: FoodBakedBase

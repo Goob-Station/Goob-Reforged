@@ -14,9 +14,7 @@
       path: /Audio/Weapons/ebladehum.ogg
   - type: ComponentToggler
     components:
-    - type: Tool
-      qualities:
-      - Slicing
+    - type: Sharp
     - type: DisarmMalus
       malus: 0.6
     - type: Execution
@@ -128,9 +126,7 @@
         volume: -3
   - type: ComponentToggler
     components:
-    - type: Tool
-      qualities:
-      - Slicing
+    - type: Sharp
     - type: DisarmMalus
       malus: 0.4
     - type: Execution
@@ -195,9 +191,7 @@
     deactivatedSecret: true
   - type: ComponentToggler
     components:
-    - type: Tool
-      qualities:
-      - Slicing
+    - type: Sharp
     - type: DisarmMalus
       malus: 0.4
     - type: Execution
@@ -320,13 +314,11 @@
         volume: 3
   - type: ComponentToggler
     components:
+    - type: Sharp
     - type: DisarmMalus
       malus: 0.7
     - type: Execution
       doAfterDuration: 4.0
-    - type: Tool
-      qualities:
-      - Slicing
   - type: Wieldable
     wieldSound: null # esword light sound instead
   - type: MeleeWeapon

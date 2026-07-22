@@ -46,6 +46,7 @@ namespace Content.Shared.Magic;
 public abstract partial class SharedMagicSystem : EntitySystem
 {
     [Dependency] private ISerializationManager _seriMan = default!;
+    [Dependency] private IMapManager _mapManager = default!;
     [Dependency] private SharedMapSystem _mapSystem = default!;
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private SharedGunSystem _gunSystem = default!;
@@ -67,7 +68,7 @@ public abstract partial class SharedMagicSystem : EntitySystem
     [Dependency] private TurfSystem _turf = default!;
     [Dependency] private SharedChargesSystem _charges = default!;
     [Dependency] private ExamineSystemShared _examine= default!;
-    [Dependency] private AliveHumanoidTargetSystem _target = default!;
+    [Dependency] private TargetSystem _target = default!;
 
     private static readonly ProtoId<TagPrototype> InvalidForGlobalSpawnSpellTag = "InvalidForGlobalSpawnSpell";
 
@@ -287,7 +288,7 @@ public abstract partial class SharedMagicSystem : EntitySystem
         var ent = Spawn(ev.Prototype, fromMap);
         var direction = _transform.ToMapCoordinates(toCoords).Position -
                          fromMap.Position;
-        _gunSystem.ShootProjectile(ent, direction, userVelocity, ev.Performer, ev.Performer, ev.ProjectileSpeed);
+        _gunSystem.ShootProjectile(ent, direction, userVelocity, ev.Performer, ev.Performer, 25f);
     }
     // End Projectile Spells
     #endregion
@@ -342,7 +343,7 @@ public abstract partial class SharedMagicSystem : EntitySystem
         if (!_net.IsServer)
             return;
 
-        var ent = Spawn(proto, position.SnapToGrid(EntityManager));
+        var ent = Spawn(proto, position.SnapToGrid(EntityManager, _mapManager));
 
         if (lifetime != null)
         {
@@ -476,7 +477,7 @@ public abstract partial class SharedMagicSystem : EntitySystem
 
         ev.Handled = true;
 
-        var allHumans = _target.GetMinds();
+        var allHumans = _target.GetAliveHumans();
 
         foreach (var human in allHumans)
         {

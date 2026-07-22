@@ -45,7 +45,8 @@
   - type: TypingIndicator
     proto: robot
   - type: Vocal
-    emoteSounds: UnisexSilicon
+    sounds:
+      Unsexed: UnisexSilicon
   - type: Emoting
   - type: ZombieImmune
   - type: ProtectedFromStepTriggers
@@ -244,7 +245,8 @@
       params:
         variation: 0.125
   - type: Vocal
-    emoteSounds: Cluwne
+    sounds:
+      Unsexed: Cluwne
   - type: ExplodeOnTrigger
   - type: Explosive
     explosionType: Default

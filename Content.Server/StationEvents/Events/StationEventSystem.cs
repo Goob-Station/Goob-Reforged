@@ -8,6 +8,8 @@ using Content.Shared.Database;
 using Content.Shared.GameTicking.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 
 namespace Content.Server.StationEvents.Events;
 
@@ -17,6 +19,7 @@ namespace Content.Server.StationEvents.Events;
 public abstract partial class StationEventSystem<T> : GameRuleSystem<T> where T : IComponent
 {
     [Dependency] protected IAdminLogManager AdminLogManager = default!;
+    [Dependency] protected IPrototypeManager PrototypeManager = default!;
     [Dependency] protected ChatSystem ChatSystem = default!;
     [Dependency] protected SharedAudioSystem Audio = default!;
     [Dependency] protected StationSystem StationSystem = default!;
@@ -27,7 +30,7 @@ public abstract partial class StationEventSystem<T> : GameRuleSystem<T> where T 
     {
         base.Initialize();
 
-        Sawmill = LogManager.GetSawmill("stationevents");
+        Sawmill = Logger.GetSawmill("stationevents");
     }
 
     /// <inheritdoc/>
