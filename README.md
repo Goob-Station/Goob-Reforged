@@ -36,20 +36,3 @@ We are not currently accepting translations of the game on our main repository. 
 3. <b style="color:crimson;">Different from other SS14 projects! </b>Compile the solution with `dotnet run --project Goobstation.Bootstrap`
 
 [More detailed instructions on building the project.](https://docs.goobstation.com/en/general-development/setup.html)
-
-## License
-
-Each file in this codebase includes a license header that clearly defines its terms. Most unique files in this repository are licensed under the Mozilla Public License (MPL). Files originating from upstream (the Space Station 14 codebase) are licensed under MIT. Any dual or multiple licenses are explicitly indicated with two or more license lines in the file header. Please refer to the headers for the exact licensing terms.
-
-Most media assets are licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) unless stated otherwise. Assets have their license and the copyright in the metadata file. [Example](https://github.com/space-wizards/space-station-14/blob/master/Resources/Textures/Objects/Tools/crowbar.rsi/meta.json).
-
-Note that some assets are licensed under the non-commercial [CC-BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) or similar non-commercial licenses and will need to be removed if you wish to use this project commercially.
-
-### MPL for Dummies, Forks, and people looking to port our content.
-
-The Mozilla Public License (MPL) is a “file-level” license, which means it only applies to the specific files it covers. Unlike AGPL, which requires the entire project using your code to also be AGPL (strong copyleft), MPL allows your code to be included in any codebase (open or closed source) as long as the MPL license stays with that file.
-
-If you distribute binaries of an MPL-covered file, you must make that file’s source code available. You do **not** need to release the source code of the rest of the project. This makes it much easier to combine MPL-licensed files with other projects without affecting their overall licensing.
-
-Most MPL-licensed files can also be relicensed under stronger copyleft licenses, such as GPL or AGPL, if desired.
-**Exception:** files licensed under `MPL-2.0-no-copyleft-exception` cannot be ported to heavier copyleft licenses.
