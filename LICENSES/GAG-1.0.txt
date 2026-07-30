@@ -216,15 +216,6 @@ indemnity or liability terms You offer. You may include additional
 disclaimers of warranty and limitations of liability specific to any
 jurisdiction.
 
-3.6. Remote End User Access
-
-If You run Covered Software on a server or network service and allow third
-parties to interact with or use the software remotely, You must make the
-Source Code Form of the Covered Software, including any Modifications You
-have made, available to those remote users under the terms of this License.
-You must provide clear instructions for obtaining the Source Code Form,
-and it must be offered at no more than the cost of distribution.
-
 4. Inability to Comply Due to Statute or Regulation
 ---------------------------------------------------
 
