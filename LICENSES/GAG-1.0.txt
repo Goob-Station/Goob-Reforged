@@ -1,5 +1,11 @@
-Mozilla Public License Version 2.0
-==================================
+Goob Access Guarantee Version 1.0
+===========================
+
+This License is a modified version of the Mozilla Public License,
+Version 2.0. It is not the Mozilla Public License. It differs from the
+Mozilla Public License, most notably in Sections 1.5, 1.12, 2.7, 3.6,
+and 10, and it is neither published nor endorsed by the Mozilla
+Foundation.
 
 1. Definitions
 --------------
@@ -22,20 +28,14 @@ Mozilla Public License Version 2.0
     including portions thereof.
 
 1.5. "Incompatible With Secondary Licenses"
-    means
-
-    (a) that the initial Contributor has attached the notice described
-        in Exhibit B to the Covered Software; or
-
-    (b) that the Covered Software was made available under the terms of
-        version 1.1 or earlier of the License, but not also under the
-        terms of a Secondary License.
+    means that the initial Contributor has attached the notice described
+    in Exhibit B to the Covered Software.
 
 1.6. "Executable Form"
     means any form of the work other than Source Code Form.
 
 1.7. "Larger Work"
-    means a work that combines Covered Software with other material, in 
+    means a work that combines Covered Software with other material, in
     a separate file or files, that is not Covered Software.
 
 1.8. "License"
@@ -65,10 +65,8 @@ Mozilla Public License Version 2.0
     Contributor Version.
 
 1.12. "Secondary License"
-    means either the GNU General Public License, Version 2.0, the GNU
-    Lesser General Public License, Version 2.1, the GNU Affero General
-    Public License, Version 3.0, or any later versions of those
-    licenses.
+    means the GNU Affero General Public License, Version 3.0, or any
+    later version of that license.
 
 1.13. "Source Code Form"
     means the form of the work preferred for making modifications.
@@ -105,7 +103,8 @@ non-exclusive license:
 
 The licenses granted in Section 2.1 with respect to any Contribution
 become effective for each Contribution on the date the Contributor first
-distributes such Contribution.
+distributes such Contribution or first makes it available for remote
+network interaction as described in Section 3.6, whichever occurs first.
 
 2.3. Limitations on Grant Scope
 
@@ -151,8 +150,8 @@ equivalents.
 
 2.7. Conditions
 
-Sections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted
-in Section 2.1.
+Sections 3.1, 3.2, 3.3, 3.4, and 3.6 are conditions of the licenses
+granted in Section 2.1.
 
 3. Responsibilities
 -------------------
@@ -216,6 +215,30 @@ indemnity or liability terms You offer. You may include additional
 disclaimers of warranty and limitations of liability specific to any
 jurisdiction.
 
+3.6. Remote Network Interaction
+
+If You make Covered Software available to third parties to interact with
+remotely through a computer network, whether or not You have made
+Modifications, You must:
+
+(a) make available the Source Code Form of the Covered Software,
+    including any Modifications You have made, corresponding to the
+    version being made available remotely, under the terms of this
+    License;
+
+(b) provide that Source Code Form at no charge through a network server
+    or other readily accessible means; and
+
+(c) offer notice of how to obtain that Source Code Form prominently,
+    through the same interface by which those third parties interact
+    with the Covered Software.
+
+This obligation continues for as long as You provide such remote access.
+
+Making Covered Software available for remote network interaction is not
+distribution for the purposes of Sections 3.1 and 3.2, and does not by
+itself trigger the obligations of those Sections.
+
 4. Inability to Comply Due to Statute or Regulation
 ---------------------------------------------------
 
@@ -225,9 +248,11 @@ statute, judicial order, or regulation then You must: (a) comply with
 the terms of this License to the maximum extent possible; and (b)
 describe the limitations and the code they affect. Such description must
 be placed in a text file included with all distributions of the Covered
-Software under this License. Except to the extent prohibited by statute
-or regulation, such description must be sufficiently detailed for a
-recipient of ordinary skill to be able to understand it.
+Software under this License, and, where the limitation affects Your
+compliance with Section 3.6, made available alongside the Source Code
+Form offered under that Section. Except to the extent prohibited by
+statute or regulation, such description must be sufficiently detailed
+for a recipient of ordinary skill to be able to understand it.
 
 5. Termination
 --------------
@@ -325,9 +350,9 @@ shall not be used to construe this License against a Contributor.
 
 10.1. New Versions
 
-Mozilla Foundation is the license steward. Except as provided in Section
-10.3, no one other than the license steward has the right to modify or
-publish new versions of this License. Each version will be given a
+Goob Station is the license steward. Except as provided in Section 10.3,
+no one other than the license steward has the right to modify or publish
+new versions of this License. Each version will be given a
 distinguishing version number.
 
 10.2. Effect of New Versions
@@ -355,9 +380,9 @@ notice described in Exhibit B of this License must be attached.
 Exhibit A - Source Code Form License Notice
 -------------------------------------------
 
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  This Source Code Form is subject to the terms of the Goob Access
+  Guarantee, v. 1.0. If a copy of the GAG was not distributed with this
+  file, You can obtain one at https://goobstation.com/GAG/1.0/.
 
 If it is not possible or desirable to put the notice in a particular
 file, then You may include the notice in a location (such as a LICENSE
@@ -370,4 +395,4 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 ---------------------------------------------------------
 
   This Source Code Form is "Incompatible With Secondary Licenses", as
-  defined by the Mozilla Public License, v. 2.0.
+  defined by the Goob Access Guarantee, v. 1.0.
