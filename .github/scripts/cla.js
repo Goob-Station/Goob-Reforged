@@ -1,7 +1,8 @@
 'use strict';
 
+
 const CONFIG = {
-  claDocument: 'https://github.com/Goob-Station/Goob-Station/blob/master/CLA.md',
+  claDocumentPath: 'blob/master/CLA.md',
 
   signaturesBranch: 'cla-signatures',
   signaturesPath: 'signatures.json',
@@ -13,6 +14,8 @@ const CONFIG = {
 
   allowlist: [],
 
+  minimizeWhenResolved: true,
+
   marker: '<!-- goob-cla-bot -->',
 
   committer: {
@@ -23,6 +26,10 @@ const CONFIG = {
 
 const norm = (s) => (s || '').toLowerCase().replace(/\s+/g, ' ').trim();
 const lc = (s) => (s || '').toLowerCase();
+
+const serverUrl = (ctx) => process.env.GITHUB_SERVER_URL || ctx.context.serverUrl;
+const repoUrl = (ctx) => `${serverUrl(ctx)}/${ctx.owner}/${ctx.repo}`;
+const claUrl = (ctx) => `${repoUrl(ctx)}/${CONFIG.claDocumentPath}`;
 
 async function loadStore(ctx) {
   const { github, owner, repo } = ctx;
@@ -66,10 +73,10 @@ async function mutateStore(ctx, message, mutate) {
   for (let attempt = 0; attempt < 4; attempt++) {
     const store = await loadStore(ctx);
     const changed = await mutate(store.data);
-    if (!changed) return store;
+    if (!changed) return false;
     try {
       await writeStore(ctx, store, message);
-      return store;
+      return true;
     } catch (err) {
       if (err.status !== 409 && err.status !== 422) throw err;
       await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
@@ -78,12 +85,12 @@ async function mutateStore(ctx, message, mutate) {
   throw new Error('could not write the signature ledger after 4 attempts');
 }
 
-function hasSigned(data, login) {
-  return data.signatures.some((s) => lc(s.login) === lc(login));
+function findSignature(data, login) {
+  return data.signatures.find((s) => lc(s.login) === lc(login)) || null;
 }
 
 function addSignature(data, user, meta) {
-  if (hasSigned(data, user.login)) return false;
+  if (findSignature(data, user.login)) return false;
   data.signatures.push({
     login: user.login,
     id: user.id,
@@ -123,71 +130,85 @@ function requiredSigners(pr) {
   return [...seen.values()];
 }
 
-function renderComment(data, required, missing) {
+const FOOTER =
+  '<sub>Signatures are recorded in ' +
+  `[\`${CONFIG.signaturesPath}\`](../blob/${CONFIG.signaturesBranch}/${CONFIG.signaturesPath}) ` +
+  'on the `' +
+  CONFIG.signaturesBranch +
+  '` branch and carry over to every future pull request. ' +
+  'Reply with `I revoke my CLA signature` to withdraw.</sub>';
+
+function renderPrompt(data, required, missing, claHref) {
+  const onFile = required.filter((login) => !missing.includes(login));
   const lines = [CONFIG.marker, '', '## Contributor License Agreement', ''];
 
-  if (required.length === 0) {
-    lines.push('No signatures are required for this pull request.');
-    return lines.join('\n');
-  }
-
   lines.push(
-    `Thanks for contributing to Goob Station. Before this can be merged, everyone`,
-    `whose work is included needs to sign the [CLA](${CONFIG.claDocument}).`,
-    '',
-    '| Contributor | Status |',
-    '| --- | --- |'
+    'Thanks for contributing to Goob Station. This pull request is waiting on',
+    `${missing.length} signature${missing.length === 1 ? '' : 's'}:`,
+    ''
   );
-
-  for (const login of required) {
-    const sig = data.signatures.find((s) => lc(s.login) === lc(login));
-    lines.push(
-      sig
-        ? `| @${login} | Signed ${sig.signed_at.slice(0, 10)} |`
-        : `| @${login} | Not signed yet |`
-    );
-  }
-
+  for (const login of missing) lines.push(`- @${login}`);
   lines.push('');
 
-  if (missing.length === 0) {
-    lines.push('Everyone has signed. This check is green.');
-  } else {
+  if (onFile.length > 0) {
+    const listed = onFile
+      .map((login) => {
+        const sig = findSignature(data, login);
+        return `\`${login}\` (${sig.signed_at.slice(0, 10)})`;
+      })
+      .join(', ');
     lines.push(
-      '### How to sign',
+      `<details><summary>Already on file: ${onFile.length}</summary>`,
       '',
-      'Either react to **this comment** with :+1:, or post a new comment containing:',
+      listed,
       '',
-      '```',
-      'I have read the CLA Document and I hereby sign the CLA',
-      '```',
-      '',
-      'Commenting is picked up immediately. Reactions are swept every ten minutes,',
-      'so give it a moment before worrying.',
-      '',
-      '### Porting someone else\'s work?',
-      '',
-      'Add a line like this to the pull request description and they will be added',
-      'to the table above:',
-      '',
-      '```',
-      'CLA-Cosigners: @their-username @another-username',
-      '```'
+      '</details>',
+      ''
     );
   }
 
   lines.push(
+    '### How to sign',
     '',
-    '<sub>Signatures are recorded in ' +
-      `[\`${CONFIG.signaturesPath}\`](../blob/${CONFIG.signaturesBranch}/${CONFIG.signaturesPath}) ` +
-      'on the `' + CONFIG.signaturesBranch + '` branch. ' +
-      'Reply with `I revoke my CLA signature` to withdraw.</sub>'
+    `Read the [CLA](${claHref}), then either react to **this comment**`,
+    'with :+1:, or post a new comment containing:',
+    '',
+    '```',
+    'I have read the CLA Document and I hereby sign the CLA',
+    '```',
+    '',
+    'Comments are picked up immediately. Reactions are swept every ten minutes.',
+    'You only have to do this once. Future pull requests will not ask again.',
+    '',
+    "### Porting someone else's work?",
+    '',
+    'Add a line like this to the pull request description. Anyone who has already',
+    'signed is recognised automatically and will not be pinged:',
+    '',
+    '```',
+    'CLA-Cosigners: @their-username @another-username',
+    '```',
+    '',
+    FOOTER
   );
 
   return lines.join('\n');
 }
 
-async function upsertComment(ctx, prNumber, body) {
+function renderResolved(required) {
+  const listed = required.map((login) => `\`${login}\``).join(', ');
+  return [
+    CONFIG.marker,
+    '',
+    '## Contributor License Agreement',
+    '',
+    `All contributors on this pull request have signed: ${listed}`,
+    '',
+    FOOTER,
+  ].join('\n');
+}
+
+async function findBotComment(ctx, prNumber) {
   const { github, owner, repo } = ctx;
   const comments = await github.paginate(github.rest.issues.listComments, {
     owner,
@@ -195,27 +216,33 @@ async function upsertComment(ctx, prNumber, body) {
     issue_number: prNumber,
     per_page: 100,
   });
-  const existing = comments.find((c) => (c.body || '').includes(CONFIG.marker));
+  return comments.find((c) => (c.body || '').includes(CONFIG.marker)) || null;
+}
 
-  if (existing) {
-    if (norm(existing.body) !== norm(body)) {
-      await github.rest.issues.updateComment({
-        owner,
-        repo,
-        comment_id: existing.id,
-        body,
-      });
+async function setMinimized(ctx, nodeId, minimize) {
+  if (!CONFIG.minimizeWhenResolved || !nodeId) return;
+  const { github, core } = ctx;
+  try {
+    if (minimize) {
+      await github.graphql(
+        `mutation($id: ID!) {
+           minimizeComment(input: { subjectId: $id, classifier: RESOLVED }) {
+             clientMutationId
+           }
+         }`,
+        { id: nodeId }
+      );
+    } else {
+      await github.graphql(
+        `mutation($id: ID!) {
+           unminimizeComment(input: { subjectId: $id }) { clientMutationId }
+         }`,
+        { id: nodeId }
+      );
     }
-    return existing.id;
+  } catch (err) {
+    core.info(`could not toggle comment collapse: ${err.message}`);
   }
-
-  const created = await github.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number: prNumber,
-    body,
-  });
-  return created.data.id;
 }
 
 async function evaluate(ctx, prNumber) {
@@ -229,13 +256,44 @@ async function evaluate(ctx, prNumber) {
 
   const store = await loadStore(ctx);
   const required = requiredSigners(pr);
-  const missing = required.filter((login) => !hasSigned(store.data, login));
+  const missing = required.filter((login) => !findSignature(store.data, login));
 
-  const commentId = await upsertComment(
-    ctx,
-    prNumber,
-    renderComment(store.data, required, missing)
-  );
+  const existing = await findBotComment(ctx, prNumber);
+  let commentId = existing ? existing.id : null;
+
+  if (missing.length > 0) {
+    const body = renderPrompt(store.data, required, missing, claUrl(ctx));
+    if (existing) {
+      if (norm(existing.body) !== norm(body)) {
+        await github.rest.issues.updateComment({
+          owner,
+          repo,
+          comment_id: existing.id,
+          body,
+        });
+      }
+      await setMinimized(ctx, existing.node_id, false);
+    } else {
+      const created = await github.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: prNumber,
+        body,
+      });
+      commentId = created.data.id;
+    }
+  } else if (existing) {
+    const body = renderResolved(required);
+    if (norm(existing.body) !== norm(body)) {
+      await github.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: existing.id,
+        body,
+      });
+    }
+    await setMinimized(ctx, existing.node_id, true);
+  }
 
   await github.rest.repos.createCommitStatus({
     owner,
@@ -243,7 +301,7 @@ async function evaluate(ctx, prNumber) {
     sha: pr.head.sha,
     state: missing.length === 0 ? 'success' : 'pending',
     context: CONFIG.statusContext,
-    target_url: CONFIG.claDocument,
+    target_url: claUrl(ctx),
     description:
       missing.length === 0
         ? 'All contributors have signed the CLA'
@@ -252,11 +310,14 @@ async function evaluate(ctx, prNumber) {
 
   await mutateStore(ctx, `cla: update pending index for #${prNumber}`, (data) => {
     const key = String(prNumber);
-    const shouldWatch = missing.length > 0 && pr.state === 'open';
+    const shouldWatch = missing.length > 0 && pr.state === 'open' && commentId != null;
     if (shouldWatch) {
-      const entry = { comment_id: commentId, updated_at: new Date().toISOString() };
-      if (JSON.stringify(data.pending[key]) === JSON.stringify(entry)) return false;
-      data.pending[key] = entry;
+      const prev = data.pending[key];
+      if (prev && prev.comment_id === commentId) return false;
+      data.pending[key] = {
+        comment_id: commentId,
+        updated_at: new Date().toISOString(),
+      };
       return true;
     }
     if (!(key in data.pending)) return false;
@@ -266,7 +327,7 @@ async function evaluate(ctx, prNumber) {
 
   core.info(
     `PR #${prNumber}: ${required.length} required, ${missing.length} missing` +
-      (missing.length ? ` (${missing.join(', ')})` : '')
+      (missing.length ? ` (${missing.join(', ')})` : ' (silent)')
   );
 }
 
@@ -316,8 +377,6 @@ async function sweepReactions(ctx) {
     return;
   }
 
-  const touched = new Set();
-
   for (const [prNumber, entry] of pending) {
     let reactions;
     try {
@@ -329,10 +388,10 @@ async function sweepReactions(ctx) {
       });
     } catch (err) {
       if (err.status === 404) {
-        touched.add(Number(prNumber));
-        continue;
+        reactions = [];
+      } else {
+        throw err;
       }
-      throw err;
     }
 
     for (const reaction of reactions) {
@@ -340,22 +399,21 @@ async function sweepReactions(ctx) {
       const user = reaction.user;
       if (!user || user.type === 'Bot') continue;
 
-      const added = await mutateStore(
+      await mutateStore(
         ctx,
         `cla: ${user.login} signed by reaction on #${prNumber}`,
         (data) =>
           addSignature(data, user, {
             method: 'reaction',
             pr: Number(prNumber),
-            evidence: `https://github.com/${owner}/${repo}/pull/${prNumber}#issuecomment-${entry.comment_id}`,
+            evidence: `${repoUrl(ctx)}/pull/${prNumber}#issuecomment-${entry.comment_id}`,
           })
       );
-      if (added) touched.add(Number(prNumber));
     }
-  
-  const toRefresh = new Set([...touched, ...pending.map(([n]) => Number(n))]);
-  for (const prNumber of toRefresh) {
-    await evaluate(ctx, prNumber);
+  }
+
+  for (const [prNumber] of pending) {
+    await evaluate(ctx, Number(prNumber));
   }
 }
 
