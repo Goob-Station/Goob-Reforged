@@ -1,6 +1,15 @@
 {
   "version": 1,
-  "signatures": [],
+  "signatures": [
+    {
+      "login": "Aidenkrz",
+      "id": 28298836,
+      "signed_at": "2026-07-31T00:03:29.316Z",
+      "method": "reaction",
+      "pull_request": 87,
+      "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/87#issuecomment-5137527612"
+    }
+  ],
   "pending": {
     "87": {
       "comment_id": 5137527612,
