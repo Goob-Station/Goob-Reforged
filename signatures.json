@@ -8,6 +8,14 @@
       "method": "reaction",
       "pull_request": 87,
       "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/87#issuecomment-5137527612"
+    },
+    {
+      "login": "BombasterDS2",
+      "id": 191210121,
+      "signed_at": "2026-08-02T07:20:22.147Z",
+      "method": "reaction",
+      "pull_request": 90,
+      "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/90#issuecomment-5150303017"
     }
   ],
   "pending": {
