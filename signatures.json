@@ -16,6 +16,14 @@
       "method": "reaction",
       "pull_request": 90,
       "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/90#issuecomment-5150303017"
+    },
+    {
+      "login": "madeline-celeste",
+      "id": 224184098,
+      "signed_at": "2026-08-17T17:02:05.239Z",
+      "method": "reaction",
+      "pull_request": 96,
+      "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/96#issuecomment-5317911612"
     }
   ],
   "pending": {
