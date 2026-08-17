@@ -28,7 +28,7 @@
   id: HandheldPowerMonitoringConsole
   parent:
   - BaseHandheldPowerMonitoringConsole
-  suffix: Handheld
+  suffix: Handheld, Always Powered
   components:
   - type: Damageable
   - type: Injurable
@@ -45,4 +45,4 @@
 - type: entity
   id: HandheldPowerMonitoringConsolePowered
   parent: [HandheldPowerMonitoringConsole, BaseHandheldComputer]
-  suffix: Handheld, Powered
+  suffix: Handheld
