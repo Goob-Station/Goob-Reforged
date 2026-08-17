@@ -27,4 +27,5 @@
   <Import Project="..\..\..\RobustToolbox\Imports\Packaging.props" />
 
   <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.EntitySystemSubscriptionsGenerator.targets" />
 </Project>

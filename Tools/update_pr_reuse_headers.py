@@ -15,6 +15,7 @@ LICENSE_CONFIG = {
     "mit": {"id": "MIT-GOOB", "path": "LICENSES/MIT-WIZARDS.txt"},
     "mpl": {"id": "MPL-2.0", "path": "LICENSES/MPL-2.0.txt"},
     "mpl-no-copyleft": {"id": "MPL-2.0-no-copyleft-exception", "path": "LICENSES/MPL-2.0-no-copyleft-exception.txt"},
+    "gag": {"id": "LicenseRef-GAG-1.0.txt", "path": "LICENSES/LicenseRef-GAG-1.0.txt"},
 }
 
 DEFAULT_LICENSE_LABEL = "mit-wizards"
@@ -24,12 +25,12 @@ DIRECTORY_RULES = [
     {
         "pattern": "Content.Goobstation.*/",
         "author": "Goob Station Contributors",
-        "license": "mpl"
+        "license": "gag"
     },
     {
         "pattern": "_Goobstation",
         "author": "Goob Station Contributors",
-        "license": "mpl"
+        "license": "gag"
     },
 ]
 
