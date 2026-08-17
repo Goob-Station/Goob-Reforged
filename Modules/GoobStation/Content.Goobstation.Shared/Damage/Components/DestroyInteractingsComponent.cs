@@ -1,3 +1,4 @@
+using Content.Goobstation.Shared.Particles;
 using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
@@ -38,8 +39,8 @@ public sealed partial class DestroyInteractingsComponent : Component
     /// <summary>
     /// The destroy on collide fixture 
     /// </summary>
-    [DataField(required: true)]
-    public string FixtureId;
+    [DataField]
+    public string FixtureId = "destroyer";
 
     /// <summary>
     /// Sound that should be played on destruction coordinates
@@ -52,6 +53,12 @@ public sealed partial class DestroyInteractingsComponent : Component
     /// </summary>
     [DataField]
     public EntProtoId? SpawnOnDestruction;
+
+    /// <summary>
+    /// Particle that should appear on entity destruction
+    /// </summary>
+    [DataField]
+    public ProtoId<ParticleEffectPrototype>? Particle;
 
     //TODO:Particles
 }

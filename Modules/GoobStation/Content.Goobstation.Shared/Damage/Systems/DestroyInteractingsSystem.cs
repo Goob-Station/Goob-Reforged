@@ -1,5 +1,9 @@
 using Content.Goobstation.Common.Damage;
+using Content.Goobstation.Shared.Particles.Systems;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Destructible;
+using Content.Shared.Ghost;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Weapons.Melee.Events;
@@ -16,6 +20,10 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
     [Dependency] private SharedAudioSystem _audioSystem = default!;
     [Dependency] private SharedDestructibleSystem _destructibleSystem = default!;
     [Dependency] private SharedHandsSystem _handsSystem = default!;
+
+    [Dependency] private SharedParticleSystem _particleSystem = default!;
+
+    [Dependency] private SharedTransformSystem _transformSystem = default!;
     [Dependency] private EntityWhitelistSystem _whitelistSystem = default!;
 
     public override void Initialize()
@@ -37,14 +45,20 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
         if (!_whitelistSystem.CheckBoth(entity, destructor.Comp.DestroyBlacklist, destructor.Comp.DestroyWhitelist))
             return false;
 
-        var position = Transform(entity).Coordinates;
+        if (HasComp<GodmodeComponent>(entity) || HasComp<GhostComponent>(entity))
+            return false;
+
+        var position = _transformSystem.GetMapCoordinates(entity);
         if (!_destructibleSystem.DestroyEntity(entity))
             return false;
 
         _audioSystem.PlayPredicted(destructor.Comp.DestructionSound, destructor, user);
 
+        if (destructor.Comp.Particle is { } particleId)
+            _particleSystem.CreateParticleOnCoordinates(particleId, position);
+
         if (destructor.Comp.SpawnOnDestruction is { } protoId)
-            spawned = PredictedSpawnAtPosition(protoId, position);
+            spawned = PredictedSpawnAtPosition(protoId, _transformSystem.ToCoordinates(position));
 
         return true;
     }
@@ -53,6 +67,9 @@ public sealed partial class DestroyInteractingSystem : EntitySystem
     {
         var target = destructor.Comp.RespectHandInteraction ? args.Used : args.User;
         args.Handled = TryDestroyEntity(target, destructor, out var spawned, args.User);
+
+        if (HasComp<GodmodeComponent>(args.User) || HasComp<GhostComponent>(args.User))
+            return;
 
         if (spawned is not { } spawnedEnt)
             return;
