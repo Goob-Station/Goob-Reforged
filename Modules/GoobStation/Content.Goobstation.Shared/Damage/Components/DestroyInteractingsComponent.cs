@@ -59,6 +59,4 @@ public sealed partial class DestroyInteractingsComponent : Component
     /// </summary>
     [DataField]
     public ProtoId<ParticleEffectPrototype>? Particle;
-
-    //TODO:Particles
 }
