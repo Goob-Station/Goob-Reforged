@@ -9,8 +9,6 @@ using System.Net;
 using System.Text.Json;
 using Content.Shared.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Content.Server.Database
 {
@@ -18,24 +16,6 @@ namespace Content.Server.Database
     {
         protected ServerDbContext(DbContextOptions options) : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            ((IDbContextOptionsBuilderInfrastructure) options).AddOrUpdateExtension(new SnakeCaseExtension());
-
-            options.ConfigureWarnings(x =>
-            {
-                x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning);
-#if DEBUG
-                // for tests
-                x.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning);
-#endif
-            });
-
-#if DEBUG
-            options.EnableSensitiveDataLogging();
-#endif
         }
 
         public DbSet<Preference> Preference { get; set; } = null!;

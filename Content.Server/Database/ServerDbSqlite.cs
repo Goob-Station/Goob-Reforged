@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization.Manager;
+using Robust.Shared.Utility;
 
 namespace Content.Server.Database
 {
@@ -21,7 +22,7 @@ namespace Content.Server.Database
     ///     Provides methods to retrieve and update character preferences.
     ///     Don't use this directly, go through <see cref="ServerPreferencesManager" /> instead.
     /// </summary>
-    public sealed class ServerDbSqlite : ServerDbBase<SqliteServerDbContext>
+    public sealed class ServerDbSqlite : ServerDbBase
     {
         private readonly Func<DbContextOptions<SqliteServerDbContext>> _options;
 
@@ -77,7 +78,7 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl();
 
-            var ban = await db.TypedContext.Ban
+            var ban = await db.SqliteDbContext.Ban
                 .ApplyIncludes(GetBanDefIncludes())
                 .Where(p => p.Id == id)
                 .AsSplitQuery()
@@ -112,7 +113,7 @@ namespace Content.Server.Database
         }
 
         private async Task<IEnumerable<BanDef>> GetBanQueryAsync(
-            DbGuard<SqliteServerDbContext> db,
+            DbGuardImpl db,
             IPAddress? address,
             NetUserId? userId,
             ImmutableArray<byte>? hwId,
@@ -122,11 +123,11 @@ namespace Content.Server.Database
         {
             var exempt = await GetBanExemptionCore(db, userId);
 
-            var newPlayer = !await db.TypedContext.Player.AnyAsync(p => p.UserId == userId);
+            var newPlayer = !await db.SqliteDbContext.Player.AnyAsync(p => p.UserId == userId);
 
             // SQLite can't do the net masking stuff we need to match IP address ranges.
             // So just pull down the whole list into memory.
-            var queryBans = await GetAllBans(db.TypedContext, includeUnbanned, exempt, type);
+            var queryBans = await GetAllBans(db.SqliteDbContext, includeUnbanned, exempt, type);
 
             var playerInfo = new BanMatcher.PlayerInfo
             {
@@ -194,9 +195,9 @@ namespace Content.Server.Database
                         })
                         .ToList(),
             };
-            db.TypedContext.Ban.Add(banEntity);
+            db.SqliteDbContext.Ban.Add(banEntity);
 
-            await db.TypedContext.SaveChangesAsync();
+            await db.SqliteDbContext.SaveChangesAsync();
             return ConvertBan(banEntity);
         }
 
@@ -204,14 +205,14 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl();
 
-            db.TypedContext.Unban.Add(new Unban
+            db.SqliteDbContext.Unban.Add(new Unban
             {
                 BanId = unban.BanId,
                 UnbanningAdmin = unban.UnbanningAdmin?.UserId,
                 UnbanTime = unban.UnbanTime.UtcDateTime
             });
 
-            await db.TypedContext.SaveChangesAsync();
+            await db.SqliteDbContext.SaveChangesAsync();
         }
         #endregion
 
@@ -299,9 +300,9 @@ namespace Content.Server.Database
                 Trust = trust,
             };
 
-            db.TypedContext.ConnectionLog.Add(connectionLog);
+            db.SqliteDbContext.ConnectionLog.Add(connectionLog);
 
-            await db.TypedContext.SaveChangesAsync();
+            await db.SqliteDbContext.SaveChangesAsync();
 
             return connectionLog.Id;
         }
@@ -311,9 +312,9 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl(cancel);
 
-            var admins = await db.TypedContext.Admin
+            var admins = await db.SqliteDbContext.Admin
                 .Include(a => a.Flags)
-                .GroupJoin(db.TypedContext.Player, a => a.UserId, p => p.UserId, (a, grouping) => new {a, grouping})
+                .GroupJoin(db.SqliteDbContext.Player, a => a.UserId, p => p.UserId, (a, grouping) => new {a, grouping})
                 .SelectMany(t => t.grouping.DefaultIfEmpty(), (t, p) => new {t.a, p!.LastSeenUserName})
                 .ToArrayAsync(cancel);
 
@@ -384,14 +385,13 @@ namespace Content.Server.Database
             return Task.CompletedTask;
         }
 
-        protected override Task<DbGuard<SqliteServerDbContext>> GetTypedDb(
-            CancellationToken cancel = default,
-            [CallerMemberName] string? name = null)
+        protected override DateTime NormalizeDatabaseTime(DateTime time)
         {
-            return GetDbImpl(cancel, name);
+            DebugTools.Assert(time.Kind == DateTimeKind.Unspecified);
+            return DateTime.SpecifyKind(time, DateTimeKind.Utc);
         }
 
-        private async Task<DbGuard<SqliteServerDbContext>> GetDbImpl(
+        private async Task<DbGuardImpl> GetDbImpl(
             CancellationToken cancel = default,
             [CallerMemberName] string? name = null)
         {
@@ -404,7 +404,35 @@ namespace Content.Server.Database
 
             var dbContext = new SqliteServerDbContext(_options());
 
-            return new DbGuard<SqliteServerDbContext>(dbContext, _prefsSemaphore.Release);
+            return new DbGuardImpl(this, dbContext);
+        }
+
+        protected override async Task<DbGuard> GetDb(
+            CancellationToken cancel = default,
+            [CallerMemberName] string? name = null)
+        {
+            return await GetDbImpl(cancel, name).ConfigureAwait(false);
+        }
+
+        private sealed class DbGuardImpl : DbGuard
+        {
+            private readonly ServerDbSqlite _db;
+            private readonly SqliteServerDbContext _ctx;
+
+            public DbGuardImpl(ServerDbSqlite db, SqliteServerDbContext dbContext)
+            {
+                _db = db;
+                _ctx = dbContext;
+            }
+
+            public override ServerDbContext DbContext => _ctx;
+            public SqliteServerDbContext SqliteDbContext => _ctx;
+
+            public override async ValueTask DisposeAsync()
+            {
+                await _ctx.DisposeAsync();
+                _db._prefsSemaphore.Release();
+            }
         }
 
         private sealed class ConcurrencySemaphore
