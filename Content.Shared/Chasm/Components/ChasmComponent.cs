@@ -4,12 +4,14 @@ using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared.Chasm;
+namespace Content.Shared.Chasm.Components; // Goob
 
 /// <summary>
 /// Marks a component that will cause entities to fall into them on a step trigger activation
 /// </summary>
-[NetworkedComponent, RegisterComponent, Access(typeof(ChasmSystem))]
+[NetworkedComponent, RegisterComponent,
+ AutoGenerateComponentState(fieldDeltas:true), // Goob
+ Access(typeof(ChasmSystem))]
 public sealed partial class ChasmComponent : Component
 {
     /// <summary>
@@ -37,6 +39,15 @@ public sealed partial class ChasmComponent : Component
     /// </summary>
     [DataField]
     public ProtoId<EmotePrototype>? Emote = "Scream";
+
+    // Goobstation start
+    /// <summary>
+    /// Goobstation
+    /// A list of entities that are currently falling into the chasm.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public List<EntityUid> FallingEntities = new();
+    // Goobstation end
 }
 
 /// <summary>

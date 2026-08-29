@@ -1,11 +1,15 @@
-﻿using Content.Shared.ActionBlocker;
+using Content.Shared.ActionBlocker;
+using Content.Shared.Chasm.Components;
+using Content.Shared.Chasm.Events;
 using Content.Shared.Chat;
+using Content.Shared.Interaction;
 using Content.Shared.Movement.Events;
 using Content.Shared.StepTrigger.Systems;
 using Content.Shared.Weapons.Misc;
 using Content.Shared.Whitelist;
 using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
@@ -22,9 +26,13 @@ public sealed partial class ChasmSystem : EntitySystem
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedChatSystem _chat = default!;
     [Dependency] private SharedGrapplingGunSystem _grapple = default!;
+    [Dependency] private SharedContainerSystem _container = default!; // Goob
 
     [Dependency] private EntityQuery<ChasmComponent> _chasmQuery;
     [Dependency] private EntityQuery<ChasmFallingComponent> _chasmFallingQuery;
+
+    // todo marty ask rouden what the fuck was going on here and on upstream merging their shit remove these comments
+    // dlso this is why we dont early merge OPEN prs
 
     /// <inheritdoc />
     public override void Update(float frameTime)
@@ -34,22 +42,12 @@ public sealed partial class ChasmSystem : EntitySystem
         var query = EntityQueryEnumerator<ChasmFallingComponent>();
         while (query.MoveNext(out var uid, out var chasm))
         {
-            if (_timing.CurTime < chasm.NextDeletionTime)
+            // Goobstation Start
+            if (_timing.CurTime < chasm.NextEffectsTime)
                 continue;
 
-            var chasmEvent = new EntityCompletedFallingIntoChasmEvent((uid, chasm));
-            RaiseLocalEvent(chasm.FallingInto, ref chasmEvent);
-            if (_chasmQuery.TryComp(chasm.FallingInto, out var chasmComp))
-            {
-                var tripperEvent = new CompletedFallingIntoChasmEvent((chasm.FallingInto, chasmComp));
-                RaiseLocalEvent(uid, ref tripperEvent);
-            }
-            else
-            {
-                DebugTools.Assert($"{ToPrettyString(chasm.FallingInto)} is missing {nameof(ChasmComponent)}");
-            }
-
-            PredictedQueueDel(uid);
+            EndFalling((uid, chasm));
+            // Goobstation End
         }
     }
 
@@ -94,14 +92,19 @@ public sealed partial class ChasmSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnShutdown(Entity<ChasmComponent> entity, ref ComponentShutdown args)
     {
-        var e = EntityQueryEnumerator<ChasmFallingComponent>();
-        while (e.MoveNext(out var fallingEnt, out var falling))
+        // Goobstation Start
+        foreach (var uid in entity.Comp.FallingEntities)
         {
-            if (falling.FallingInto != entity.Owner)
+            if (TerminatingOrDeleted(uid) || !Exists(uid))
                 continue;
 
-            RemCompDeferred<ChasmFallingComponent>(fallingEnt);
+            var resetVisualsEv = new ResetChasmVisualsEvent();
+            RaiseLocalEvent(uid, ref resetVisualsEv);
+
+            RemCompDeferred<ChasmFallingComponent>(uid);
+            _blocker.UpdateCanMove(uid);
         }
+        // Goobstation End
     }
 
     [SubscribeLocalEvent]
@@ -109,6 +112,41 @@ public sealed partial class ChasmSystem : EntitySystem
     {
         args.Cancel();
     }
+
+    // Goobstation Start
+    [SubscribeLocalEvent]
+    private void OnFallingDelete(Entity<ChasmFallingComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (ent.Comp.FallChasm is { } chasmUid &&
+            _chasmQuery.TryComp(chasmUid, out var chasm))
+        {
+            chasm.FallingEntities.Remove(ent.Owner);
+            DirtyField(chasmUid, chasm, nameof(ChasmComponent.FallingEntities));
+        }
+    }
+
+    [SubscribeLocalEvent]
+    private void OnBeforeInteract(Entity<ChasmFallingComponent> ent, ref InteractHandEvent args)
+    {
+        args.Handled = true;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnDeleteFall(Entity<ChasmDeleteComponent> ent, ref ChasmFallEffectsEvent args)
+    {
+        PredictedQueueDel(args.Entity);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnContainerFall(Entity<ChasmContainerComponent> ent, ref ChasmFallEffectsEvent args)
+    {
+        if (!_container.TryGetContainer(ent.Owner, ent.Comp.ContainerId, out var container))
+            return;
+
+        _container.Insert(args.Entity, container);
+    }
+    // Goobstation End
+
     #endregion Event Handlers
 
     #region Public API
@@ -134,9 +172,13 @@ public sealed partial class ChasmSystem : EntitySystem
             return null;
 
         var falling = AddComp<ChasmFallingComponent>(tripper);
-        falling.FallingInto = chasm;
+        falling.FallChasm = chasm.Owner; // Goob
 
-        falling.NextDeletionTime = _timing.CurTime + falling.DeletionTime;
+        // Goobstation Start
+        falling.NextEffectsTime = _timing.CurTime + falling.EffectsTime;
+        chasm.Comp.FallingEntities.Add(tripper);
+        // Goobstation End
+
         _blocker.UpdateCanMove(tripper);
 
         if (playSound)
@@ -152,8 +194,56 @@ public sealed partial class ChasmSystem : EntitySystem
 
         Entity<ChasmFallingComponent> ret = (tripper, falling);
         Dirty(ret);
+        DirtyField(chasm, chasm.Comp, nameof(ChasmComponent.FallingEntities)); // Goob
         return ret;
     }
+
+    // Goobstation Start
+    /// <summary>
+    /// Immediately ends the falling of an entity into a chasm.
+    /// </summary>
+    /// <param name="tripper">The currently falling entity.</param>
+    [PublicAPI]
+    public void EndFalling(Entity<ChasmFallingComponent?> tripper)
+    {
+        if (!_chasmFallingQuery.Resolve(tripper.Owner, ref tripper.Comp, logMissing: false))
+            return;
+
+        if (tripper.Comp.FallChasm is not { } chasm)
+            return;
+
+        var resetVisualsEv = new ResetChasmVisualsEvent();
+        RaiseLocalEvent(tripper.Owner, ref resetVisualsEv);
+
+        var beforeEv = new BeforeChasmFallEvent(chasm);
+        RaiseLocalEvent(tripper.Owner, ref beforeEv);
+        if (beforeEv.Cancelled)
+            return;
+
+        var chasmEvent = new EntityCompletedFallingIntoChasmEvent((tripper.Owner, tripper.Comp));
+        RaiseLocalEvent(chasm, ref chasmEvent);
+
+        if (_chasmQuery.TryComp(chasm, out var chasmComp))
+        {
+            chasmComp.FallingEntities.Remove(tripper.Owner);
+
+            var tripperEvent = new CompletedFallingIntoChasmEvent((chasm, chasmComp));
+            RaiseLocalEvent(tripper.Owner, ref tripperEvent);
+
+            DirtyField(chasm, chasmComp, nameof(ChasmComponent.FallingEntities));
+        }
+        else
+        {
+            DebugTools.Assert($"{ToPrettyString(chasm)} is missing {nameof(ChasmComponent)} when an entity fell into it!");
+        }
+
+        var effectsEv = new ChasmFallEffectsEvent(tripper.Owner);
+        RaiseLocalEvent(chasm, ref effectsEv);
+
+        RemComp(tripper.Owner, tripper.Comp);
+        _blocker.UpdateCanMove(tripper.Owner);
+    }
+    // Goobstation End
 
     #endregion Public API
 }

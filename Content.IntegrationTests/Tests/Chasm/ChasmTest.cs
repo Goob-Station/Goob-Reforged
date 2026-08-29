@@ -1,5 +1,5 @@
 using Content.IntegrationTests.Tests.Movement;
-using Content.Shared.Chasm;
+using Content.Shared.Chasm.Components;
 using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Misc;
 using Content.Shared.Weapons.Ranged.Components;
@@ -36,10 +36,10 @@ public sealed class ChasmTest : MovementTest
         // We should be falling right now.
         Assert.That(TryComp<ChasmFallingComponent>(Player, out var falling), "Player is not falling after walking over a chasm.");
 
-        //var fallTime = (float)falling.EffectsTime.TotalSeconds;
+        var fallTime = (float)falling.EffectsTime.TotalSeconds; // Goob
 
         // Wait until we get deleted.
-        //await Pair.RunSeconds(fallTime);
+        await Pair.RunSeconds(fallTime); // Goob
 
         // Check that the player was deleted.
         AssertDeleted(Player);
