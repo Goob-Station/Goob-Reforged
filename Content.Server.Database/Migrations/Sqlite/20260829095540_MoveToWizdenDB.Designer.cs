@@ -187,7 +187,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("AdminMessages", t =>
                         {
-                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT dismissed OR seen");
+                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT \"Dismissed\" OR \"Seen\"");
                         });
                 });
 
@@ -449,7 +449,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("Ban", t =>
                         {
-                            t.HasCheckConstraint("NoExemptOnRoleBan", "type = 0 OR exempt_flags = 0");
+                            t.HasCheckConstraint("NoExemptOnRoleBan", "\"Type\" = 0 OR \"ExemptFlags\" = 0");
                         });
                 });
 
@@ -1052,7 +1052,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("server_ban_exemption", t =>
                         {
-                            t.HasCheckConstraint("FlagsNotZero", "flags != 0");
+                            t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0");
                         });
                 });
 

@@ -20,15 +20,15 @@ namespace Content.Server.Database
             // Enforce that an address cannot be IPv6-mapped IPv4.
             // So that IPv4 addresses are consistent between separate-socket and dual-stack socket modes.
             modelBuilder.Entity<BanAddress>().ToTable(t =>
-                t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= address"));
+                t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\"")); // Goob
 
             modelBuilder.Entity<Player>().ToTable(t =>
                 t.HasCheckConstraint("LastSeenAddressNotIPv6MappedIPv4",
-                    "NOT inet '::ffff:0.0.0.0/96' >>= last_seen_address"));
+                    "NOT inet '::ffff:0.0.0.0/96' >>= \"LastSeenAddress\"")); // Goob
 
             modelBuilder.Entity<ConnectionLog>().ToTable(t =>
                 t.HasCheckConstraint("AddressNotIPv6MappedIPv4",
-                    "NOT inet '::ffff:0.0.0.0/96' >>= address"));
+                    "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\"")); // Goob
 
             // ReSharper restore StringLiteralTypo
 

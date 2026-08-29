@@ -205,7 +205,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("AdminMessages", t =>
                         {
-                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT dismissed OR seen");
+                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT \"Dismissed\" OR \"Seen\"");
                         });
                 });
 
@@ -481,7 +481,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("Ban", t =>
                         {
-                            t.HasCheckConstraint("NoExemptOnRoleBan", "type = 0 OR exempt_flags = 0");
+                            t.HasCheckConstraint("NoExemptOnRoleBan", "\"Type\" = 0 OR \"ExemptFlags\" = 0");
                         });
                 });
 
@@ -505,7 +505,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("BanAddress", t =>
                         {
-                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= address");
+                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\"");
                         });
                 });
 
@@ -694,7 +694,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("connection_log", t =>
                         {
-                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= address");
+                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\"");
                         });
                 });
 
@@ -869,7 +869,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("player", t =>
                         {
-                            t.HasCheckConstraint("LastSeenAddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= last_seen_address");
+                            t.HasCheckConstraint("LastSeenAddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"LastSeenAddress\"");
                         });
                 });
 
@@ -1127,7 +1127,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("server_ban_exemption", t =>
                         {
-                            t.HasCheckConstraint("FlagsNotZero", "flags != 0");
+                            t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0");
                         });
                 });
 

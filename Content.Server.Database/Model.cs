@@ -153,7 +153,7 @@ namespace Content.Server.Database
             // Ban exemption can't have flags 0 since that wouldn't exempt anything.
             // The row should be removed if setting to 0.
             modelBuilder.Entity<ServerBanExemption>().ToTable(t =>
-                t.HasCheckConstraint("FlagsNotZero", "flags != 0"));
+                t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0")); // Goob
 
             modelBuilder.Entity<Player>()
                 .HasIndex(p => p.UserId)
@@ -267,7 +267,7 @@ namespace Content.Server.Database
             // A message cannot be "dismissed" without also being "seen".
             modelBuilder.Entity<AdminMessage>().ToTable(t =>
                 t.HasCheckConstraint("NotDismissedAndSeen",
-                    "NOT dismissed OR seen"));
+                    "NOT \"Dismissed\" OR \"Seen\"")); // Goob
 
             modelBuilder.Entity<RoleWhitelist>()
                 .HasOne(w => w.Player)

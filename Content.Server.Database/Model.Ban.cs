@@ -86,9 +86,9 @@ internal static class ModelBan
                     join.Property<int>("RoundsId").HasColumnName("rounds_id");
                 });
         // Goob end
-        
+
         modelBuilder.Entity<Ban>()
-            .ToTable(t => t.HasCheckConstraint("NoExemptOnRoleBan", $"type = {(int)BanType.Server} OR exempt_flags = 0"));
+            .ToTable(t => t.HasCheckConstraint("NoExemptOnRoleBan", $"\"Type\" = {(int)BanType.Server} OR \"ExemptFlags\" = 0")); // Goob
     }
 }
 
