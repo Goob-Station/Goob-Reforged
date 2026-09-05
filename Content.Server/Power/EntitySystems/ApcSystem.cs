@@ -17,11 +17,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Server.Power.EntitySystems;
 
-/// <summary>
-/// A system for interactions with APCs.
-/// APCs are wall-mounted battery banks and breakers for stepping down MV to LV power.
-/// </summary>
-/// <seealso cref="ApcComponent"/>
 public sealed partial class ApcSystem : EntitySystem
 {
     [Dependency] private AccessReaderSystem _accessReader = default!;
@@ -33,15 +28,21 @@ public sealed partial class ApcSystem : EntitySystem
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private UserInterfaceSystem _ui = default!;
 
-    /// <inheritdoc />
     public override void Initialize()
     {
         base.Initialize();
 
         UpdatesAfter.Add(typeof(PowerNetSystem));
+
+        SubscribeLocalEvent<ApcComponent, BoundUIOpenedEvent>(OnBoundUiOpen);
+        SubscribeLocalEvent<ApcComponent, ComponentStartup>(OnApcStartup);
+        SubscribeLocalEvent<ApcComponent, ChargeChangedEvent>(OnBatteryChargeChanged);
+        SubscribeLocalEvent<ApcComponent, ApcToggleMainBreakerMessage>(OnToggleMainBreaker);
+        SubscribeLocalEvent<ApcComponent, GotEmaggedEvent>(OnEmagged);
+
+        SubscribeLocalEvent<ApcComponent, EmpPulseEvent>(OnEmpPulse);
     }
 
-    /// <inheritdoc />
     public override void Update(float deltaTime)
     {
         var query = EntityQueryEnumerator<ApcComponent, PowerNetworkBatteryComponent, UserInterfaceComponent>();
@@ -54,8 +55,12 @@ public sealed partial class ApcSystem : EntitySystem
                 UpdateUIState(uid, apc, battery);
             }
 
+            if (apc.NeedStateUpdate)
+            {
+                UpdateApcState(uid, apc, battery);
+            }
+
             // Overload
-            var tripped = false;
             if (apc.MainBreakerEnabled && battery.CurrentSupply > apc.MaxLoad)
             {
                 // Not already overloaded, start timer
@@ -63,61 +68,45 @@ public sealed partial class ApcSystem : EntitySystem
                 {
                     apc.TripStartTime = curTime;
                 }
-                else if (curTime - apc.TripStartTime > apc.TripTime)
+                else
                 {
-                    apc.TripFlag = true;
-                    ApcToggleBreaker(uid, apc, battery); // off, we already checked MainBreakerEnabled above
-                    apc.NeedStateUpdate = true; // Force an update.
-                    tripped = true;
+                    if (curTime - apc.TripStartTime > apc.TripTime)
+                    {
+                        apc.TripFlag = true;
+                        ApcToggleBreaker(uid, apc, battery); // off, we already checked MainBreakerEnabled above
+                    }
                 }
             }
             else
             {
                 apc.TripStartTime = null;
             }
-
-            // Check battery update (more frequent changes)
-            if (!apc.NeedStateUpdate &&
-                CalcChannelState((uid, apc), battery.NetworkBattery) != apc.LastChannelState)
-            {
-                apc.NeedStateUpdate = true;
-            }
-
-            if (apc.NeedStateUpdate)
-            {
-                UpdateApcState(uid, apc, battery, forceChargeCheck: tripped);
-            }
         }
     }
 
-    #region Event Handlers
     // Change the APC's state only when the battery state changes, or when it's first created.
-    [SubscribeLocalEvent]
-    private void OnBatteryChargeChanged(Entity<ApcComponent> ent, ref ChargeChangedEvent args)
+    private void OnBatteryChargeChanged(EntityUid uid, ApcComponent component, ref ChargeChangedEvent args)
     {
         // Defer until the next tick.
-        ent.Comp.NeedStateUpdate = true;
+        component.NeedStateUpdate = true;
     }
 
-    [SubscribeLocalEvent]
-    private void OnApcStartup(Entity<ApcComponent> ent, ref ComponentStartup args)
+    private static void OnApcStartup(EntityUid uid, ApcComponent component, ComponentStartup args)
     {
         // We cannot update immediately, as various network/battery state is not valid yet.
         // Defer until the next tick.
-        ent.Comp.NeedStateUpdate = true;
+        component.NeedStateUpdate = true;
     }
 
-    [SubscribeLocalEvent]
-    private void OnBoundUiOpen(Entity<ApcComponent> ent, ref BoundUIOpenedEvent args)
+    private void OnBoundUiOpen(EntityUid uid, ApcComponent component, BoundUIOpenedEvent args)
     {
-        UpdateApcState(ent, ent.Comp);
+        UpdateApcState(uid, component);
     }
 
-    [SubscribeLocalEvent]
-    private void OnToggleMainBreaker(Entity<ApcComponent> ent, ref ApcToggleMainBreakerMessage args)
+    private void OnToggleMainBreaker(EntityUid uid, ApcComponent component, ApcToggleMainBreakerMessage args)
     {
         var attemptEv = new ApcToggleMainBreakerAttemptEvent();
-        RaiseLocalEvent(ent, ref attemptEv);
+        RaiseLocalEvent(uid, ref attemptEv);
         if (attemptEv.Cancelled)
         {
             _popup.PopupCursor(Loc.GetString("apc-component-on-toggle-cancel"),
@@ -125,9 +114,9 @@ public sealed partial class ApcSystem : EntitySystem
             return;
         }
 
-        if (_accessReader.IsAllowed(args.Actor, ent))
+        if (_accessReader.IsAllowed(args.Actor, uid))
         {
-            ApcToggleBreaker(ent, ent.Comp, user: args.Actor);
+            ApcToggleBreaker(uid, component, user: args.Actor);
         }
         else
         {
@@ -136,37 +125,7 @@ public sealed partial class ApcSystem : EntitySystem
         }
     }
 
-    [SubscribeLocalEvent]
-    private void OnEmagged(Entity<ApcComponent> ent, ref GotEmaggedEvent args)
-    {
-        if (!_emag.CompareFlag(args.Type, EmagType.Interaction))
-            return;
-
-        if (_emag.CheckFlag(ent, EmagType.Interaction))
-            return;
-
-        args.Handled = true;
-    }
-
-    // TODO: This subscription should be in shared.
-    // But I am not moving ApcComponent to shared, this PR already got soaped enough and that component uses several layers of OOP.
-    // At least the EMP visuals won't mispredict, since all APCs also have the BatteryComponent, which also has a EMP effect and is in shared.
-    [SubscribeLocalEvent]
-    private void OnEmpPulse(Entity<ApcComponent> ent, ref EmpPulseEvent args)
-    {
-        if (ent.Comp.MainBreakerEnabled)
-        {
-            args.Affected = true;
-            args.Disabled = true;
-            ApcToggleBreaker(ent, ent.Comp);
-        }
-    }
-    #endregion Event Handlers
-
-    #region Public API
-    /// <summary>
-    /// Toggles the enabled state of the APC's main breaker.
-    /// </summary>
+    /// <summary>Toggles the enabled state of the APC's main breaker.</summary>
     public void ApcToggleBreaker(
         EntityUid uid,
         ApcComponent? apc = null,
@@ -182,11 +141,8 @@ public sealed partial class ApcSystem : EntitySystem
         if (apc.MainBreakerEnabled)
             apc.TripFlag = false;
 
-        UpdateApcState(uid, apc, battery);
         UpdateUIState(uid, apc);
-
-        var audioParams = (apc.OnReceiveMessageSound?.Params ?? AudioParams.Default).AddVolume(-2f);
-        _audio.PlayPvs(apc.OnReceiveMessageSound, uid, audioParams);
+        _audio.PlayPvs(apc.OnReceiveMessageSound, uid, AudioParams.Default.WithVolume(-2f));
 
         if (user != null)
         {
@@ -196,34 +152,37 @@ public sealed partial class ApcSystem : EntitySystem
         }
     }
 
-    /// <summary>
-    /// Updates the UI and appearance of the given APC based on its status in the power network.
-    /// </summary>
+    private void OnEmagged(EntityUid uid, ApcComponent comp, ref GotEmaggedEvent args)
+    {
+        if (!_emag.CompareFlag(args.Type, EmagType.Interaction))
+            return;
+
+        if (_emag.CheckFlag(uid, EmagType.Interaction))
+            return;
+
+        args.Handled = true;
+    }
+
     public void UpdateApcState(EntityUid uid,
-        ApcComponent? apc = null,
-        PowerNetworkBatteryComponent? battery = null,
-        bool forceChargeCheck = false)
+        ApcComponent? apc=null,
+        PowerNetworkBatteryComponent? battery = null)
     {
         if (!Resolve(uid, ref apc, ref battery, false))
             return;
 
-        if (apc.LastChargeStateTime == null || forceChargeCheck || apc.LastChargeStateTime + ApcComponent.VisualsChangeDelay < _gameTiming.CurTime)
+        if (apc.LastChargeStateTime == null || apc.LastChargeStateTime + ApcComponent.VisualsChangeDelay < _gameTiming.CurTime)
         {
-            var newState = CalcChargeState((uid, apc), battery.NetworkBattery);
+            var newState = CalcChargeState(uid, battery.NetworkBattery);
             if (newState != apc.LastChargeState)
             {
                 apc.LastChargeState = newState;
                 apc.LastChargeStateTime = _gameTiming.CurTime;
 
-                _appearance.SetData(uid, ApcVisuals.ChargeState, newState);
+                if (TryComp(uid, out AppearanceComponent? appearance))
+                {
+                    _appearance.SetData(uid, ApcVisuals.ChargeState, newState, appearance);
+                }
             }
-        }
-
-        var channelState = CalcChannelState((uid, apc), battery.NetworkBattery);
-        if (channelState != apc.LastChannelState)
-        {
-            apc.LastChannelState = channelState;
-            _appearance.SetData(uid, ApcVisuals.ChannelState, channelState);
         }
 
         var extPowerState = CalcExtPowerState(uid, battery.NetworkBattery);
@@ -236,10 +195,6 @@ public sealed partial class ApcSystem : EntitySystem
         apc.NeedStateUpdate = false;
     }
 
-    /// <summary>
-    /// Updates the UI of the given API.
-    /// Sends off a new ApcBoundInterfaceState to anyone with the UI open.
-    /// </summary>
     public void UpdateUIState(EntityUid uid,
         ApcComponent? apc = null,
         PowerNetworkBatteryComponent? netBat = null,
@@ -249,32 +204,29 @@ public sealed partial class ApcSystem : EntitySystem
             return;
 
         var battery = netBat.NetworkBattery;
-        const int chargeAccuracy = 5;
+        const int ChargeAccuracy = 5;
 
         // TODO: Fix ContentHelpers or make a new one coz this is cooked.
-        var charge = ContentHelpers.RoundToNearestLevels(battery.CurrentStorage / battery.Capacity, 1.0, 100 / chargeAccuracy) / 100f * chargeAccuracy;
+        var charge = ContentHelpers.RoundToNearestLevels(battery.CurrentStorage / battery.Capacity, 1.0, 100 / ChargeAccuracy) / 100f * ChargeAccuracy;
 
         var state = new ApcBoundInterfaceState(apc.MainBreakerEnabled,
-            (int)MathF.Ceiling(battery.CurrentSupply), apc.LastExternalState,
+            (int) MathF.Ceiling(battery.CurrentSupply), apc.LastExternalState,
             charge,
             apc.MaxLoad,
             apc.TripFlag);
 
         _ui.SetUiState((uid, ui), ApcUiKey.Key, state);
     }
-    #endregion Public API
 
-    #region Internal
-    private ApcChargeState CalcChargeState(Entity<ApcComponent> ent, PowerState.Battery battery)
+    private ApcChargeState CalcChargeState(EntityUid uid, PowerState.Battery battery)
     {
-        if (_emag.CheckFlag(ent, EmagType.Interaction))
+        if (_emag.CheckFlag(uid, EmagType.Interaction))
             return ApcChargeState.Emag;
 
-        if (ent.Comp.TripFlag)
-            return ApcChargeState.Tripped;
-
         if (battery.CurrentStorage / battery.Capacity > ApcComponent.HighPowerThreshold)
+        {
             return ApcChargeState.Full;
+        }
 
         var delta = battery.CurrentSupply - battery.CurrentReceiving;
         return delta < 0 ? ApcChargeState.Charging : ApcChargeState.Lack;
@@ -296,23 +248,19 @@ public sealed partial class ApcSystem : EntitySystem
         return ApcExternalPowerState.Good;
     }
 
-    /// <summary>
-    /// Generates the channel state for a given APC - whether the APC is providing (or can provide) power to the network.
-    /// </summary>
-    private ApcChannelState CalcChannelState(Entity<ApcComponent> ent, PowerState.Battery battery)
+    // TODO: This subscription should be in shared.
+    // But I am not moving ApcComponent to shared, this PR already got soaped enough and that component uses several layers of OOP.
+    // At least the EMP visuals won't mispredict, since all APCs also have the BatteryComponent, which also has a EMP effect and is in shared.
+    private void OnEmpPulse(EntityUid uid, ApcComponent component, ref EmpPulseEvent args)
     {
-        if (ent.Comp.TripFlag)
-            return ApcChannelState.BreakerTripped;
-        else if (!ent.Comp.MainBreakerEnabled)
-            return ApcChannelState.BreakerOpen;
-
-        return battery.CurrentSupply > 0 ? ApcChannelState.On : ApcChannelState.Off;
+        if (component.MainBreakerEnabled)
+        {
+            args.Affected = true;
+            args.Disabled = true;
+            ApcToggleBreaker(uid, component);
+        }
     }
-    #endregion Internal
 }
 
-/// <summary>
-/// A cancellable event raised to check if the main breaker of an APC can be toggled.
-/// </summary>
 [ByRefEvent]
 public record struct ApcToggleMainBreakerAttemptEvent(bool Cancelled);

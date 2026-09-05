@@ -21,7 +21,7 @@ public sealed partial class LockingWhitelistSystem : EntitySystem
             return;
 
         if (!args.Silent)
-            _popupSystem.PopupEntity(Loc.GetString("locking-whitelist-component-lock-toggle-deny"), ent.Owner, ent.Owner);
+            _popupSystem.PopupClient(Loc.GetString("locking-whitelist-component-lock-toggle-deny"), ent.Owner);
 
         args.Cancelled = true;
     }

@@ -342,7 +342,7 @@ public sealed partial class EventManagerSystem : EntitySystem
             return false;
         }
 
-        if (_roundEnd.IsRoundEndRequested() && !stationEvent.OccursDuringRoundEnd && !_roundEnd.CanCallOrRecall())
+        if (_roundEnd.IsRoundEndRequested() && !stationEvent.OccursDuringRoundEnd)
         {
             return false;
         }

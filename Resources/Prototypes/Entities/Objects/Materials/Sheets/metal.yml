@@ -99,11 +99,16 @@
       map: ["base"]
   - type: Item
     heldPrefix: brass
+  - type: FloorTile
+    outputs:
+    - PlatingBrass
   - type: Solution
     solution:
       reagents:
-      - ReagentId: Brass
-        Quantity: 10
+      - ReagentId: Zinc
+        Quantity: 3.3
+      - ReagentId: Copper
+        Quantity: 6.7
 
 - type: entity
   parent: SheetBrass

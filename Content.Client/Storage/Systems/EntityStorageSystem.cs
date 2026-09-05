@@ -2,4 +2,4 @@
 
 namespace Content.Client.Storage.Systems;
 
-public sealed partial class EntityStorageSystem : SharedEntityStorageSystem;
+public sealed class EntityStorageSystem : SharedEntityStorageSystem;

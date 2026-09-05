@@ -5,7 +5,7 @@ namespace Content.Shared.Traits.Assorted;
 /// <summary>
 /// This handles removing accents when using the accentless trait.
 /// </summary>
-public sealed partial class AccentlessSystem : EntitySystem
+public sealed class AccentlessSystem : EntitySystem
 {
     /// <inheritdoc/>
     public override void Initialize()

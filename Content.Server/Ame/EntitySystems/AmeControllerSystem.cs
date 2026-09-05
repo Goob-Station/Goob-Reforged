@@ -115,11 +115,7 @@ public sealed partial class AmeControllerSystem : EntitySystem
 
                 // only play audio if we actually had an injection
                 if (availableInject > 0)
-                {
-                    var audioParams = controller.InjectSound?.Params ?? AudioParams.Default;
-                    audioParams = audioParams.AddVolume(overloading ? 10f : 0f);
-                    _audioSystem.PlayPvs(controller.InjectSound, uid, audioParams);
-                }
+                    _audioSystem.PlayPvs(controller.InjectSound, uid, AudioParams.Default.WithVolume(overloading ? 10f : 0f));
                 UpdateUi(uid, controller);
             }
         }
@@ -348,10 +344,7 @@ public sealed partial class AmeControllerSystem : EntitySystem
         if (!PlayerCanUseController(uid, user, needsPower, comp))
             return;
 
-        var audioParams = comp.ClickSound?.Params ?? AudioParams.Default;
-        audioParams = audioParams.AddVolume(-2f);
-        _audioSystem.PlayPvs(comp.ClickSound, uid, audioParams);
-
+        _audioSystem.PlayPvs(comp.ClickSound, uid, AudioParams.Default.WithVolume(-2f));
         switch (msg.Button)
         {
             case UiButton.Eject:

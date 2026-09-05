@@ -405,7 +405,7 @@
   - type: Sprite
     state: pill16
   - type: Label
-    localizedLabel: pill-label-dexalin-20u
+    currentLabel: dexalin 20u
   - type: Solution
     solution:
       reagents:
@@ -419,7 +419,7 @@
   suffix: Dexalin 20u, 7
   components:
   - type: Label
-    localizedLabel: pill-label-dexalin-20u
+    currentLabel: dexalin 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -437,7 +437,7 @@
   - type: Sprite
     state: pill10
   - type: Label
-    localizedLabel: pill-label-dylovene-20u
+    currentLabel: dylovene 20u
   - type: Solution
     solution:
       reagents:
@@ -451,7 +451,7 @@
   suffix: Dylovene 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-dylovene-20u
+    currentLabel: dylovene 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -469,7 +469,7 @@
   - type: Sprite
     state: pill17
   - type: Label
-    localizedLabel: pill-label-hyronalin-20u
+    currentLabel: hyronalin 20u
   - type: Solution
     solution:
       reagents:
@@ -483,7 +483,7 @@
   suffix: Hyronalin 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-hyronalin-20u
+    currentLabel: hyronalin 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -501,7 +501,7 @@
   - type: Sprite
     state: pill9
   - type: Label
-    localizedLabel: pill-label-potassium-iodide-20u
+    currentLabel: potassium iodide 20u
   - type: Solution
     solution:
       reagents:
@@ -515,7 +515,7 @@
   suffix: Potassium iodide 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-potassium-iodide-20u
+    currentLabel: potassium iodide 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -533,7 +533,7 @@
   - type: Sprite
     state: pill14
   - type: Label
-    localizedLabel: pill-label-iron-20u
+    currentLabel: iron 20u
   - type: Solution
     solution:
       reagents:
@@ -551,7 +551,7 @@
   - type: Sprite
     state: pill13
   - type: Label
-    localizedLabel: pill-label-copper-20u
+    currentLabel: copper 20u
   - type: Solution
     solution:
       reagents:
@@ -565,7 +565,7 @@
   suffix: Iron 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-iron-20u
+    currentLabel: iron 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -579,7 +579,7 @@
   suffix: Copper 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-copper-20u
+    currentLabel: copper 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -597,7 +597,7 @@
   - type: Sprite
     state: pill4
   - type: Label
-    localizedLabel: pill-label-kelotane-20u
+    currentLabel: kelotane 20u
   - type: Solution
     solution:
       reagents:
@@ -611,7 +611,7 @@
   suffix: Kelotane 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-kelotane-20u
+    currentLabel: kelotane 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -629,7 +629,7 @@
   - type: Sprite
     state: pill8
   - type: Label
-    localizedLabel: pill-label-dermaline-20u
+    currentLabel: dermaline 20u
   - type: Solution
     solution:
       reagents:
@@ -643,7 +643,7 @@
   suffix: Dermaline 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-dermaline-20u
+    currentLabel: dermaline 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -672,7 +672,7 @@
   - type: Sprite
     state: pill3
   - type: Label
-    localizedLabel: pill-label-tricordrazine-20u
+    currentLabel: tricordrazine 20u
   - type: Solution
     solution:
       reagents:
@@ -686,26 +686,12 @@
   suffix: Tricordrazine 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-tricordrazine-20u
+    currentLabel: tricordrazine 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
         id: PillTricordrazine
         amount: 5
-
--  type: entity
-   name: pill canister
-   parent: PillCanister
-   id: PillCanisterAmbuzol
-   suffix: Ambuzol 15u, 2
-   components:
-   - type: Label
-     localizedLabel: pill-label-ambuzol-15u
-   - type: EntityTableContainerFill
-     containers:
-       storagebase:
-         id: PillAmbuzol
-         amount: 2
 
 - type: entity
   name: pill
@@ -718,7 +704,7 @@
   - type: Sprite
     state: pill5
   - type: Label
-    localizedLabel: pill-label-bicaridine-20u
+    currentLabel: bicaridine 20u
   - type: Solution
     solution:
       reagents:
@@ -732,7 +718,7 @@
   suffix: Bicaridine 20u, 5
   components:
   - type: Label
-    localizedLabel: pill-label-bicaridine-20u
+    currentLabel: bicaridine 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -750,7 +736,7 @@
   - type: Sprite
     state: pill21
   - type: Label
-    localizedLabel: pill-label-charcoal-20u
+    currentLabel: charcoal 20u
   - type: Solution
     solution:
       reagents:
@@ -764,7 +750,7 @@
   suffix: Charcoal 20u, 3
   components:
   - type: Label
-    localizedLabel: pill-label-charcoal-20u
+    currentLabel: charcoal 20u
   - type: EntityTableContainerFill
     containers:
       storagebase:
@@ -791,7 +777,7 @@
     solution:
       reagents:
       - ReagentId: Ambuzol
-        Quantity: 15
+        Quantity: 10
 
 - type: entity
   name: ambuzol plus pill
@@ -853,7 +839,7 @@
   id: SyringeEphedrine
   components:
   - type: Label
-    localizedLabel: reagent-name-ephedrine
+    currentLabel: reagent-name-ephedrine
   - type: Solution
     solution:
       reagents:
@@ -866,7 +852,7 @@
   id: SyringeInaprovaline
   components:
   - type: Label
-    localizedLabel: reagent-name-inaprovaline
+    currentLabel: reagent-name-inaprovaline
   - type: Solution
     solution:
       reagents:
@@ -879,7 +865,7 @@
   id: SyringeTranexamicAcid
   components:
   - type: Label
-    localizedLabel: reagent-name-tranexamic-acid
+    currentLabel: reagent-name-tranexamic-acid
   - type: Solution
     solution:
       reagents:
@@ -892,7 +878,7 @@
   id: SyringeBicaridine
   components:
   - type: Label
-    localizedLabel: reagent-name-bicaridine
+    currentLabel: reagent-name-bicaridine
   - type: Solution
     solution:
       reagents:
@@ -905,7 +891,7 @@
   id: SyringeDermaline
   components:
   - type: Label
-    localizedLabel: reagent-name-dermaline
+    currentLabel: reagent-name-dermaline
   - type: Solution
     solution:
       reagents:
@@ -918,7 +904,7 @@
   id: SyringeHyronalin
   components:
   - type: Label
-    localizedLabel: reagent-name-hyronalin
+    currentLabel: reagent-name-hyronalin
   - type: Solution
     solution:
       reagents:
@@ -931,7 +917,7 @@
   id: SyringeIpecac
   components:
   - type: Label
-    localizedLabel: reagent-name-ipecac
+    currentLabel: reagent-name-ipecac
   - type: Solution
     solution:
       reagents:
@@ -944,7 +930,7 @@
   id: SyringeAmbuzol
   components:
   - type: Label
-    localizedLabel: reagent-name-ambuzol
+    currentLabel: reagent-name-ambuzol
   - type: Solution
     solution:
       reagents:
@@ -957,7 +943,7 @@
   id: SyringeSigynate
   components:
   - type: Label
-    localizedLabel: reagent-name-sigynate
+    currentLabel: reagent-name-sigynate
   - type: Solution
     solution:
       reagents:
@@ -970,7 +956,7 @@
   id: SyringeEthylredoxrazine
   components:
   - type: Label
-    localizedLabel: reagent-name-ethylredoxrazine
+    currentLabel: reagent-name-ethylredoxrazine
   - type: Solution
     solution:
       reagents:
@@ -983,7 +969,7 @@
   id: SyringePhalanximine
   components:
   - type: Label
-    localizedLabel: reagent-name-phalanximine
+    currentLabel: reagent-name-phalanximine
   - type: Solution
     solution:
       reagents:
@@ -996,7 +982,7 @@
   id: SyringeSaline
   components:
   - type: Label
-    localizedLabel: reagent-name-saline
+    currentLabel: reagent-name-saline
   - type: Solution
     solution:
       reagents:
@@ -1010,7 +996,7 @@
   id: SyringeRomerol
   components:
   - type: Label
-    localizedLabel: reagent-name-romerol
+    currentLabel: reagent-name-romerol
   - type: Solution
     solution:
       reagents:
@@ -1023,24 +1009,11 @@
   id: SyringeStimulants
   components:
   - type: Label
-    localizedLabel: reagent-name-stimulants
+    currentLabel: reagent-name-stimulants
   - type: Solution
     solution:
       reagents:
       - ReagentId: Stimulants
-        Quantity: 15
-
-- type: entity
-  suffix: hivarol
-  parent: PrefilledSyringe
-  id: SyringeHivarol
-  components:
-  - type: Label
-    localizedLabel: reagent-name-hivarol
-  - type: Solution
-    solution:
-      reagents:
-      - ReagentId: Hivarol
         Quantity: 15
 
 # Entity Tables

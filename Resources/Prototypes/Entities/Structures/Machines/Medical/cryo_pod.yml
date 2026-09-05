@@ -1,5 +1,5 @@
 - type: entity
-  parent: [BaseStructure, ConstructibleMachine, BaseConstructibleMachineDestructible] # Not a BaseMachinePowered since we don't want the anchorable component
+  parent: [BaseStructure, ConstructibleMachine] # Not a BaseMachinePowered since we don't want the anchorable component
   id: CryoPod
   name: cryo pod
   description: A special machine intended to create a safe environment for the use of chemicals that react in cold environments.
@@ -54,16 +54,23 @@
     boardName: wires-board-name-cryopod
     layoutId: CryoPod
   - type: Damageable
-    damageModifierSet: GlassReinforcedMod
+    damageModifierSet: StructuralMetallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 175
+        damage: 100
       behaviors:
+      - !type:EmptyAllContainersBehaviour
       - !type:PlaySoundBehavior
         sound:
           collection: WindowShatter
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
   - type: ApcPowerReceiver
     powerLoad: 3000
   - type: ExtensionCableReceiver
@@ -107,7 +114,7 @@
   - type: Climbable # so that ejected bodies don't get stuck
     vaultable: false
   - type: ContainerTemperature
-    coldDamageThreshold: 213
+    coldDamageThreshold: 10
   - type: GuideHelp
     guides:
     - Cryogenics
@@ -122,7 +129,7 @@
     id: injectionBuffer
 
 - type: entity
-  parent: [ BaseMachine, BaseMachineDestructible ]
+  parent: BaseMachine
   id: CryoPodDestroyed
   name: destroyed cryo pod
   description: A cryo pod that has seen better days. It's entirely inoperable; not good for anything but scrap.
@@ -144,17 +151,17 @@
         - MachineMask
         layer:
         - MachineLayer
-  - type: Damageable
-    damageModifierSet: GlassMod
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 175
+        damage: 100
       behaviors:
       - !type:PlaySoundBehavior
         sound:
           collection: WindowShatter
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
   - type: PhysicalComposition
     materialComposition:
       Steel: 2000 # 20 sheets

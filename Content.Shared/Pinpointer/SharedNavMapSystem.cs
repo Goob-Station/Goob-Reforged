@@ -3,12 +3,10 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Content.Shared.Examine;
 using Content.Shared.Tag;
-using Content.Shared.Wall;
 using Robust.Shared.GameStates;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
-using Dependency = Robust.Shared.IoC.DependencyAttribute;
 
 namespace Content.Shared.Pinpointer;
 
@@ -25,13 +23,12 @@ public abstract partial class SharedNavMapSystem : EntitySystem
     public const int WallMask = AllDirMask << (int) NavMapChunkType.Wall;
     public const int FloorMask = AllDirMask << (int) NavMapChunkType.Floor;
 
-    [Dependency] private TagSystem _tagSystem = default!;
-    [Dependency] private INetManager _net = default!;
+    [Robust.Shared.IoC.Dependency] private TagSystem _tagSystem = default!;
+    [Robust.Shared.IoC.Dependency] private INetManager _net = default!;
 
-    [Dependency] private EntityQuery<NavMapDoorComponent> _doorQuery;
-    [Dependency] private EntityQuery<WallComponent> _wallQuery;
+    [Robust.Shared.IoC.Dependency] private EntityQuery<NavMapDoorComponent> _doorQuery = default!;
 
-    private static readonly ProtoId<TagPrototype>[] WallTags = ["Window"];
+    private static readonly ProtoId<TagPrototype>[] WallTags = {"Wall", "Window"};
 
     public override void Initialize()
     {
@@ -64,7 +61,7 @@ public abstract partial class SharedNavMapSystem : EntitySystem
         if (_doorQuery.HasComp(uid))
             return NavMapChunkType.Airlock;
 
-        if (_wallQuery.HasComp(uid) || _tagSystem.HasAnyTag(uid, WallTags))
+        if (_tagSystem.HasAnyTag(uid, WallTags))
             return NavMapChunkType.Wall;
 
         return NavMapChunkType.Invalid;

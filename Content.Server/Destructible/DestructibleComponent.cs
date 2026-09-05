@@ -6,15 +6,14 @@ namespace Content.Server.Destructible;
 ///     When attached to an <see cref="Robust.Shared.GameObjects.EntityUid"/>, allows it to take damage
 ///     and triggers thresholds when reached.
 /// </summary>
-[RegisterComponent, Access(typeof(DestructibleSystem))]
+[RegisterComponent]
 public sealed partial class DestructibleComponent : Component
 {
     /// <summary>
     /// A list of damage thresholds for the entity;
     /// includes their triggers and resultant behaviors.
     /// </summary>
-    [DataField(customTypeSerializer: typeof(DamageThresholdsSerializer))]
-    [AlwaysPushInheritance]
+    [DataField]
     public List<DamageThreshold> Thresholds = new();
 
     /// <summary>

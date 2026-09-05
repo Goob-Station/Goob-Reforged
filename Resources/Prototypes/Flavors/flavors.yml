@@ -1115,6 +1115,11 @@
   description: flavor-complex-monkey-business
 
 - type: flavor
+  id: neurotoxin
+  flavorType: Complex
+  description: flavor-complex-neurotoxin
+
+- type: flavor
   id: patron
   flavorType: Complex
   description: flavor-complex-patron

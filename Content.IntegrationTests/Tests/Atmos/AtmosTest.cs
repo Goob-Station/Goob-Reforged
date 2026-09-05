@@ -1,52 +1,32 @@
-using System.Diagnostics.CodeAnalysis;
-using Content.Client.Atmos.EntitySystems;
-using Content.IntegrationTests.Fixtures;
-using Content.IntegrationTests.Fixtures.Attributes;
+using Content.IntegrationTests.Tests.Interaction;
+using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
-using Content.Shared.CCVar;
-using Content.Shared.Item.ItemToggle;
 using Content.Shared.Tests;
-using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
-using Robust.Shared.Utility;
 
 namespace Content.IntegrationTests.Tests.Atmos;
 
 /// <summary>
-/// Base class for tests involving <see cref="AtmosphereSystem"/>.
-/// Primarily in charge of setting up common dependencies and providing a test map if needed.
+/// Helper class for atmospherics tests.
 /// See <see cref="TileAtmosphereTest"/> on how to add new tests with custom maps.
 /// </summary>
-public abstract partial class AtmosTest : GameTest
+[TestFixture]
+public abstract class AtmosTest : InteractionTest
 {
-    [SidedDependency(Side.Server)] protected Server.Atmos.EntitySystems.AtmosphereSystem SAtmos = default!;
-    [SidedDependency(Side.Client)] protected Client.Atmos.EntitySystems.AtmosphereSystem CAtmos = default!;
+    protected AtmosphereSystem SAtmos = default!;
+    protected Content.Client.Atmos.EntitySystems.AtmosphereSystem CAtmos = default!;
+    protected EntityLookupSystem LookupSystem = default!;
+
+    protected Entity<GridAtmosphereComponent> RelevantAtmos;
 
     /// <summary>
     /// Used in <see cref="AtmosphereSystem.RunProcessingFull"/>. Resolved during test setup.
     /// </summary>
-    /// <remarks>This will be null if no <see cref="TestMapPath"/> is provided.</remarks>
-    protected Entity<GridAtmosphereComponent, GasTileOverlayComponent, MapGridComponent, TransformComponent> ProcessEnt;
-
-    /// <summary>
-    /// Helper shorthand of <see cref="ProcessEnt"/>.
-    /// </summary>
-    /// <remarks>This will be null if no <see cref="TestMapPath"/> is provided.</remarks>
-    protected Entity<GridAtmosphereComponent> RelevantAtmos => (ProcessEnt.Owner, ProcessEnt.Comp1);
-
-    /// <summary>
-    /// Map to automatically load for tests. Override if you want the helper to automatically
-    /// load the provided map and resolve the <see cref="ProcessEnt"/> for you.
-    /// If null, no map is loaded.
-    /// </summary>
-    /// <remarks>This map will have necessary Atmospherics components EnsureComp'd onto it.</remarks>
-    protected virtual ResPath? TestMapPath => null;
-
-    protected TestMapData MapData => Pair.TestMap;
+    protected Entity<GridAtmosphereComponent, GasTileOverlayComponent, MapGridComponent, TransformComponent> ProcessEnt = default;
 
     protected virtual float Moles => 1000.0f;
 
@@ -54,33 +34,36 @@ public abstract partial class AtmosTest : GameTest
     protected virtual float Tolerance => 0.05f;
 
     [SetUp]
-    public virtual async Task Setup()
+    public override async Task Setup()
     {
-        if (!TestMapPathNotNull())
-            return;
+        await base.Setup();
 
-        Pair.TestMap = await Pair.LoadTestMap(TestMapPath.Value);
+        SAtmos = SEntMan.System<AtmosphereSystem>();
+        CAtmos = CEntMan.System<Content.Client.Atmos.EntitySystems.AtmosphereSystem>();
+        LookupSystem = SEntMan.System<EntityLookupSystem>();
 
-        var gridAtmosComp = SComp<GridAtmosphereComponent>(MapData.Grid);
-        var overlayComp = SComp<GasTileOverlayComponent>(MapData.Grid);
-        var mapGridComp = SComp<MapGridComponent>(MapData.Grid);
-        var xform = SComp<TransformComponent>(MapData.Grid);
+        SEntMan.TryGetComponent<GridAtmosphereComponent>(MapData.Grid, out var gridAtmosComp);
+        SEntMan.TryGetComponent<GasTileOverlayComponent>(MapData.Grid, out var overlayComp);
+        SEntMan.TryGetComponent<MapGridComponent>(MapData.Grid, out var mapGridComp);
+        var xform = SEntMan.GetComponent<TransformComponent>(MapData.Grid);
 
         using (Assert.EnterMultipleScope())
         {
             Assert.That(gridAtmosComp,
-                Is.Not.Null,
-                "Loaded map doesn't have a GridAtmosphereComponent on its grid. " +
-                "Does your TestMapPath have the necessary Atmospherics components?");
+                    Is.Not.Null,
+                    "Loaded map doesn't have a GridAtmosphereComponent on its grid. " +
+                    "Did you forget to override TestMapPath with a proper atmospherics testing map?");
             Assert.That(overlayComp,
                 Is.Not.Null,
                 "Loaded map doesn't have a GasTileOverlayComponent on its grid. " +
-                "Does your TestMapPath have the necessary Atmospherics components?");
+                "Did you forget to override TestMapPath with a proper atmospherics testing map?");
             Assert.That(mapGridComp,
                 Is.Not.Null,
                 "Loaded map doesn't have a MapGridComponent on its grid. " +
-                "Does your TestMapPath have the necessary Atmospherics components?");
+                "Did you forget to override TestMapPath with a proper atmospherics testing map?");
         }
+
+        RelevantAtmos = (MapData.Grid, gridAtmosComp);
 
         ProcessEnt = new Entity<GridAtmosphereComponent, GasTileOverlayComponent, MapGridComponent, TransformComponent>(
             MapData.Grid.Owner,
@@ -88,27 +71,6 @@ public abstract partial class AtmosTest : GameTest
             overlayComp,
             mapGridComp,
             xform);
-
-        await Server.WaitPost(() =>
-        {
-            var cfg = Server.ResolveDependency<IConfigurationManager>();
-
-            //Make sure Atmos is always processed fully during tick and not split up
-            cfg.SetCVar(CCVars.AtmosMaxProcessTime, 9999f);
-        });
-
-        // Make sure the map and whatnot is fleshed out.
-        await RunUntilSynced();
-    }
-
-    [MemberNotNullWhen(true,
-        nameof(ProcessEnt),
-        nameof(RelevantAtmos),
-        nameof(TestMapPath))]
-    private bool TestMapPathNotNull()
-    {
-        // nullability analysis GO
-        return TestMapPath != null;
     }
 
     /// <summary>

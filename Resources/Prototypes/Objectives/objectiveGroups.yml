@@ -145,8 +145,8 @@
 - type: weightedRandom
   id: ChangelingObjectiveGroupDevour
   weights:
-    ChangelingDevouredCountObjective: 1
-    ChangelingMostDevouredObjective: 1
+    ChangelingUniqueIdentityObjective: 1
+    # eventually: devour most
 
 - type: weightedRandom
   id: ChangelingObjectiveGroupEscapeDummy
@@ -157,8 +157,8 @@
   id: ChangelingObjectiveGroupEscape
   weights:
     ChangelingSurviveObjective: 0.5
-    ChangelingEscapeDepartmentObjective: 1.0
-    ChangelingEscapeIdentityObjective: 1.5
+    ChangelingEscapeIdentityObjective: 1
+    # eventually: escape as a job/dept
 
 - type: weightedRandom
   id: ChangelingObjectiveGroupKillDummy

@@ -3,7 +3,7 @@ using System.Numerics;
 using Content.Shared.Administration.Managers;
 using Content.Shared.Database;
 using Content.Shared.Follower.Components;
-using Content.Shared.Ghost.Components;
+using Content.Shared.Ghost;
 using Content.Shared.Hands;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Pulling.Events;
@@ -20,7 +20,6 @@ using Robust.Shared.Physics;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Follower;
@@ -34,7 +33,6 @@ public sealed partial class FollowerSystem : EntitySystem
     [Dependency] private SharedPhysicsSystem _physicsSystem = default!;
     [Dependency] private INetManager _netMan = default!;
     [Dependency] private ISharedAdminManager _adminManager = default!;
-    [Dependency] private IRobustRandom _random = default!;
 
     private static readonly ProtoId<TagPrototype> ForceableFollowTag = "ForceableFollow";
     private static readonly ProtoId<TagPrototype> PreventGhostnadoWarpTag = "NotGhostnadoWarpable";
@@ -319,53 +317,13 @@ public sealed partial class FollowerSystem : EntitySystem
     }
 
     /// <summary>
-    /// Gets the player with the most non-admin ghosts following it.
-    /// If there are multiple players with the same top amount of followers, picks one at random.
+    /// Gets the entity with the most non-admin ghosts following it.
     /// </summary>
-    public EntityUid? GetMostGhostFollowed(EntityUid? except = null)
+    public EntityUid? GetMostGhostFollowed()
     {
-        var pool = new List<EntityUid>();
+        EntityUid? picked = null;
         var most = 0;
 
-        var followedEnts = GetAllFollowed(except);
-        foreach (var (followed, followers) in followedEnts)
-        {
-            if (followers == most)
-            {
-                pool.Add(followed);
-            }
-            else if (followers > most)
-            {
-                pool.Clear();
-                pool.Add(followed);
-                most = followers;
-            }
-        }
-
-        return pool.Any() ? _random.Pick(pool) : null;
-    }
-
-    /// <summary>
-    /// Gets a random player that is being followed by at least one non-admin ghost.
-    /// </summary>
-    public EntityUid? GetRandomGhostFollowed(EntityUid? except = null)
-    {
-        var followedEnts = GetAllFollowed(except)
-            .Where(item => item.Value > 0 && item.Key != except)
-            .ToArray();
-        if (followedEnts.Length == 0)
-            return null;
-
-        var picked = _random.Pick(followedEnts);
-        return picked.Key;
-    }
-
-    /// <summary>
-    /// Gets all players that are being followed by non-admin ghosts with a follower count for each.
-    /// <remarks>Admin ghosts are excluded from the list of entities so that players can't spy on them.</remarks>
-    /// </summary>
-    private Dictionary<EntityUid, int> GetAllFollowed(EntityUid? except = null)
-    {
         // Keep a tally of how many ghosts are following each entity
         var followedEnts = new Dictionary<EntityUid, int>();
 
@@ -373,14 +331,11 @@ public sealed partial class FollowerSystem : EntitySystem
         var query = EntityQueryEnumerator<FollowerComponent, GhostComponent, ActorComponent>();
         while (query.MoveNext(out _, out var follower, out _, out var actor))
         {
-            var followed = follower.Following;
-
-            if (follower.Following == except)
-                continue;
-
             // Don't count admin followers so that players cannot notice if admins are in stealth mode and following someone.
             if (_adminManager.IsAdmin(actor.PlayerSession))
                 continue;
+
+            var followed = follower.Following;
 
             // If the followed entity cannot be ghostnado'd to, we don't count it.
             // Used for making admins not warpable to, but IsAdmin isn't used for cases where the admin wants to be followed, for example during events.
@@ -390,9 +345,15 @@ public sealed partial class FollowerSystem : EntitySystem
             // Add new entry or increment existing
             followedEnts.TryGetValue(followed, out var currentValue);
             followedEnts[followed] = currentValue + 1;
+
+            if (followedEnts[followed] > most)
+            {
+                picked = followed;
+                most = followedEnts[followed];
+            }
         }
 
-        return followedEnts;
+        return picked;
     }
 }
 

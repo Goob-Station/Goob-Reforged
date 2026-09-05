@@ -185,8 +185,7 @@ public sealed partial class HumanoidProfileEditor
                 .Where(job => job.SetPreference)
                 .ToArray();
 
-            if (JobUIComparer.TryCreate(_prototypeManager, null, out var comparer))
-                Array.Sort(jobs, comparer);
+            Array.Sort(jobs, JobUIComparer.Instance);
 
             foreach (var job in jobs)
             {

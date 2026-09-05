@@ -2,7 +2,6 @@ using Content.Server.Mind;
 using Content.Server.Zombies;
 using Content.Shared.Body;
 using Content.Shared.Species.Components;
-using Content.Shared.Whitelist;
 using Content.Shared.Zombies;
 using Robust.Shared.Prototypes;
 
@@ -12,7 +11,6 @@ public sealed partial class NymphSystem : EntitySystem
 {
     [Dependency] private MindSystem _mindSystem = default!;
     [Dependency] private ZombieSystem _zombie = default!;
-    [Dependency] private EntityWhitelistSystem _whitelist = default!;
 
     public override void Initialize()
     {
@@ -27,9 +25,6 @@ public sealed partial class NymphSystem : EntitySystem
             return;
 
         if (!ProtoMan.TryIndex<EntityPrototype>(comp.EntityPrototype, out var entityProto))
-            return;
-
-        if (!_whitelist.CheckBoth(args.Target, comp.Blacklist, comp.Whitelist))
             return;
 
         // Get the organs' position & spawn a nymph there

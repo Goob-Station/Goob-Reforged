@@ -7,7 +7,7 @@ namespace Content.Shared.Anomaly.Components;
 /// <summary>
 /// Complementary visuals component to <see cref="InnerBodyAnomalyComponent"/>.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class InnerBodyAnomalyVisualsComponent : Component
 {
     /// <summary>

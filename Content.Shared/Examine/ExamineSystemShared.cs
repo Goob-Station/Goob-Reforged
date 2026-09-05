@@ -1,6 +1,6 @@
 using System.Linq;
 using Content.Shared.Eye.Blinding.Components;
-using Content.Shared.Ghost.Components;
+using Content.Shared.Ghost;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
@@ -22,10 +22,6 @@ namespace Content.Shared.Examine
         [Dependency] protected MobStateSystem MobStateSystem = default!;
 
         [Dependency] private EntityQuery<GhostComponent> _ghostQuery = default!;
-        [Dependency] private EntityQuery<OccluderComponent> _occluderQuery = default!;
-        [Dependency] private EntityQuery<TransformComponent> _xformQuery = default!;
-
-        private readonly List<RayCastResults> _occluderRaycastResults = new();
 
         public const float MaxRaycastRange = 100;
 
@@ -155,7 +151,8 @@ namespace Content.Shared.Examine
                     examiner,
                     examined.Value,
                     GetExaminerRange(examiner),
-                    predicate: predicate);
+                    predicate: predicate,
+                    ignoreInsideBlocker: true);
             }
             else
             {
@@ -163,7 +160,8 @@ namespace Content.Shared.Examine
                     examiner,
                     target,
                     GetExaminerRange(examiner),
-                    predicate: predicate);
+                    predicate: predicate,
+                    ignoreInsideBlocker: true);
             }
         }
 
@@ -203,18 +201,22 @@ namespace Content.Shared.Examine
         /// <param name="other">Target coordinates</param>
         /// <param name="range">Maximum range</param>
         /// <param name="predicate">If a blocking entity evaluates for true, the entity is ignored.</param>
+        /// <param name="ignoreInsideBlocker">I predicate to be used?</param>
+        /// <param name="entMan">Entity Manager</param>
         /// <returns>Returns true if no occlusion was found between origin and other and both are in range.</returns>
         public bool InRangeUnOccluded(MapCoordinates origin,
             MapCoordinates other,
             float range,
-            Ignored? predicate)
+            Ignored? predicate,
+            bool ignoreInsideBlocker = true,
+            IEntityManager? entMan = null)
         {
             // No, rider. This is better.
             // ReSharper disable once ConvertToLocalFunction
             var wrapped = (EntityUid uid, Ignored? wrapped)
                 => wrapped != null && wrapped(uid);
 
-            return InRangeUnOccluded(origin, other, range, predicate, wrapped);
+            return InRangeUnOccluded(origin, other, range, predicate, wrapped, ignoreInsideBlocker, entMan);
         }
 
         /// <summary>
@@ -225,12 +227,16 @@ namespace Content.Shared.Examine
         /// <param name="range">Maximum range</param>
         /// <param name="state">if a blocking entity evaluates for true, the entity is ignored.</param>
         /// <param name="predicate">if a blocking entity evaluates for true, the entity is ignored.</param>
+        /// <param name="ignoreInsideBlocker">is predicate to be used?</param>
+        /// <param name="entMan">EntityManager</param>
         /// <returns>Returns true if no occlusion was found between origin and other and both are in range.</returns>
         public bool InRangeUnOccluded<TState>(MapCoordinates origin,
             MapCoordinates other,
             float range,
             TState state,
-            Func<EntityUid, TState, bool> predicate)
+            Func<EntityUid, TState, bool> predicate,
+            bool ignoreInsideBlocker = true,
+            IEntityManager? entMan = null)
         {
             if (other.MapId != origin.MapId ||
                 other.MapId == MapId.Nullspace)
@@ -254,25 +260,26 @@ namespace Content.Shared.Examine
             }
 
             var ray = new Ray(origin.Position, dir.Normalized());
-            var rayResults = _occluderRaycastResults;
-            _occluder.IntersectRay(rayResults, origin.MapId, ray, length);
+            var rayResults = _occluder
+                .IntersectRayWithPredicate(origin.MapId, ray, length, state, predicate, false);
 
             if (rayResults.Count == 0)
                 return true;
 
+            if (!ignoreInsideBlocker)
+                return false;
+
             foreach (var result in rayResults)
             {
-                if (predicate(result.HitEntity, state))
-                    continue;
-
-                if (!_occluderQuery.TryComp(result.HitEntity, out var occluder) ||
-                    !_xformQuery.TryComp(result.HitEntity, out var xform))
+                if (!TryComp(result.HitEntity, out OccluderComponent? o))
                 {
-                    return false;
+                    continue;
                 }
 
-                if (_occluder.ContainsPoint(occluder, xform, origin.Position) ||
-                    _occluder.ContainsPoint(occluder, xform, other.Position))
+                var bBox = o.BoundingBox;
+                bBox = bBox.Translated(_transform.GetWorldPosition(result.HitEntity));
+
+                if (bBox.Contains(origin.Position) || bBox.Contains(other.Position))
                 {
                     continue;
                 }
@@ -290,11 +297,13 @@ namespace Content.Shared.Examine
         /// <param name="other">Target of the examination</param>
         /// <param name="range">Maximum range for the examination</param>
         /// <param name="predicate">if a blocking entity evaluates for true, the entity is ignored.</param>
+        /// <param name="ignoreInsideBlocker">is predicate to be used?</param>
         /// <returns>Returns true if no occlusion was found between origin and other and both are in range.</returns>
         public bool InRangeUnOccluded(EntityUid origin,
             EntityUid other,
             float range = ExamineRange,
-            Ignored? predicate = null)
+            Ignored? predicate = null,
+            bool ignoreInsideBlocker = true)
         {
             var ev = new InRangeOverrideEvent(origin, other);
             RaiseLocalEvent(origin, ref ev);
@@ -307,7 +316,7 @@ namespace Content.Shared.Examine
             var originPos = _transform.GetMapCoordinates(origin);
             var otherPos = _transform.GetMapCoordinates(other);
 
-            return InRangeUnOccluded(originPos, otherPos, range, predicate);
+            return InRangeUnOccluded(originPos, otherPos, range, predicate, ignoreInsideBlocker);
         }
 
         /// <summary>
@@ -317,16 +326,18 @@ namespace Content.Shared.Examine
         /// <param name="other">Target of the examination</param>
         /// <param name="range">Maximum range for the examination</param>
         /// <param name="predicate">if a blocking entity evaluates for true, the entity is ignored.</param>
+        /// <param name="ignoreInsideBlocker">is predicate to be used?</param>
         /// <returns>Returns true if no occlusion was found between origin and other and both are in range.</returns>
         public bool InRangeUnOccluded(EntityUid origin,
             EntityCoordinates other,
             float range = ExamineRange,
-            Ignored? predicate = null)
+            Ignored? predicate = null,
+            bool ignoreInsideBlocker = true)
         {
             var originPos = _transform.GetMapCoordinates(origin);
             var otherPos = _transform.ToMapCoordinates(other);
 
-            return InRangeUnOccluded(originPos, otherPos, range, predicate);
+            return InRangeUnOccluded(originPos, otherPos, range, predicate, ignoreInsideBlocker);
         }
 
         /// <summary>
@@ -336,15 +347,17 @@ namespace Content.Shared.Examine
         /// <param name="other">Target space of the examination</param>
         /// <param name="range">Maximum range for the examination</param>
         /// <param name="predicate">if a blocking entity evaluates for true, the entity is ignored.</param>
+        /// <param name="ignoreInsideBlocker">is predicate to be used?</param>
         /// <returns></returns>
         public bool InRangeUnOccluded(EntityUid origin,
             MapCoordinates other,
             float range = ExamineRange,
-            Ignored? predicate = null)
+            Ignored? predicate = null,
+            bool ignoreInsideBlocker = true)
         {
             var originPos = _transform.GetMapCoordinates(origin);
 
-            return InRangeUnOccluded(originPos, other, range, predicate);
+            return InRangeUnOccluded(originPos, other, range, predicate, ignoreInsideBlocker);
         }
 
         /// <summary>

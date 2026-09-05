@@ -204,13 +204,12 @@ public abstract partial class SharedStrippableSystem : EntitySystem
 
         if (!stealth)
         {
-            _popupSystem.PopupEntity(
-                Loc.GetString("strippable-component-alert-owner-insert",
-                    ("user", Identity.Entity(user, EntityManager)),
-                    ("item", _handsSystem.GetActiveItem((user, user.Comp))!.Value)),
-                target,
-                target,
-                PopupType.Large);
+            _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-insert",
+                                                        ("user", Identity.Entity(user, EntityManager)),
+                                                        ("item", _handsSystem.GetActiveItem((user, user.Comp))!.Value)),
+                                                        target,
+                                                        target,
+                                                        PopupType.Large);
         }
 
         var prefix = stealth ? "stealthily " : "";
@@ -301,23 +300,16 @@ public abstract partial class SharedStrippableSystem : EntitySystem
         if (!stealth)
         {
             if (IsStripHidden(slotDef, user))
-            {
-                _popupSystem.PopupEntity(
-                    Loc.GetString("strippable-component-alert-owner-hidden",
-                        ("slot", slot)),
-                    target,
-                    target,
-                    PopupType.Large);
-            }
+                _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-hidden", ("slot", slot)), target, target, PopupType.Large);
             else
             {
-                _popupSystem.PopupEntity(
-                    Loc.GetString("strippable-component-alert-owner",
-                        ("user", Identity.Entity(user, EntityManager)),
-                        ("item", item)),
-                    target,
-                    target,
-                    PopupType.Large);
+                _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner",
+                                                            ("user", Identity.Entity(user, EntityManager)),
+                                                            ("item", item)),
+                                                            target,
+                                                            target,
+                                                            PopupType.Large);
+
             }
         }
 
@@ -418,13 +410,13 @@ public abstract partial class SharedStrippableSystem : EntitySystem
 
         if (!stealth)
         {
-            _popupSystem.PopupEntity(
-                Loc.GetString("strippable-component-alert-owner-insert-hand",
-                    ("user", Identity.Entity(user, EntityManager)),
-                    ("item", _handsSystem.GetActiveItem(user)!.Value)),
-                target,
-                target,
-                PopupType.Large);
+            _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-insert-hand",
+                                                        ("user", Identity.Entity(user, EntityManager)),
+                                                        ("item", _handsSystem.GetActiveItem(user)!.Value)),
+                                                        target,
+                                                        target,
+                                                        PopupType.Large);
+
         }
 
         var prefix = stealth ? "stealthily " : "";
@@ -528,12 +520,11 @@ public abstract partial class SharedStrippableSystem : EntitySystem
 
         if (!stealth)
         {
-            _popupSystem.PopupEntity(
-                Loc.GetString("strippable-component-alert-owner",
-                    ("user", Identity.Entity(user, EntityManager)),
-                    ("item", item)),
-                target,
-                target);
+            _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner",
+                                                        ("user", Identity.Entity(user, EntityManager)),
+                                                        ("item", item)),
+                                                        target,
+                                                        target);
         }
 
         var prefix = stealth ? "stealthily " : "";

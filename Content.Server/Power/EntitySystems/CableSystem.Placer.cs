@@ -27,6 +27,9 @@ public sealed partial class CableSystem
             return;
 
         var component = placer.Comp;
+        if (component.CablePrototypeId == null)
+            return;
+
         if (!TryComp<MapGridComponent>(_transform.GetGrid(args.ClickLocation), out var grid))
             return;
 

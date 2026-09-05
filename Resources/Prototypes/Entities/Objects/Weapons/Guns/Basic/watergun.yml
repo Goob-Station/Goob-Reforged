@@ -20,8 +20,6 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/water_spray.ogg
-  - type: SolutionItemStatus
-    solution: chamber
   - type: SolutionAmmoProvider
     solutionId: chamber
     proto: BulletWaterShot

@@ -1,6 +1,6 @@
 - type: entity
-  parent: [ BaseStructure, StructureHealthDoor ]
   id: Airlock
+  parent: BaseStructure
   name: airlock
   description: It opens, it closes, and maybe crushes you.
   components:
@@ -16,28 +16,24 @@
           "/Audio/Weapons/smash.ogg"
   - type: InteractionOutline
   - type: Sprite
-    sprite: Structures/Doors/Airlocks/Standard/airlock-base.rsi
+    sprite: Structures/Doors/Airlocks/Standard/basic.rsi
+    snapCardinals: true
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
     - state: closed_unlit
       shader: unshaded
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseUnlit"]
-      visible: true
+      visible: false
     - state: welded
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.WeldableLayers.BaseWelded"]
     - state: bolted_unlit
       shader: unshaded
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseBolted"]
     - state: emergency_unlit
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseEmergencyAccess"]
       shader: unshaded
     - state: panel_open
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
     - state: electrified_ai
       sprite: Interface/Misc/ai_hud.rsi
@@ -50,15 +46,9 @@
       visible: false
       map: ["enum.ElectrifiedLayers.Sparks"]
     - state: sparks
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseEmagging"]
       shader: unshaded
       visible: false
-  - type: IconSmooth
-    key: walls
-    additionalKeys:
-    - woods
-    mode: NoSprite
   - type: AnimationPlayer
   - type: Physics
   - type: Fixtures
@@ -97,7 +87,6 @@
     fuel: 5
     time: 3
   - type: Airlock
-    openUnlitVisible: true
   - type: NavMapDoor
   - type: DoorBolt
   - type: Appearance
@@ -152,13 +141,10 @@
   - type: RadiationBlocker
     resistance: 3
   - type: Occluder
-    polygon:
-    - "-0.5, 0.5"
-    - "0.5, 0.5"
-    - "0.5, -0.5"
-    - "-0.5, -0.5"
   - type: Damageable
-    damageModifierSet: SteelStaticMod
+    damageModifierSet: StrongMetallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: RCDDeconstructable
     cost: 6
     delay: 8
@@ -167,8 +153,10 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 200
+        damage: 500
       behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
       # TODO this should go to the broken node first
       - !type:PlaySoundBehavior
         sound:
@@ -199,8 +187,6 @@
     - Airlocks
     - WirePanels
     - Networking
-  - type: StructureAligner
-  - type: StructureAlignerPylon
   placement:
     mode: SnapgridCenter
 
@@ -226,7 +212,7 @@
   - type: Occluder
     enabled: false
   - type: Sprite
-    sprite: Structures/Doors/Airlocks/Glass/airlock-base.rsi
+    sprite: Structures/Doors/Airlocks/Glass/glass.rsi
   - type: AnimationPlayer
   - type: Fixtures
     fixtures:

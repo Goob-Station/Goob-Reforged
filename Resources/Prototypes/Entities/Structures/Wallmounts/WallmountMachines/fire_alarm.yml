@@ -1,5 +1,5 @@
 - type: entity
-  parent: [ BaseWallmountMachine, StructureHealthMachineFlimsy ]
+  parent: BaseWallmountMachine
   id: FireAlarm
   name: fire alarm
   description: A fire alarm. Spicy!
@@ -32,9 +32,9 @@
   - type: AtmosAlarmableVisuals
     layerMap: "fireAlarmState"
     alarmStates:
-      Normal: fire_0
-      Warning: fire_0 # shouldn't be alarming at a warning
-      Danger: fire_2
+      Normal: fire_off
+      Warning: fire_off # shouldn't be alarming at a warning
+      Danger: fire_on
       Emagged: fire_emagged
     hideOnDepowered: [ "fireAlarmState" ]
   - type: Tag
@@ -53,13 +53,12 @@
   - type: WiresVisuals
   - type: AlertLevelDisplay
     alertVisuals:
-      Green: fire_0
-      Blue: fire_1
-      Red: fire_2
-      Violet: fire_1
-      Yellow: fire_1
-      DeltaNuke: fire_3
-      # TODO: add missing alarm states
+      green: fire_0
+      blue: fire_1
+      red: fire_2
+      violet: fire_1
+      yellow: fire_1
+      delta: fire_3
   - type: UserInterface
     interfaces:
       enum.WiresUiKey.Key:
@@ -69,14 +68,13 @@
     boardName: wires-board-name-firealarm
     layoutId: FireAlarm
   - type: Sprite
-    sprite: Structures/Wallmounts/fire-alarm.rsi
-    offset: 0, -0.25
+    sprite: Structures/Wallmounts/air_monitors.rsi
     layers:
-    - state: base
+    - state: fire0
       map: ["fireAlarmBase"]
-    - state: fire_0
+    - state: fire_off
       map: ["fireAlarmState"]
-    - state: panel
+    - state: fire_b2
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: Transform
     anchored: true
@@ -84,17 +82,21 @@
     graph: FireAlarm
     node: fire_alarm
   - type: Damageable
-    damageModifierSet: PlasticMod
+    damageModifierSet: Metallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: GuideHelp
     guides:
     - Networking
   - type: Destructible
     thresholds:
-    - trigger: &DamageMachineFlimsy
+    - trigger:
         !type:DamageTrigger
-        damage: 50
+        damage: 80
       behaviors:
-      - &SoundMetalGlassBreak !type:PlaySoundBehavior
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
         sound:
           collection: MetalGlassBreak
           params:
@@ -102,30 +104,52 @@
   - type: StationAiWhitelist
 
 - type: entity
-  parent: [ BaseWallmountMetallic, StructureHealthMachineFlimsy ]
+  parent: BaseWallmountMetallic
   id: FireAlarmAssembly
   name: fire alarm assembly
   description: A fire alarm assembly. Very mild.
   components:
   - type: Sprite
-    sprite: Structures/Wallmounts/fire-alarm.rsi
+    sprite: Structures/Wallmounts/air_monitors.rsi
     layers:
-    - state: frame1
+    - state: fire_b1
       map: [ "enum.ConstructionVisuals.Layer" ]
   - type: Appearance
   - type: GenericVisualizer
     visuals:
       enum.ConstructionVisuals.Key:
         enum.ConstructionVisuals.Layer:
-          assembly: { state: frame1 }
-          electronics: { state: frame2 }
+          assembly: { state: fire_b1 }
+          electronics: { state: fire_b2 }
   - type: Construction
     graph: FireAlarm
     node: assembly
-  - type: Damageable
-    damageModifierSet: PlasticMod
   - type: Destructible
     thresholds:
-    - trigger: *DamageMachineFlimsy
+    - trigger:
+        !type:DamageTrigger
+        damage: 15
       behaviors:
-      - *SoundMetalGlassBreak
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalGlassBreak
+          params:
+            volume: -4
+
+- type: entity
+  id: FireAlarmXeno
+  parent: FireAlarm
+  description: An alien fire alarm. Works just the same!
+  components:
+  - type: Sprite
+    sprite: Structures/Wallmounts/air_monitors_xeno.rsi
+
+- type: entity
+  id: FireAlarmAssemblyXeno
+  parent: FireAlarmAssembly
+  description: An alien fire alarm assembly. Good luck with the wires.
+  components:
+  - type: Sprite
+    sprite: Structures/Wallmounts/air_monitors_xeno.rsi

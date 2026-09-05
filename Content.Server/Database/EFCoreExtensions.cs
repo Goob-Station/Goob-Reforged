@@ -6,32 +6,31 @@ namespace Content.Server.Database;
 
 internal static class EFCoreExtensions
 {
-    extension<TEntity>(IQueryable<TEntity> query) where TEntity : class
+    public static IQueryable<TEntity> ApplyIncludes<TEntity>(
+        this IQueryable<TEntity> query,
+        IEnumerable<Expression<Func<TEntity, object>>> properties) where TEntity : class
     {
-        public IQueryable<TEntity> ApplyIncludes(
-            IEnumerable<Expression<Func<TEntity, object>>> properties)
+        var q = query;
+        foreach (var property in properties)
         {
-            var q = query;
-            foreach (var property in properties)
-            {
-                q = q.Include(property);
-            }
-
-            return q;
+            q = q.Include(property);
         }
 
-        public IQueryable<TEntity> ApplyIncludes<TDerived>(
-            IEnumerable<Expression<Func<TDerived, object>>> properties,
-            Expression<Func<TEntity, TDerived>> getDerived)
-            where TDerived : class
-        {
-            var q = query;
-            foreach (var property in properties)
-            {
-                q = q.Include(getDerived).ThenInclude(property);
-            }
+        return q;
+    }
 
-            return q;
+    public static IQueryable<TEntity> ApplyIncludes<TEntity, TDerived>(
+        this IQueryable<TEntity> query,
+        IEnumerable<Expression<Func<TDerived, object>>> properties,
+        Expression<Func<TEntity, TDerived>> getDerived)
+        where TDerived : class where TEntity : class
+    {
+        var q = query;
+        foreach (var property in properties)
+        {
+            q = q.Include(getDerived).ThenInclude(property);
         }
+
+        return q;
     }
 }

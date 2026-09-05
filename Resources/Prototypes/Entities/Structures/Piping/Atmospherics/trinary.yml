@@ -54,9 +54,6 @@
             True: { state: gasFilterOn }
             False: { state: gasFilter }
     - type: PipeColorVisuals
-    - type: ActivatableUI
-      key: enum.GasFilterUiKey.Key
-    - type: ActivatableUIRequiresAnchor
     - type: UserInterface
       interfaces:
         enum.GasFilterUiKey.Key:
@@ -156,9 +153,6 @@
             True: { state: gasMixerOn }
             False: { state: gasMixer }
     - type: PipeColorVisuals
-    - type: ActivatableUI
-      key: enum.GasMixerUiKey.Key
-    - type: ActivatableUIRequiresAnchor
     - type: UserInterface
       interfaces:
         enum.GasMixerUiKey.Key:

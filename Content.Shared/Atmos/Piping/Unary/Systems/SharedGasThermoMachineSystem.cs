@@ -24,7 +24,7 @@ public abstract partial class SharedGasThermoMachineSystem : EntitySystem
     {
         if (Loc.TryGetString("gas-thermomachine-system-examined",
                 out var str,
-                ("machineName", Name(uid)),
+                ("machineName", !IsHeater(thermoMachine) ? "freezer" : "heater"),
                 ("tempColor", !IsHeater(thermoMachine) ? "deepskyblue" : "red"),
                 ("temp", Math.Round(thermoMachine.TargetTemperature, 2))
             ))

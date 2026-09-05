@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Construction.NodeEntities;
 using Content.Shared.Construction.Serialization;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared.Construction
 {
@@ -27,7 +28,7 @@ namespace Content.Shared.Construction
         [DataField("transform")]
         public IGraphTransform[] TransformLogic = Array.Empty<IGraphTransform>();
 
-        [DataField(customTypeSerializer: typeof(GraphNodeEntitySerializer))]
+        [DataField("entity", customTypeSerializer: typeof(GraphNodeEntitySerializer))]
         public IGraphNodeEntity Entity { get; private set; } = new NullNodeEntity();
 
         /// <summary>
@@ -41,8 +42,8 @@ namespace Content.Shared.Construction
         ///     This will largely be used for construction graphs which have removeable upgrades, such as hacking protections for airlocks,
         ///     so that the upgrades can be removed and you can return to the last primary construction step without replacing the entity
         /// </remarks>
-        [DataField]
-        public bool DoNotReplaceInheritingEntities;
+        [DataField("doNotReplaceInheritingEntities")]
+        public bool DoNotReplaceInheritingEntities = false;
 
         public ConstructionGraphEdge? GetEdge(string target)
         {

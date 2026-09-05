@@ -1,22 +1,24 @@
 - type: entity
-  parent: [BaseDeltaPressureReinforcedPlasma, BaseWindowStructure, BaseRCDResistant, StructureHealthBarrierStrong]
   id: ReinforcedPlasmaWindow
   name: reinforced plasma window
+  parent: [BaseDeltaPressureReinforcedPlasma, WindowRCDResistant]
   components:
   - type: Sprite
-    sprite: Structures/Windows/window-plasma-reinf.rsi
+    drawdepth: WallTops
+    sprite: Structures/Windows/reinforced_plasma_window.rsi
   - type: Icon
-    sprite: Structures/Windows/window-plasma-reinf.rsi
-    state: full
+    sprite: Structures/Windows/reinforced_plasma_window.rsi
   - type: Damageable
-    damageModifierSet: GlassReinforcedPlasmaMod
+    damageModifierSet: RGlass
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: RadiationBlocker
     resistance: 4
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 120
+        damage: 150
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -29,6 +31,8 @@
           PartRodMetal:
             min: 1
             max: 2
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
   - type: IconSmooth
     base: rpwindow
   - type: Construction
@@ -45,9 +49,14 @@
     price: 132
 
 - type: entity
-  parent: [BaseDeltaPressureReinforcedPlasmaQuarter, BaseWindowStructureDirectional, BaseRCDResistant, StructureHealthBarrier]
   id: PlasmaReinforcedWindowDirectional
+  parent: [BaseDeltaPressureReinforcedPlasmaQuarter, WindowDirectionalRCDResistant]
   name: directional reinforced plasma window
+  description: Don't smudge up the glass down there.
+  placement:
+    mode: SnapgridCenter
+    snap:
+    - Window
   components:
   - type: Sprite
     sprite: Structures/Windows/directional.rsi
@@ -66,14 +75,14 @@
     damageOverlay:
       sprite: Structures/Windows/cracks_directional.rsi
   - type: Damageable
-    damageModifierSet: GlassReinforcedPlasmaMod
+    damageModifierSet: RGlass
   - type: RadiationBlocker
     resistance: 2
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 80
+        damage: 75
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -86,39 +95,10 @@
           PartRodMetal:
             min: 1
             max: 1
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
   - type: StaticPrice
     price: 66
-
-- type: entity
-  parent: PlasmaReinforcedWindowDirectional
-  id: PlasmaReinforcedWindowDirectionalCorner
-  suffix: Corner
-  components:
-  - type: Sprite
-    sprite: Structures/Windows/directional.rsi
-    state: plasma_reinforced_window_corner
-  - type: Icon
-    sprite: Structures/Windows/directional.rsi
-    state: plasma_reinforced_window_corner
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeAabb
-          bounds: "-0.5,-0.5,-0.28125,-0.28125"
-        density: 1500
-        mask:
-        - FullTileMask
-        layer:
-        - GlassLayer
-  - type: Construction
-    graph: WindowDirectionalCorner
-    node: plasmaReinforcedWindowDirectionalCorner
-  - type: DamageVisuals
-    thresholds: [5, 10, 20]
-    trackAllDamage: true
-    damageOverlay:
-      sprite: Structures/Windows/cracks_directional_corner.rsi
 
 - type: entity
   parent: ReinforcedPlasmaWindow
@@ -131,7 +111,7 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi
+    sprite: Structures/Windows/reinforced_plasma_diagonal.rsi
     state: state0
   - type: Tag
     tags:
@@ -139,10 +119,10 @@
     - Window
   - type: IconSmooth
     mode: Diagonal
-    key: walls
+    key: windows
     base: state
   - type: Icon
-    sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi
+    sprite: Structures/Windows/reinforced_plasma_diagonal.rsi
     state: state0
   - type: Fixtures
     fixtures:
@@ -165,7 +145,7 @@
     - East
   - type: DamageVisuals
     damageOverlay:
-      sprite: Structures/Windows/cracks-diagonal.rsi
+      sprite: Structures/Windows/cracks_diagonal.rsi
   - type: Construction
     graph: WindowDiagonal
     node: reinforcedPlasmaWindowDiagonal

@@ -67,13 +67,22 @@ entity-effect-guidebook-smoke-area =
         *[other] create
     } large quantities of smoke
 
-entity-effect-guidebook-satiate =
+entity-effect-guidebook-satiate-thirst =
     { $chance ->
         [1] Satiates
         *[other] satiate
     } { $relative ->
-        [1] {$type} averagely
-        *[other] {$type} at {NATURALFIXED($relative, 3)}x the average rate
+        [1] thirst averagely
+        *[other] thirst at {NATURALFIXED($relative, 3)}x the average rate
+    }
+
+entity-effect-guidebook-satiate-hunger =
+    { $chance ->
+        [1] Satiates
+        *[other] satiate
+    } { $relative ->
+        [1] hunger averagely
+        *[other] hunger at {NATURALFIXED($relative, 3)}x the average rate
     }
 
 entity-effect-guidebook-health-change =
@@ -486,6 +495,12 @@ entity-effect-guidebook-plant-phalanximine =
         *[other] restore
     } viability to a plant rendered nonviable by a mutation
 
+entity-effect-guidebook-plant-remove-kudzu =
+    { $chance ->
+        [1] Removes
+        *[other] remove
+    } kudzu weed growth from a plant
+
 entity-effect-guidebook-plant-diethylamine =
     { $chance ->
         [1] Increases
@@ -510,18 +525,6 @@ entity-effect-guidebook-plant-seeds-remove =
         *[other] remove the
     } seeds of the plant
 
-entity-effect-guidebook-plant-mutate-exude-gasses =
-    { $chance ->
-        [1] Mutates
-        *[other] mutate
-    } the plant to exude gases between {$minValue} and {$maxValue} moles
-
-entity-effect-guidebook-plant-mutate-consume-gasses =
-    { $chance ->
-        [1] Mutates
-        *[other] mutate
-    } the plant to consume gases between {$minValue} and {$maxValue} moles
-
 entity-effect-guidebook-plant-mutate-chemicals =
     { $chance ->
         [1] Mutates
@@ -533,9 +536,3 @@ entity-effect-guidebook-add-reagent-to-bloodstream =
         [1] Injects
         *[other] inject
     } {$quantity} of {$reagent} directly into the bloodstream
-
-entity-effect-disarm =
-    { $chance ->
-        [1] Disarms
-        *[other] disarms
-    } the entity

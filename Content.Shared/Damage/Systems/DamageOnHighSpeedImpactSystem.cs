@@ -53,11 +53,7 @@ public sealed partial class DamageOnHighSpeedImpactSystem : EntitySystem
         _damageable.TryChangeDamage(uid, component.Damage * damageScale);
 
         if (_gameTiming.IsFirstTimePredicted)
-        {
-            var audioParams = component.SoundHit?.Params ?? AudioParams.Default;
-            audioParams = audioParams.WithVariation(0.125f).AddVolume(-0.125f);
-            _audio.PlayPvs(component.SoundHit, uid, audioParams);
-        }
+            _audio.PlayPvs(component.SoundHit, uid, AudioParams.Default.WithVariation(0.125f).WithVolume(-0.125f));
         _color.RaiseEffect(Color.Red, new List<EntityUid>() { uid }, Filter.Pvs(uid, entityManager: EntityManager));
     }
 

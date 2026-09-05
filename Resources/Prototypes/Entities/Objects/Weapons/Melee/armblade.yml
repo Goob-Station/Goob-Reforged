@@ -19,10 +19,9 @@
     attackRate: 1
     damage:
       types:
-        Slash: 10
-        Piercing: 10
-        Caustic: 5
-        Structural: 15
+        Slash: 11
+        Piercing: 11
+        Structural: 20
   - type: Item
     size: Normal
     sprite: Objects/Weapons/Melee/armblade.rsi

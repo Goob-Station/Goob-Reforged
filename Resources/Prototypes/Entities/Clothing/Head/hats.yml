@@ -38,8 +38,8 @@
     sprite: Clothing/Head/Hats/beret_french.rsi
   - type: Clothing
     sprite: Clothing/Head/Hats/beret_french.rsi
-  - type: FrenchAccent
-    relayAccent: true
+  - type: AddAccentClothing
+    accent: FrenchAccent
   - type: Tag
     tags:
     - PetWearable
@@ -187,7 +187,6 @@
     tags:
     - PetWearable
     - CorgiWearable
-    - WhitelistChameleon
 
 - type: entity
   parent: ClothingHeadBase
@@ -203,7 +202,6 @@
     tags:
     - PetWearable
     - CorgiWearable
-    - WhitelistChameleon
 
 - type: entity
   parent: ClothingHeadBase
@@ -267,7 +265,6 @@
     tags:
     - PetWearable
     - CorgiWearable
-    - WhitelistChameleon
 
 - type: entity
   parent: [ClothingHeadBase, BaseCommandContraband]
@@ -317,7 +314,6 @@
     tags:
     - PetWearable
     - CorgiWearable
-    - WhitelistChameleon
 
 - type: entity
   parent: ClothingHeadBase
@@ -507,9 +503,9 @@
     tags:
     - PetWearable
     - CorgiWearable
-  - type: ReplacementAccent
-    accent: pirate
-    relayAccent: true
+  - type: AddAccentClothing
+    accent: ReplacementAccent
+    replacement: pirate
 
 - type: entity
   parent: ClothingHeadBase
@@ -556,6 +552,7 @@
   components:
   - type: Clothing
     sprite: Clothing/Head/Hats/santahat.rsi
+  - type: Appearance
   - type: HideLayerClothing
     layers:
       Hair: HEAD
@@ -592,8 +589,8 @@
     sprite: Clothing/Head/Hats/sombrero.rsi
   - type: Clothing
     sprite: Clothing/Head/Hats/sombrero.rsi
-  - type: SpanishAccent
-    relayAccent: true
+  - type: AddAccentClothing
+    accent: SpanishAccent
   - type: Tag
     tags:
     - PetWearable
@@ -680,8 +677,9 @@
   components:
   - type: Clothing
     sprite: Clothing/Head/Hats/ushanka.rsi
-  - type: RussianAccent
-    relayAccent: true
+  - type: Appearance
+  - type: AddAccentClothing
+    accent: RussianAccent
   - type: Foldable
     canFoldInsideContainer: true
   - type: FoldableClothing
@@ -766,7 +764,6 @@
     tags:
     - PetWearable
     - CorgiWearable
-    - WhitelistChameleon
 
 - type: entity
   parent: ClothingHeadBase
@@ -1055,9 +1052,9 @@
     sprite: Clothing/Head/Hats/piratetricord.rsi
   - type: Clothing
     sprite: Clothing/Head/Hats/piratetricord.rsi
-  - type: ReplacementAccent
-    accent: pirate
-    relayAccent: true
+  - type: AddAccentClothing
+    accent: ReplacementAccent
+    replacement: pirate
 
 - type: entity
   parent: ClothingHeadBase
@@ -1336,9 +1333,9 @@
       sprite: Clothing/Head/Hats/cowboyhatbrown.rsi
     - type: Clothing
       sprite: Clothing/Head/Hats/cowboyhatbrown.rsi
-    - type: ReplacementAccent
-      accent: cowboy
-      relayAccent: true
+    - type: AddAccentClothing
+      accent: ReplacementAccent
+      replacement: cowboy
     - type: Tag
       tags:
       - PetWearable
@@ -1487,7 +1484,6 @@
     tags:
     - PetWearable
     - CorgiWearable
-    - WhitelistChameleon
 
 - type: entity
   parent: ClothingHeadBase
@@ -1551,19 +1547,3 @@
     sprite: Clothing/Head/Hats/mitre_clown.rsi
   - type: Clothing
     sprite: Clothing/Head/Hats/mitre_clown.rsi
-
-- type: entity
-  parent: ClothingHeadBase
-  id: ClothingHeadHatTramDriver
-  name: tram driver hat
-  description: It smells like confidence.
-  components:
-  - type: Sprite
-    sprite: Clothing/Head/Hats/tramdriver.rsi
-  - type: Clothing
-    sprite: Clothing/Head/Hats/tramdriver.rsi
-  - type: Tag
-    tags:
-    - ClothMade
-    - Recyclable
-    - WhitelistChameleon

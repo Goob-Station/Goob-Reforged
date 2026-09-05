@@ -43,10 +43,7 @@
     - Meat
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseParent
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseTorso
   name: torso
   abstract: true
@@ -71,10 +68,7 @@
       - Special
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseParent
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseHead
   name: head
   abstract: true
@@ -99,15 +93,9 @@
       - SnoutCover
       - HeadSide
       - HeadTop
-  - type: Tag
-    tags:
-    - Head
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseParent
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseArmLeft
   name: left arm
   abstract: true
@@ -126,10 +114,7 @@
       - LArm
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseParent
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseArmRight
   name: right arm
   abstract: true
@@ -148,9 +133,7 @@
       - RArm
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseHandLeft
   name: left hand
   abstract: true
@@ -173,9 +156,7 @@
       - LHand
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseHandRight
   name: right hand
   abstract: true
@@ -198,10 +179,7 @@
       - RHand
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseParent
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseLegLeft
   name: left leg
   abstract: true
@@ -220,10 +198,7 @@
       - LLeg
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseParent
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseLegRight
   name: right leg
   abstract: true
@@ -242,9 +217,7 @@
       - RLeg
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseFootLeft
   name: left foot
   abstract: true
@@ -263,9 +236,7 @@
       - LFoot
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildExternal
+  parent: OrganBase
   id: OrganBaseFootRight
   name: right foot
   abstract: true
@@ -284,9 +255,7 @@
       - RFoot
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseBrain
   name: brain
   abstract: true
@@ -319,9 +288,7 @@
       Taco: Brain
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseEyes
   name: eyes
   abstract: true
@@ -344,9 +311,7 @@
       - Eyes
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseTongue
   name: tongue
   abstract: true
@@ -359,9 +324,7 @@
     - state: tongue
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseAppendix
   name: appendix
   abstract: true
@@ -374,9 +337,7 @@
     - state: appendix
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseEars
   name: ears
   abstract: true
@@ -389,9 +350,7 @@
     - state: ears
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseLungs
   name: lungs
   abstract: true
@@ -424,9 +383,7 @@
       canReact: false
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseHeart
   name: heart
   abstract: true
@@ -442,9 +399,7 @@
     stages: [ Bloodstream ]
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseStomach
   name: stomach
   abstract: true
@@ -476,9 +431,7 @@
       maxVol: 150 # 1.25 liters which is average for a human
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseLiver
   name: liver
   abstract: true
@@ -496,9 +449,7 @@
     stages: [ Metabolites ]
 
 - type: entity
-  parent:
-  - OrganBase
-  - OrganBaseChildInternal
+  parent: OrganBase
   id: OrganBaseKidneys
   name: kidneys
   abstract: true
@@ -547,26 +498,3 @@
     sexStateOverrides:
       Male: torso_m
       Female: torso_f
-
-- type: entity
-  abstract: true
-  id: OrganBaseParent
-  components:
-  - type: ParentOrgan
-  - type: DetachableOrgan
-    detachedBody: DetachedBody
-
-- type: entity
-  abstract: true
-  id: OrganBaseChildExternal
-  components:
-  - type: ChildOrgan
-  - type: DetachableOrgan
-    detachedBody: DetachedBody
-
-- type: entity
-  abstract: true
-  id: OrganBaseChildInternal
-  components:
-  - type: ChildOrgan
-  - type: InternalChildOrgan

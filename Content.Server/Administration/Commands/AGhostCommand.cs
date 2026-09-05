@@ -3,8 +3,7 @@ using Content.Server.GameTicking;
 using Content.Server.Ghost;
 using Content.Server.Mind;
 using Content.Shared.Administration;
-using Content.Shared.Ghost.Components;
-using Content.Shared.Ghost.Systems;
+using Content.Shared.Ghost;
 using Content.Shared.Mind;
 using Robust.Server.GameObjects;
 using Robust.Server.Player;
@@ -95,14 +94,11 @@ public sealed partial class AGhostCommand : LocalizedCommands
 
         var canReturn = mind.CurrentEntity != null
                         && !_entities.HasComponent<GhostComponent>(mind.CurrentEntity);
-
-        if (player!.AttachedEntity == null
-            || !transformSystem.TryGetMapOrGridCoordinates(player.AttachedEntity.Value, out var coordinates))
-        {
-            coordinates = gameTicker.GetObserverSpawnPoint();
-        }
-
-        var ghost = _entities.SpawnEntity(GameTicker.AdminObserverPrototypeName, coordinates.Value);
+        var coordinates = player!.AttachedEntity != null
+            ? _entities.GetComponent<TransformComponent>(player.AttachedEntity.Value).Coordinates
+            : gameTicker.GetObserverSpawnPoint();
+        var ghost = _entities.SpawnEntity(GameTicker.AdminObserverPrototypeName, coordinates);
+        transformSystem.AttachToGridOrMap(ghost, _entities.GetComponent<TransformComponent>(ghost));
 
         if (canReturn)
         {

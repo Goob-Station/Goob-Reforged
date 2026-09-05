@@ -1,8 +1,5 @@
 using System.Reflection;
 using Content.Shared.Guidebook;
-using Robust.Server.Player;
-using Robust.Shared.Enums;
-using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
@@ -14,8 +11,6 @@ namespace Content.Server.Guidebook;
 /// </summary>
 public sealed partial class GuidebookDataSystem : EntitySystem
 {
-    [Dependency] private IPlayerManager _player = default!;
-
     private readonly Dictionary<string, List<MemberInfo>> _tagged = [];
     private GuidebookData _cachedData = new();
 
@@ -23,21 +18,18 @@ public sealed partial class GuidebookDataSystem : EntitySystem
     {
         base.Initialize();
 
+        SubscribeNetworkEvent<RequestGuidebookDataEvent>(OnRequestRules);
         SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
-        _player.PlayerStatusChanged += OnPlayerStatusChanged;
 
         // Build initial cache
         GatherData(ref _cachedData);
     }
 
-    private void OnPlayerStatusChanged(object? sender, SessionStatusEventArgs e)
+    private void OnRequestRules(RequestGuidebookDataEvent ev, EntitySessionEventArgs args)
     {
-        if (e.NewStatus != SessionStatus.Connected)
-            return;
-
-        // Send cached data to newly-connected client.
+        // Send cached data to requesting client
         var sendEv = new UpdateGuidebookDataEvent(_cachedData);
-        RaiseNetworkEvent(sendEv, e.Session);
+        RaiseNetworkEvent(sendEv, args.SenderSession);
     }
 
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)

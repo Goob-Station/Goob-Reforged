@@ -167,9 +167,7 @@
   - type: VentriloquistPuppet
   - type: Item
     size: Normal
-  - type: PermanentStatusEffects
-    statusEffects:
-    - StatusEffectVentriloquistPuppetMuted
+  - type: Muted
   - type: TypingIndicator
     proto: robot
   - type: Actions
@@ -259,7 +257,6 @@
         enum.ToggleableVisuals.Layer:
           True: { visible: true }
           False: { visible: false }
-  - type: ItemToggleExaminableStatus
   - type: ItemToggle
   - type: ProximityBeeper
   - type: ProximityDetector

@@ -1,7 +1,8 @@
 using Content.Server.Antag.Mimic;
 using Content.Server.GameTicking.Rules;
+using Content.Server.GameTicking.Rules.Components;
 using Content.Shared.GameTicking.Components;
-using Content.Shared.VendingMachines.Components;
+using Content.Shared.VendingMachines;
 using Robust.Shared.Map;
 using Robust.Shared.Random;
 

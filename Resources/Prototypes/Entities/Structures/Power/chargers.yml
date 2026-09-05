@@ -17,12 +17,24 @@
     powerLoad: 1 # same as draw given in ChargerComponent.PassiveDraw; increased when it is actually charging something
   - type: Anchorable
     delay: 1
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 40
+      behaviors:
+      - !type:EmptyAllContainersBehaviour
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
   - type: StaticPrice
     price: 75
 
 - type: entity
   abstract: true
-  parent: [ BaseRecharger, BaseSmallConstructibleMachineDestructible ]
+  parent: BaseRecharger
   id: BaseItemRecharger
   components:
   - type: Sprite
@@ -51,18 +63,6 @@
       machine_board: !type:Container
       machine_parts: !type:Container
   - type: RequireProjectileTarget
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:EmptyContainersBehaviour
-        containers:
-        - charger_slot
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalBreak
 
 - type: entity
   parent: BaseItemRecharger
@@ -84,7 +84,12 @@
   - type: Machine
     board: CellRechargerCircuitboard
   - type: WiresPanel
-  - type: WiresVisuals
+  - type: GenericVisualizer
+    visuals:
+      enum.WiresVisuals.MaintenancePanelState:
+        enum.WiresVisualLayers.MaintenancePanel:
+          True: { visible: true }
+          False: { visible: false }
   - type: PowerCellSlot
     cellSlotId: charger_slot
     # fitsInCharger is true i dont think this will ever affect anything negatively but it lets it function
@@ -121,8 +126,6 @@
         - MachineMask
         layer:
         - MachineLayer
-  - type: Damageable
-    damageModifierSet: PlasteelMod
   - type: LitOnPowered
   - type: PointLight
     radius: 1.5
@@ -162,10 +165,9 @@
       charger_slot:
         ejectOnInteract: true
         whitelist:
-          tags:
-          - Stunbaton
           components:
           - BatteryAmmoProvider
+          - Stunbaton
           - PowerCell
         blacklist:
           tags:
@@ -191,10 +193,9 @@
       charger_slot:
         ejectOnInteract: true
         whitelist:
-          tags:
-          - Stunbaton
           components:
           - BatteryAmmoProvider
+          - Stunbaton
           - PowerCell
         blacklist:
           tags:
@@ -224,16 +225,15 @@
       charger_slot:
         ejectOnInteract: true
         whitelist:
-          tags:
-          - Stunbaton
           components:
           - BatteryAmmoProvider
+          - Stunbaton
         blacklist:
           tags:
           - PotatoBattery
 
 - type: entity
-  parent: [ BaseRecharger, BaseConstructibleMachineDestructible ]
+  parent: BaseRecharger
   id: BorgCharger
   name: cyborg recharging station
   description: A stationary charger for various robotic and cyborg entities. Surprisingly spacious.
@@ -319,15 +319,6 @@
         - MachineMask
         layer:
         - MachineLayer
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 175
-      behaviors:
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalBreak
 
 - type: entity
   parent: BorgCharger

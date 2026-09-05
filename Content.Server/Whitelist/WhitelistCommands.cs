@@ -1,6 +1,5 @@
 using Content.Server.Administration;
 using Content.Server.Database;
-using Content.Server.Players.Whitelist;
 using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Robust.Server.Player;
@@ -15,7 +14,6 @@ public sealed partial class AddWhitelistCommand : LocalizedCommands
 {
     [Dependency] private IPlayerLocator _locator = default!;
     [Dependency] private IServerDbManager _dbManager = default!;
-    [Dependency] private WhitelistManager _whitelistManager = default!;
     public override string Command => "whitelistadd";
 
     public override async void Execute(IConsoleShell shell, string argStr, string[] args)
@@ -33,13 +31,14 @@ public sealed partial class AddWhitelistCommand : LocalizedCommands
         if (data != null)
         {
             var guid = data.UserId;
-            if (await _dbManager.GetWhitelistStatusAsync(guid))
+            var isWhitelisted = await _dbManager.GetWhitelistStatusAsync(guid);
+            if (isWhitelisted)
             {
                 shell.WriteLine(Loc.GetString("cmd-whitelistadd-existing", ("username", data.Username)));
                 return;
             }
 
-            _whitelistManager.AddWhitelist(guid);
+            await _dbManager.AddToWhitelistAsync(guid);
             shell.WriteLine(Loc.GetString("cmd-whitelistadd-added", ("username", data.Username)));
             return;
         }
@@ -63,7 +62,6 @@ public sealed partial class RemoveWhitelistCommand : LocalizedCommands
 {
     [Dependency] private IPlayerLocator _locator = default!;
     [Dependency] private IServerDbManager _dbManager = default!;
-    [Dependency] private WhitelistManager _whitelistManager = default!;
 
     public override string Command => "whitelistremove";
 
@@ -82,13 +80,14 @@ public sealed partial class RemoveWhitelistCommand : LocalizedCommands
         if (data != null)
         {
             var guid = data.UserId;
-            if (!await _dbManager.GetWhitelistStatusAsync(guid))
+            var isWhitelisted = await _dbManager.GetWhitelistStatusAsync(guid);
+            if (!isWhitelisted)
             {
                 shell.WriteLine(Loc.GetString("cmd-whitelistremove-existing", ("username", data.Username)));
                 return;
             }
 
-            _whitelistManager.RemoveWhitelist(guid);
+            await _dbManager.RemoveFromWhitelistAsync(guid);
             shell.WriteLine(Loc.GetString("cmd-whitelistremove-removed", ("username", data.Username)));
             return;
         }
@@ -134,8 +133,6 @@ public sealed partial class KickNonWhitelistedCommand : LocalizedCommands
             if (await _dbManager.GetAdminDataForAsync(session.UserId) is not null)
                 continue;
 
-            // We let this one query the whitelist to be 100% certain it's kicking out non-whitelisted players +
-            // it's mostly adding/removing whitelists that needs to go through the cache.
             if (!await _dbManager.GetWhitelistStatusAsync(session.UserId))
                 _netManager.DisconnectChannel(session.Channel, Loc.GetString("whitelist-not-whitelisted"));
         }

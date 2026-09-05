@@ -39,10 +39,6 @@ ui-options-restart-sounds = Round Restart Sounds
 ui-options-event-music = Event Music
 ui-options-admin-sounds = Play Admin Sounds
 ui-options-bwoink-sound = Play AHelp Notification Sound
-ui-options-mute-unfocused = Mute audio when unfocused
-ui-options-audio-device = Output device:
-ui-options-audio-device-default = System default
-ui-options-audio-hrtf = Enable HRTF Audio Processing (Requires Restart)
 ui-options-volume-label = Volume
 
 ## Graphics menu
@@ -65,9 +61,6 @@ ui-options-fancy-speech = Show names in speech bubbles
 ui-options-fancy-name-background = Add background to speech bubble names
 ui-options-chat-follow-button = As ghost, show a follow button next to chat messages
 ui-options-vsync = VSync
-ui-options-max-fps = Maximum FPS:
-ui-options-max-fps-display-rate = Display Rate
-ui-options-max-fps-tooltip = Maximum framerate the client should run at. Set to 0 for no limit. This has no effect if VSync is enabled.
 ui-options-fullscreen = Fullscreen
 ui-options-lighting-label = Lighting Quality:
 ui-options-lighting-very-low = Very Low
@@ -113,7 +106,6 @@ ui-options-ambient-occlusion = Show Ambient Occlusion
 ui-options-fps-counter = Show FPS counter
 ui-options-vp-width = Viewport width:
 ui-options-hud-layout = HUD layout:
-ui-options-sharpness = Sharpness:
 
 ## Controls menu
 

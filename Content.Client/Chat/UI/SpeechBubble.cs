@@ -214,7 +214,6 @@ namespace Content.Client.Chat.UI
             var label = new RichTextLabel
             {
                 MaxWidth = SpeechMaxWidth,
-                OutlineColorOverride = TextOutline.Default.Color,
             };
 
             label.SetMessage(FormatSpeech(message.WrappedMessage, fontColor));
@@ -244,8 +243,7 @@ namespace Content.Client.Chat.UI
             {
                 var label = new RichTextLabel
                 {
-                    MaxWidth = SpeechMaxWidth,
-                    OutlineColorOverride = TextOutline.Default.Color,
+                    MaxWidth = SpeechMaxWidth
                 };
 
                 label.SetMessage(ExtractAndFormatSpeechSubstring(message, "BubbleContent", fontColor));
@@ -262,17 +260,15 @@ namespace Content.Client.Chat.UI
             var bubbleHeader = new RichTextLabel
             {
                 ModulateSelfOverride = Color.White.WithAlpha(ConfigManager.GetCVar(CCVars.SpeechBubbleSpeakerOpacity)),
-                Margin = new Thickness(2, 0, 2, 0),
-                OutlineColorOverride = TextOutline.Default.Color,
+                Margin = new Thickness(1, 1, 1, 1),
             };
 
             var bubbleContent = new RichTextLabel
             {
                 ModulateSelfOverride = Color.White.WithAlpha(ConfigManager.GetCVar(CCVars.SpeechBubbleTextOpacity)),
                 MaxWidth = SpeechMaxWidth,
-                Margin = new Thickness(2, 0, 2, 0),
+                Margin = new Thickness(2, 6, 2, 2),
                 StyleClasses = { "bubbleContent" },
-                OutlineColorOverride = TextOutline.Default.Color,
             };
 
             //We'll be honest. *Yes* this is hacky. Doing this in a cleaner way would require a bottom-up refactor of how saycode handles sending chat messages. -Myr
@@ -287,7 +283,7 @@ namespace Content.Client.Chat.UI
                 ModulateSelfOverride = Color.White.WithAlpha(ConfigManager.GetCVar(CCVars.SpeechBubbleBackgroundOpacity)),
                 HorizontalAlignment = HAlignment.Center,
                 VerticalAlignment = VAlignment.Bottom,
-                Margin = new Thickness(4, 20, 4, 2)
+                Margin = new Thickness(4, 14, 4, 2)
             };
 
             var headerPanel = new PanelContainer

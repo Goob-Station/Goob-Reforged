@@ -8,7 +8,7 @@ namespace Content.Shared.StationRecords;
 /// </summary>
 [DataDefinition]
 [Serializable, NetSerializable]
-public sealed partial record GeneralStationRecord : StationRecord
+public sealed partial record GeneralStationRecord
 {
     /// <summary>
     ///     Name tied to this station record.
@@ -51,7 +51,9 @@ public sealed partial record GeneralStationRecord : StationRecord
     public Gender Gender = Gender.Epicene;
 
     /// <summary>
-    ///     The priority to display this record at, taken from the station's job-weight profile.
+    ///     The priority to display this record at.
+    ///     This is taken from the 'weight' of a job prototype,
+    ///     usually.
     /// </summary>
     [DataField]
     public int DisplayPriority;

@@ -9,7 +9,13 @@ public sealed partial class NameModifierSystem : EntitySystem
 {
     [Dependency] private MetaDataSystem _metaData = default!;
 
-    [SubscribeLocalEvent]
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<NameModifierComponent, EntityRenamedEvent>(OnEntityRenamed);
+    }
+
     private void OnEntityRenamed(Entity<NameModifierComponent> ent, ref EntityRenamedEvent args)
     {
         SetBaseName(ent, args.NewName);
@@ -129,7 +135,7 @@ public sealed class RefreshNameModifiersEvent : IInventoryRelayEvent
     /// </summary>
     public string GetModifiedName()
     {
-        // Start out with the entity's base name
+        // Start out with the entity's name name
         var name = BaseName;
 
         // Iterate through all the modifiers in priority order

@@ -52,7 +52,6 @@
     - state: icon
     - state: icon-flash
       visible: false
-      shader: unshaded
       map: [ "light" ]
   - type: Clothing
     equippedPrefix: off
@@ -61,19 +60,12 @@
     size: Normal # I'm not updating the solution because these probably shouldn't be edible...
   - type: ToggleableVisuals
     spriteLayer: light
-    inhandVisuals:
-      left:
-      - state: inhand-left-light
-        shader: unshaded
-      right:
-      - state: inhand-right-light
-        shader: unshaded
   - type: ItemTogglePointLight
   - type: PointLight
     enabled: false
     radius: 3
     energy: 1
-    lightMask: ConeSingle
+    mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
     netsync: false
   - type: Appearance
@@ -111,7 +103,7 @@
 
 - type: entity
   abstract: true
-  parent: [ ClothingHeadBase, TemperatureProtection ]
+  parent: ClothingHeadBase
   id: ClothingHeadEVAHelmetBase
   name: base space helmet
   components:
@@ -124,6 +116,9 @@
   - type: PressureProtection
     highPressureMultiplier: 0.6
     lowPressureMultiplier: 1000
+  - type: TemperatureProtection
+    heatingCoefficient: 0.2
+    coolingCoefficient: 0.2
   - type: IngestionBlocker
   - type: Clothing
     #Copies ClothingHeadHardsuitBase behavior
@@ -146,7 +141,7 @@
 
 - type: entity
   abstract: true
-  parent: TemperatureProtection
+  # No parent since we aren't actually an item.
   id: ClothingHeadHardsuitBase
   name: base hardsuit helmet
   categories: [ HideSpawnMenu ]
@@ -165,14 +160,12 @@
     unequipSound: /Audio/Mecha/mechmove03.ogg
     quickEquip: false
     slots: [ HEAD ]
-    clothingVisuals:
-      head:
-      - state: equipped-head
-      - state: equipped-head-unshaded
-        shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.3
     lowPressureMultiplier: 1000
+  - type: TemperatureProtection
+    heatingCoefficient: 0.1
+    coolingCoefficient: 0.1
   - type: Armor
     modifiers:
       coefficients:
@@ -197,11 +190,6 @@
 
 - type: entity
   abstract: true
-  parent: [ TemperatureProtection, ClothingHeadHardsuitBase ]
-  id: ClothingHeadHardsuitInsulatedBase
-
-- type: entity
-  abstract: true
   # No parent since it isn't an item
   # must parent both this and the desired helmet base when using
   id: ClothingHeadSuitWithLightBase
@@ -214,26 +202,19 @@
   - type: Sprite
     layers:
     - state: icon
-    - state: icon-unshaded
-      shader: unshaded
-    - state: light-overlay
+    - state: icon-flash
       visible: false
-      shader: unshaded
       map: [ "light" ]
   - type: Clothing
     equippedPrefix: off
   - type: ToggleableVisuals
     spriteLayer: light
-    clothingVisuals:
-      head:
-      - state: equipped-head-light
-        shader: unshaded
   - type: ItemTogglePointLight
   - type: PointLight
     enabled: false
     radius: 3
     energy: 2
-    lightMask: ConeSingle
+    mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
     netsync: false
   - type: Appearance
@@ -266,7 +247,6 @@
 
 - type: entity
   abstract: true
-  parent: TemperatureProtectionMinimal
   id: ClothingHeadHatHoodWinterBase
   name: base winter coat hood
   description: A hood, made to keep your head warm.
@@ -280,6 +260,9 @@
     unequipSound: /Audio/Effects/rustle2.ogg
     quickEquip: false
     slots: [ HEAD ]
+  - type: TemperatureProtection
+    heatingCoefficient: 1.05
+    coolingCoefficient: 0.7
   - type: ZombificationResistance
     zombificationResistanceCoefficient: 0.90
   - type: Armor # so zombification resistance shows up

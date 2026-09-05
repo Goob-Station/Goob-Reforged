@@ -2,4 +2,4 @@
 
 namespace Content.Server.SmartFridge;
 
-public sealed partial class SmartFridgeSystem : SharedSmartFridgeSystem;
+public sealed class SmartFridgeSystem : SharedSmartFridgeSystem;

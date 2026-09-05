@@ -159,11 +159,11 @@ public abstract partial class SharedGunSystem
             CycleCartridge(uid, component, user, appearance);
 
             if (user != null)
-                PopupSystem.PopupEntity(Loc.GetString("gun-chamber-bolt-closed"), uid, user.Value);
+                PopupSystem.PopupClient(Loc.GetString("gun-chamber-bolt-closed"), uid, user.Value);
 
             if (slots != null)
             {
-                _slots.SetLock((uid, slots), ChamberSlot, true);
+                _slots.SetLock(uid, ChamberSlot, true, slots);
             }
 
             Audio.PlayPredicted(component.BoltClosedSound, uid, user);
@@ -189,11 +189,11 @@ public abstract partial class SharedGunSystem
             }
 
             if (user != null)
-                PopupSystem.PopupEntity(Loc.GetString("gun-chamber-bolt-opened"), uid, user.Value);
+                PopupSystem.PopupClient(Loc.GetString("gun-chamber-bolt-opened"), uid, user.Value);
 
             if (slots != null)
             {
-                _slots.SetLock((uid, slots), ChamberSlot, false);
+                _slots.SetLock(uid, ChamberSlot, false, slots);
             }
 
             Audio.PlayPredicted(component.BoltOpenedSound, uid, user);

@@ -33,6 +33,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
 
     [UISystemDependency] private readonly ClientInventorySystem _inventorySystem = default!;
     [UISystemDependency] private readonly HandsSystem _handsSystem = default!;
+    [UISystemDependency] private readonly ContainerSystem _container = default!;
     [UISystemDependency] private readonly SpriteSystem _sprite = default!;
 
     private EntityUid? _playerUid;
@@ -343,7 +344,8 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         // Set green / red overlay at 50% transparency
         var hoverEntity = _entities.SpawnEntity("hoverentity", MapCoordinates.Nullspace);
         var hoverSprite = _entities.GetComponent<SpriteComponent>(hoverEntity);
-        var fits = _inventorySystem.CanEquip(player.Value, held.Value, control.SlotName, out _, slotDef, containerSlot: container);
+        var fits = _inventorySystem.CanEquip(player.Value, held.Value, control.SlotName, out _, slotDef) &&
+                   _container.CanInsert(held.Value, container);
 
         if (!fits && _entities.TryGetComponent<StorageComponent>(container.ContainedEntity, out var storage))
         {
@@ -357,7 +359,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
                 if (!slot.InsertOnInteract)
                     continue;
 
-                if (!itemSlotsSys.CanInsert(container.ContainedEntity.Value, slot, held.Value, null))
+                if (!itemSlotsSys.CanInsert(container.ContainedEntity.Value, held.Value, null, slot))
                     continue;
                 fits = true;
                 break;

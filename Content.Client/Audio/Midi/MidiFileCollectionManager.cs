@@ -15,7 +15,7 @@ public sealed partial class MidiFileCollectionManager : IPostInjectInit
     /// <summary>
     /// Directory path to use inside UserData for storing MIDIs.
     /// </summary>
-    public static readonly ResPath UserMidiDirectory = new("/UserMidis/");
+    private static readonly ResPath UserMidiDirectory = new("/UserMidis/");
 
     private const string SawmillCategory = "midifilecollection";
 

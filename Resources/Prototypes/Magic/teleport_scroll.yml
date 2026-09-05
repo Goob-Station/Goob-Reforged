@@ -30,5 +30,3 @@
     delays:
       TeleportDelay: !type:UseDelayInfo
         length: 300
-      TeleportFailedDelay: !type:UseDelayInfo
-        length: 10

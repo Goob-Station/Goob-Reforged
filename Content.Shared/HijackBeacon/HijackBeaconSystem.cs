@@ -298,7 +298,7 @@ public sealed partial class HijackBeaconSystem : EntitySystem
             return;
 
         _transform.AnchorEntity(ent, beaconXForm);
-        _popup.PopupEntity(Loc.GetString("hijack-beacon-popup-anchor"), ent);
+        _popup.PopupPredicted(Loc.GetString("hijack-beacon-popup-anchor"), ent, null);
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ public sealed partial class HijackBeaconSystem : EntitySystem
             return;
 
         _transform.Unanchor(ent, beaconXForm);
-        _popup.PopupEntity(Loc.GetString("hijack-beacon-popup-unanchor"), ent);
+        _popup.PopupPredicted(Loc.GetString("hijack-beacon-popup-unanchor"), ent, null);
     }
 
     /// <summary>

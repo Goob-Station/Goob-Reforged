@@ -32,10 +32,9 @@
   description: Polymorphs you into a Spider.
   components:
   - type: Action
-  - type: Sprite
-    sprite: Mobs/Animals/spider.rsi
-    layers:
-    - state: tarantula
+    icon:
+      sprite: Mobs/Animals/spider.rsi
+      state: tarantula
   - type: InstantAction
     event: !type:PolymorphActionEvent
       protoId: WizardSpider
@@ -47,10 +46,9 @@
   description: CLANG!
   components:
   - type: Action
-  - type: Sprite
-    sprite: Objects/Fun/immovable_rod.rsi
-    layers:
-    - state: icon
+    icon:
+      sprite: Objects/Fun/immovable_rod.rsi
+      state: icon
   - type: InstantAction
     event: !type:PolymorphActionEvent
       protoId: WizardRod
@@ -64,10 +62,9 @@
   - type: Magic
   - type: Action
     useDelay: 30
-  - type: Sprite
-    sprite: Objects/Magic/magicactions.rsi
-    layers:
-    - state: jaunt
+    icon:
+      sprite: Objects/Magic/magicactions.rsi
+      state: jaunt
   - type: InstantAction
     event: !type:PolymorphActionEvent
       protoId: Jaunt

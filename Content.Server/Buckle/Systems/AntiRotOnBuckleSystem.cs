@@ -5,7 +5,7 @@ using Content.Shared.Power;
 
 namespace Content.Server.Buckle.Systems;
 
-public sealed partial class AntiRotOnBuckleSystem : EntitySystem
+public sealed class AntiRotOnBuckleSystem : EntitySystem
 {
     public override void Initialize()
     {

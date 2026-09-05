@@ -160,7 +160,7 @@
         - id: ClothingNeckGoldAutismPin
     # Rare Group
     - !type:GroupSelector
-      weight: 15
+      weight: 2
       children:
       - id: DrinkMugDog
       - id: CigarGold

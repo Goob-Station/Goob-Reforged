@@ -3,6 +3,7 @@
   id: BaseXenoArtifactStructure
   name: artifact
   abstract: true
+  noSpawn: true
   components:
   # Visual
   - type: Sprite
@@ -39,15 +40,6 @@
         - Opaque
         mask:
         - MachineMask
-
-- type: entity
-  id: DummyArtifactStructure
-  parent: BaseXenoArtifactStructure
-  name: artifact
-  suffix: Debug
-  components:
-  - type: XenoArtifact
-    isGenerationRequired: false
 
 - type: entity
   parent: BaseXenoArtifactStructure

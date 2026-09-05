@@ -123,8 +123,9 @@
         type: Add
     Digestion:
       effects:
-      - !type:ModifyStatusEffect
-        effectProto: StatusEffectMuted
+      - !type:GenericStatusEffect
+        key: Muted
+        component: Muted
         time: 5
   footstepSound:
     collection: FootstepSlime
