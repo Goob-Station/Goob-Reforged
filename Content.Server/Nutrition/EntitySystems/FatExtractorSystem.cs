@@ -1,17 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Server.Nutrition.Components;
+using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Storage.Components;
 using Content.Shared.Emag.Components;
 using Content.Shared.Emag.Systems;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
-using Content.Shared.Nutrition.Prototypes;
 using Content.Shared.Power;
 using Content.Shared.Storage.Components;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Server.Nutrition.EntitySystems;
@@ -23,7 +22,7 @@ public sealed partial class FatExtractorSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private EmagSystem _emag = default!;
-    [Dependency] private SatiationSystem _satiation = default!;
+    [Dependency] private HungerSystem _hunger = default!;
     [Dependency] private SharedAppearanceSystem _appearance = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
 
@@ -96,35 +95,23 @@ public sealed partial class FatExtractorSystem : EntitySystem
         component.Stream = _audio.Stop(component.Stream);
     }
 
-    public bool TryGetValidOccupant(EntityUid uid,
-        [NotNullWhen(true)] out Entity<SatiationComponent>? occupant,
-        FatExtractorComponent? component = null,
-        EntityStorageComponent? storage = null)
+    public bool TryGetValidOccupant(EntityUid uid, [NotNullWhen(true)] out EntityUid? occupant, FatExtractorComponent? component = null, EntityStorageComponent? storage = null)
     {
         occupant = null;
         if (!Resolve(uid, ref component, ref storage))
             return false;
 
-        var firstEntity = storage.Contents.ContainedEntities.FirstOrDefault();
-        if (firstEntity is not { Valid: true })
-        {
-            return false;
-        }
+        occupant = storage.Contents.ContainedEntities.FirstOrDefault();
 
-        if (!TryComp<SatiationComponent>(firstEntity, out var satiation))
+        if (!TryComp<HungerComponent>(occupant, out var hunger))
             return false;
 
-        Entity<SatiationComponent> entity = (firstEntity, satiation);
-
-        if (_satiation.GetValueOrNull(entity, SatiationSystem.Hunger) < component.NutritionPerSecond &&
-            !_emag.CheckFlag(uid, EmagType.Interaction))
+        if (_hunger.GetHunger(hunger) < component.NutritionPerSecond)
             return false;
 
-        if (_satiation.IsValueInRange(entity, SatiationSystem.Hunger, below: component.MinHungerThreshold) &&
-            !HasComp<EmaggedComponent>(uid))
+        if (hunger.CurrentThreshold < component.MinHungerThreshold && !_emag.CheckFlag(uid, EmagType.Interaction))
             return false;
 
-        occupant = entity;
         return true;
     }
 
@@ -153,7 +140,7 @@ public sealed partial class FatExtractorSystem : EntitySystem
                 continue;
             fat.NextUpdate += fat.UpdateTime;
 
-            _satiation.ModifyValue(occupant.Value, SatiationSystem.Hunger, -fat.NutritionPerSecond);
+            _hunger.ModifyHunger(occupant.Value, -fat.NutritionPerSecond);
             fat.NutrientAccumulator += fat.NutritionPerSecond;
             if (fat.NutrientAccumulator >= fat.NutrientPerMeat)
             {

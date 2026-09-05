@@ -1,13 +1,11 @@
 - type: entity
-  parent: [ BaseStructure, StructureHealthBarrier ]
   id: Grille
+  parent: BaseStructure
   name: grille
   description: A flimsy framework of iron rods.
-  placement:
-    mode: SnapgridCenter
-    snap:
-    - Wall
   components:
+  - type: Transform # required
+    noRot: true
   - type: MeleeSound
     soundGroups:
       Brute:
@@ -18,13 +16,11 @@
     delay: 4
     fx: EffectRCDDeconstruct4
   - type: CanBuildWindowOnTop
-  - type: Anchorable
-    flags:
-    - Anchorable
   - type: Sprite
     drawdepth: Walls
     sprite: Structures/Walls/grille.rsi
     layers:
+    - state: grille
     - state: electrified
       sprite: Effects/electricity.rsi
       map: ["enum.ElectrifiedLayers.Sparks"]
@@ -32,13 +28,15 @@
       visible: false
   - type: Icon
     sprite: Structures/Walls/grille.rsi
-    state: full
-  - type: PlacementReplacement
-    key: grilles
-  - type: IconSmooth
-    index: 0
-    key: walls
-    base: grille
+    state: grille
+  - type: Construction
+    graph: Grille
+    node: grille
+    deconstructionTarget: start
+  - type: Damageable
+    damageModifierSet: PerforatedMetallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: Electrified
     requirePower: true
     noWindowInTile: true
@@ -68,6 +66,22 @@
         - FullTileMask
         layer:
         - GlassLayer
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200 #excess damage (nuke?). avoid computational cost of spawning entities.
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:ChangeConstructionNodeBehavior
+        node: grilleBroken
+      - !type:DoActsBehavior
+        acts: ["Breakage"]
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -76,82 +90,40 @@
           True: { visible: True }
           False: { visible: False }
   - type: AnimationPlayer
-  - type: Damageable
-    damageModifierSet: RodMetalMod
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 80
-      behaviors:
-      - &SpawnRod !type:SpawnEntitiesBehavior
-        spawn:
-          PartRodMetal1:
-            min: 0
-            max: 1
-      - !type:ChangeConstructionNodeBehavior
-        node: grilleBroken
-      - !type:PlaySoundBehavior
-        sound:
-          path: "/Audio/Weapons/grille_hit.ogg"
-  - type: Construction
-    graph: Grille
-    node: grille
 
-### DIAGONAL
 - type: entity
+  id: ClockworkGrille
   parent: Grille
-  id: GrilleDiagonal
-  name: diagonal grille
+  name: clockwork grille
+  description: A flimsy framework of iron rods assembled in traditional Ratvarian fashion.
   components:
   - type: Sprite
-    sprite: Structures/Walls/grille-diagonal.rsi
+    drawdepth: Walls
+    sprite: Structures/Walls/clockwork_grille.rsi
+    state: ratvargrille
     layers:
-    - state: state0
-    - state: electrified_diagonal
-      sprite: Effects/electricity.rsi
-      map: ["enum.ElectrifiedLayers.Sparks"]
-      shader: unshaded
-      visible: false
+      - state: ratvargrille
   - type: Icon
-    sprite: Structures/Walls/grille-diagonal.rsi
-    state: state0
-  - type: IconSmooth
-    index: 0
-    mode: Diagonal
-    key: grilles
-    base: state
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PolygonShape
-          vertices:
-          - "-0.5,-0.5"
-          - "0.5,0.5"
-          - "0.5,-0.5"
-        mask:
-        - FullTileMask
-        layer:
-        - GlassLayer
+    sprite: Structures/Walls/clockwork_grille.rsi
+    state: ratvargrille
   - type: Construction
-    graph: GrilleDiagonal
-    node: grilleDiagonal
+    graph: ClockGrille
+    node: clockGrille
+    deconstructionTarget: start
 
-### BROKEN
 - type: entity
-  parent: [ BaseStructure, StructureHealthFurnitureWeak ]
   id: GrilleBroken
+  parent: BaseStructure
   name: grille
   description: A flimsy framework of iron rods. It has seen better days.
   components:
   - type: Sprite
     drawdepth: Walls
     sprite: Structures/Walls/grille.rsi
-    state: broken
+    state: grille_broken
   - type: Icon
     sprite: Structures/Walls/grille.rsi
-    state: broken
+    state: grille_broken
   - type: RCDDeconstructable
     cost: 6
     delay: 4
@@ -168,14 +140,114 @@
     tags:
     - ForceNoFixRotations
   - type: Damageable
-    damageModifierSet: RodMetalMod
+    damageModifierSet: FlimsyMetallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 5
+        damage: 10
       behaviors:
-      - *SpawnRod
-      - !type:PlaySoundBehavior
-        sound:
-          path: "/Audio/Weapons/grille_hit.ogg"
+      - !type:ChangeConstructionNodeBehavior
+        node: start
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+
+- type: entity
+  id: ClockworkGrilleBroken
+  parent: GrilleBroken
+  name: clockwork grille
+  description: A flimsy framework of iron rods assembled in traditional Ratvarian fashion. It has seen better days.
+  components:
+  - type: Sprite
+    drawdepth: Walls
+    sprite: Structures/Walls/clockwork_grille.rsi
+    state: brokenratvargrille
+  - type: Icon
+    sprite: Structures/Walls/clockwork_grille.rsi
+    state: brokenratvargrille
+  - type: Construction
+    graph: ClockGrille
+    node: clockGrilleBroken
+
+- type: entity
+  id: GrilleDiagonal
+  parent: Grille
+  name: diagonal grille
+  components:
+  - type: Transform
+    noRot: false
+  - type: Sprite
+    drawdepth: Walls
+    sprite: Structures/Walls/grille.rsi
+    layers:
+    - state: grille_diagonal
+    - state: electrified_diagonal
+      sprite: Effects/electricity.rsi
+      map: ["enum.ElectrifiedLayers.Sparks"]
+      shader: unshaded
+      visible: false
+  - type: Icon
+    sprite: Structures/Walls/grille.rsi
+    state: grille_diagonal
+  - type: Tag
+    tags:
+    - Diagonal
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PolygonShape
+            vertices:
+            - "-0.5,-0.5"
+            - "0.5,0.5"
+            - "0.5,-0.5"
+        mask:
+        - FullTileMask
+        layer:
+        - GlassLayer
+  - type: Construction
+    graph: GrilleDiagonal
+    node: grilleDiagonal
+
+- type: entity
+  id: ClockworkGrilleDiagonal
+  parent: ClockworkGrille
+  name: diagonal clockwork grille
+  components:
+  - type: Transform
+    noRot: false
+  - type: Sprite
+    drawdepth: Walls
+    sprite: Structures/Walls/clockwork_grille.rsi
+    layers:
+    - state: ratvargrille_diagonal
+    - state: electrified_diagonal
+      sprite: Effects/electricity.rsi
+      map: ["enum.ElectrifiedLayers.Sparks"]
+      shader: unshaded
+      visible: false
+  - type: Icon
+    sprite: Structures/Walls/clockwork_grille.rsi
+    state: ratvargrille_diagonal
+  - type: Tag
+    tags:
+    - Diagonal
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PolygonShape
+            vertices:
+            - "-0.5,-0.5"
+            - "0.5,0.5"
+            - "0.5,-0.5"
+        mask:
+        - FullTileMask
+        layer:
+        - GlassLayer
+  - type: Construction
+    graph: GrilleDiagonal
+    node: clockworkGrilleDiagonal
+

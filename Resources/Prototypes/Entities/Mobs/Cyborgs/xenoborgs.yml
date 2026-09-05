@@ -1,5 +1,5 @@
 - type: entity
-  parent: [ BaseXenoborgChassis, BaseXenoborgTransponder, BaseXenoborgDestructible ]
+  parent: [ BaseXenoborgChassis, BaseXenoborgTransponder ]
   id: XenoborgEngi
   name: engi xenoborg
   suffix: with brain
@@ -21,17 +21,6 @@
       shader: unshaded
       map: ["light"]
       visible: false
-    - state: electrified
-      sprite: Effects/electricity.rsi
-      shader: unshaded
-      visible: false
-      map: ["enum.ElectrifiedLayers.Sparks"]
-  - type: GenericVisualizer
-    visuals:
-      enum.ElectrifiedVisuals.ShowSparks:
-        enum.ElectrifiedLayers.Sparks:
-          True: { visible: True }
-          False: { visible: False }
   - type: BorgChassis
     maxModules: 7
     hasMindState: xenoborg_engi_e
@@ -40,16 +29,20 @@
       tags:
       - XenoborgModuleGeneric
       - XenoborgModuleEngi
+      - BorgModuleEngineering
+      - BorgModuleGeneric
   - type: ContainerFill
     containers:
       borg_brain:
       - MMIFilled
       borg_module:
       - XenoborgModuleBasic
-      - XenoborgModuleAdvancedTool
-      - XenoborgModuleConstruction
+      - BorgModuleAdvancedTool
+      - BorgModuleConstruction
+      - BorgModuleRCD
+      - BorgModuleCable
       - XenoborgModuleAccessBreaker
-      - XenoborgModuleTileGun
+      - XenoborgModuleFireExtinguisher
   - type: ShowElectrocutionHUD
   - type: ShowHealthBars
     damageContainers:
@@ -155,7 +148,7 @@
         startingItem: PowerCellHigh
 
 - type: entity
-  parent: [ BaseXenoborgChassis, BaseXenoborgTransponder, BaseXenoborgDestructible ]
+  parent: [ BaseXenoborgChassis, BaseXenoborgTransponder ]
   id: XenoborgScout
   name: scout xenoborg
   suffix: with brain
@@ -210,7 +203,7 @@
         startingItem: PowerCellHigh
 
 - type: entity
-  parent: [ BaseXenoborgChassis, BaseXenoborgTransponder, BaseXenoborgDestructible ]
+  parent: [ BaseXenoborgChassis, BaseXenoborgTransponder ]
   id: XenoborgStealth
   name: stealth xenoborg
   suffix: with brain
@@ -276,10 +269,12 @@
       - MMI
       borg_module:
       - XenoborgModuleBasic
-      - XenoborgModuleAdvancedTool
-      - XenoborgModuleConstruction
+      - BorgModuleAdvancedTool
+      - BorgModuleConstruction
+      - BorgModuleRCD
+      - BorgModuleCable
       - XenoborgModuleAccessBreaker
-      - XenoborgModuleTileGun
+      - XenoborgModuleFireExtinguisher
   - type: ItemSlots
     slots:
       cell_slot:

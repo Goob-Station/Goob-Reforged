@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Hands.Systems;
 using Content.Server.NPC.Queries;
@@ -6,24 +5,17 @@ using Content.Server.NPC.Queries.Considerations;
 using Content.Server.NPC.Queries.Curves;
 using Content.Server.NPC.Queries.Queries;
 using Content.Server.Nutrition.Components;
-using Content.Shared.Atmos.Components;
 using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Damage.Components;
-using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.Fluids.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
-using Content.Shared.Stealth;
-using Content.Shared.Stealth.Components;
 using Content.Shared.Storage.Components;
 using Content.Shared.Stunnable;
-using Content.Shared.Temperature.Components;
 using Content.Shared.Tools.Systems;
 using Content.Shared.Turrets;
 using Content.Shared.Weapons.Melee;
@@ -34,6 +26,14 @@ using Microsoft.Extensions.ObjectPool;
 using Robust.Server.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Atmos.Components;
+using System.Linq;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Temperature.Components;
+using Content.Shared.Stealth;
+using Content.Shared.Stealth.Components;
 
 namespace Content.Server.NPC.Systems;
 
@@ -58,7 +58,6 @@ public sealed partial class NPCUtilitySystem : EntitySystem
     [Dependency] private MobThresholdSystem _thresholdSystem = default!;
     [Dependency] private TurretTargetSettingsSystem _turretTargetSettings = default!;
     [Dependency] private DamageableSystem _damageable = default!;
-    [Dependency] private SatiationSystem _satiation = default!;
     [Dependency] private SharedStealthSystem _stealth = default!;
     [Dependency] private EntityQuery<PuddleComponent> _puddleQuery = default!;
 
@@ -165,7 +164,7 @@ public sealed partial class NPCUtilitySystem : EntitySystem
         var owner = blackboard.GetValue<EntityUid>(NPCBlackboard.Owner);
         switch (consideration)
         {
-            case FoodValueCon foodValueConsideration:
+            case FoodValueCon:
             {
                 // do we have a mouth available? Is the food item opened?
                 if (!_ingestion.CanConsume(owner, targetUid))
@@ -174,9 +173,7 @@ public sealed partial class NPCUtilitySystem : EntitySystem
                 var avoidBadFood = !HasComp<IgnoreBadFoodComponent>(owner);
 
                 // only eat when hungry or if it will eat anything
-                if (TryComp<SatiationComponent>(owner, out var satiation) &&
-                    _satiation.IsValueInRange((owner, satiation), SatiationSystem.Hunger, below: foodValueConsideration.HungerThreshold) &&
-                    avoidBadFood)
+                if (TryComp<HungerComponent>(owner, out var hunger) && hunger.CurrentThreshold > HungerThreshold.Okay && avoidBadFood)
                     return 0f;
 
                 // no mouse don't eat the uranium-235
@@ -189,15 +186,14 @@ public sealed partial class NPCUtilitySystem : EntitySystem
 
                 return 1f;
             }
-            case DrinkValueCon drinkValueConsideration:
+            case DrinkValueCon:
             {
                 // can't drink closed drinks and can't drink with a mask on...
                 if (!_ingestion.CanConsume(owner, targetUid))
                     return 0f;
 
                 // only drink when thirsty
-                if (TryComp<SatiationComponent>(owner, out var satiation) &&
-                    _satiation.IsValueInRange((owner, satiation), SatiationSystem.Thirst, below: drinkValueConsideration.ThirstThreshold))
+                if (TryComp<ThirstComponent>(owner, out var thirst) && thirst.CurrentThirstThreshold > ThirstThreshold.Okay)
                     return 0f;
 
                 // no janicow don't drink the blood puddle
@@ -388,7 +384,7 @@ public sealed partial class NPCUtilitySystem : EntitySystem
                     if (!TryComp<TemperatureComponent>(targetUid, out var temperature))
                         return 0f;
 
-                    return temperature.Temperature <= con.MinTemp ? 1f : 0f;
+                    return temperature.CurrentTemperature <= con.MinTemp ? 1f : 0f;
                 }
             default:
                 throw new NotImplementedException();
@@ -515,7 +511,7 @@ public sealed partial class NPCUtilitySystem : EntitySystem
     {
         switch (filter)
         {
-            case ComponentFilter compFilter:
+            case Content.Server.NPC.Queries.Queries.ComponentFilter compFilter:
             {
                 _entityList.Clear();
 

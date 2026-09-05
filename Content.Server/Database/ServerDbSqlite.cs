@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization.Manager;
-using Robust.Shared.Utility;
 
 namespace Content.Server.Database
 {
@@ -22,7 +21,7 @@ namespace Content.Server.Database
     ///     Provides methods to retrieve and update character preferences.
     ///     Don't use this directly, go through <see cref="ServerPreferencesManager" /> instead.
     /// </summary>
-    public sealed class ServerDbSqlite : ServerDbBase
+    public sealed class ServerDbSqlite : ServerDbBase<SqliteServerDbContext>
     {
         private readonly Func<DbContextOptions<SqliteServerDbContext>> _options;
 
@@ -38,9 +37,8 @@ namespace Content.Server.Database
             IConfigurationManager cfg,
             bool synchronous,
             ISawmill opsLog,
-            ISerializationManager serialization,
-            bool snapshot)
-            : base(opsLog, serialization)
+            ISerializationManager serialization)
+            : base(opsLog, serialization, new SqliteDbProvider())
         {
             _options = options;
 
@@ -52,12 +50,7 @@ namespace Content.Server.Database
 
             if (synchronous)
             {
-                // EnsureCreated means you can't apply migrations later, fine for tests
-                if (snapshot)
-                    prefsCtx.Database.EnsureCreated();
-                else
-                    prefsCtx.Database.Migrate();
-
+                prefsCtx.Database.Migrate();
                 _dbReadyTask = Task.CompletedTask;
                 prefsCtx.Dispose();
             }
@@ -78,7 +71,7 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl();
 
-            var ban = await db.SqliteDbContext.Ban
+            var ban = await db.TypedContext.Ban
                 .ApplyIncludes(GetBanDefIncludes())
                 .Where(p => p.Id == id)
                 .AsSplitQuery()
@@ -113,7 +106,7 @@ namespace Content.Server.Database
         }
 
         private async Task<IEnumerable<BanDef>> GetBanQueryAsync(
-            DbGuardImpl db,
+            DbGuard<SqliteServerDbContext> db,
             IPAddress? address,
             NetUserId? userId,
             ImmutableArray<byte>? hwId,
@@ -123,11 +116,11 @@ namespace Content.Server.Database
         {
             var exempt = await GetBanExemptionCore(db, userId);
 
-            var newPlayer = !await db.SqliteDbContext.Player.AnyAsync(p => p.UserId == userId);
+            var newPlayer = !await db.TypedContext.Player.AnyAsync(p => p.UserId == userId);
 
             // SQLite can't do the net masking stuff we need to match IP address ranges.
             // So just pull down the whole list into memory.
-            var queryBans = await GetAllBans(db.SqliteDbContext, includeUnbanned, exempt, type);
+            var queryBans = await GetAllBans(db.TypedContext, includeUnbanned, exempt, type);
 
             var playerInfo = new BanMatcher.PlayerInfo
             {
@@ -195,9 +188,9 @@ namespace Content.Server.Database
                         })
                         .ToList(),
             };
-            db.SqliteDbContext.Ban.Add(banEntity);
+            db.TypedContext.Ban.Add(banEntity);
 
-            await db.SqliteDbContext.SaveChangesAsync();
+            await db.TypedContext.SaveChangesAsync();
             return ConvertBan(banEntity);
         }
 
@@ -205,14 +198,14 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl();
 
-            db.SqliteDbContext.Unban.Add(new Unban
+            db.TypedContext.Unban.Add(new Unban
             {
                 BanId = unban.BanId,
                 UnbanningAdmin = unban.UnbanningAdmin?.UserId,
                 UnbanTime = unban.UnbanTime.UtcDateTime
             });
 
-            await db.SqliteDbContext.SaveChangesAsync();
+            await db.TypedContext.SaveChangesAsync();
         }
         #endregion
 
@@ -300,9 +293,9 @@ namespace Content.Server.Database
                 Trust = trust,
             };
 
-            db.SqliteDbContext.ConnectionLog.Add(connectionLog);
+            db.TypedContext.ConnectionLog.Add(connectionLog);
 
-            await db.SqliteDbContext.SaveChangesAsync();
+            await db.TypedContext.SaveChangesAsync();
 
             return connectionLog.Id;
         }
@@ -312,9 +305,9 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl(cancel);
 
-            var admins = await db.SqliteDbContext.Admin
+            var admins = await db.TypedContext.Admin
                 .Include(a => a.Flags)
-                .GroupJoin(db.SqliteDbContext.Player, a => a.UserId, p => p.UserId, (a, grouping) => new {a, grouping})
+                .GroupJoin(db.TypedContext.Player, a => a.UserId, p => p.UserId, (a, grouping) => new {a, grouping})
                 .SelectMany(t => t.grouping.DefaultIfEmpty(), (t, p) => new {t.a, p!.LastSeenUserName})
                 .ToArrayAsync(cancel);
 
@@ -385,13 +378,14 @@ namespace Content.Server.Database
             return Task.CompletedTask;
         }
 
-        protected override DateTime NormalizeDatabaseTime(DateTime time)
+        protected override Task<DbGuard<SqliteServerDbContext>> GetTypedDb(
+            CancellationToken cancel = default,
+            [CallerMemberName] string? name = null)
         {
-            DebugTools.Assert(time.Kind == DateTimeKind.Unspecified);
-            return DateTime.SpecifyKind(time, DateTimeKind.Utc);
+            return GetDbImpl(cancel, name);
         }
 
-        private async Task<DbGuardImpl> GetDbImpl(
+        private async Task<DbGuard<SqliteServerDbContext>> GetDbImpl(
             CancellationToken cancel = default,
             [CallerMemberName] string? name = null)
         {
@@ -404,35 +398,7 @@ namespace Content.Server.Database
 
             var dbContext = new SqliteServerDbContext(_options());
 
-            return new DbGuardImpl(this, dbContext);
-        }
-
-        protected override async Task<DbGuard> GetDb(
-            CancellationToken cancel = default,
-            [CallerMemberName] string? name = null)
-        {
-            return await GetDbImpl(cancel, name).ConfigureAwait(false);
-        }
-
-        private sealed class DbGuardImpl : DbGuard
-        {
-            private readonly ServerDbSqlite _db;
-            private readonly SqliteServerDbContext _ctx;
-
-            public DbGuardImpl(ServerDbSqlite db, SqliteServerDbContext dbContext)
-            {
-                _db = db;
-                _ctx = dbContext;
-            }
-
-            public override ServerDbContext DbContext => _ctx;
-            public SqliteServerDbContext SqliteDbContext => _ctx;
-
-            public override async ValueTask DisposeAsync()
-            {
-                await _ctx.DisposeAsync();
-                _db._prefsSemaphore.Release();
-            }
+            return new DbGuard<SqliteServerDbContext>(dbContext, _prefsSemaphore.Release);
         }
 
         private sealed class ConcurrencySemaphore

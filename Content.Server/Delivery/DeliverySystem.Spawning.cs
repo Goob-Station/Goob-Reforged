@@ -1,7 +1,7 @@
 using Content.Shared.Delivery;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.EntityTable;
-using Content.Shared.StationRecords.Components;
+using Content.Shared.StationRecords;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 

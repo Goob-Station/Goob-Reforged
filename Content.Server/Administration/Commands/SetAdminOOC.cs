@@ -28,7 +28,8 @@ namespace Content.Server.Administration.Commands
             if (string.IsNullOrEmpty(colorArg))
                 return;
 
-            if (!Color.TryFromHex(colorArg, out var color))
+            var color = Color.TryFromHex(colorArg);
+            if (!color.HasValue)
             {
                 shell.WriteError(Loc.GetString("shell-invalid-color-hex"));
                 return;
@@ -36,10 +37,10 @@ namespace Content.Server.Administration.Commands
 
             var userId = shell.Player.UserId;
             // Save the DB
-            _dbManager.SaveAdminOOCColorAsync(userId, color);
+            _dbManager.SaveAdminOOCColorAsync(userId, color.Value);
             // Update the cached preference
             var prefs = _preferenceManager.GetPreferences(userId);
-            prefs.AdminOOCColor = color;
+            prefs.AdminOOCColor = color.Value;
         }
     }
 }

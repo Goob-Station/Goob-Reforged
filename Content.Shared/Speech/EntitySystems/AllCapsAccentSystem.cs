@@ -1,13 +1,11 @@
-using Content.Shared.Speech.Components;
-
 namespace Content.Shared.Speech.EntitySystems;
 
 /// <summary>
 /// Applies the all-caps accent to speech and relayed speech status effect events.
 /// </summary>
-public sealed partial class AllCapsAccentSystem : RelayAccentSystem<AllCapsAccentComponent>
+public sealed class AllCapsAccentSystem : RelayAccentSystem<Components.AllCapsAccentComponent>
 {
-    public override string Accentuate(string message, Entity<AllCapsAccentComponent>? ent = null)
+    protected override string AccentuateInternal(EntityUid uid, Components.AllCapsAccentComponent comp, string message)
     {
         return message.ToUpperInvariant();
     }

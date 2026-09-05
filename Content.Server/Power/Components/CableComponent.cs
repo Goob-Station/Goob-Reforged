@@ -1,8 +1,10 @@
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Power;
 using Content.Shared.Tools;
-using Content.Shared.Tools.Systems;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
+using System.Diagnostics.Tracing;
+using Content.Shared.Tools.Systems;
 
 namespace Content.Server.Power.Components;
 
@@ -26,10 +28,10 @@ public sealed partial class CableComponent : Component
     ///     Checked by <see cref="CablePlacerComponent"/> to determine if there is
     ///     already a cable of a type on a tile.
     /// </summary>
-    [DataField]
+    [DataField("cableType")]
     public CableType CableType = CableType.HighVoltage;
 
-    [DataField]
+    [DataField("cuttingDelay")]
     public float CuttingDelay = 1f;
 }
 
@@ -39,17 +41,18 @@ public sealed partial class CableComponent : Component
 [ByRefEvent]
 public readonly struct CableAnchorStateChangedEvent
 {
-    public readonly Entity<TransformComponent> Cable;
-    public bool Anchored => Cable.Comp.Anchored;
+    public readonly TransformComponent Transform;
+    public EntityUid Entity => Transform.Owner;
+    public bool Anchored => Transform.Anchored;
 
     /// <summary>
     ///     If true, the entity is being detached to null-space
     /// </summary>
     public readonly bool Detaching;
 
-    public CableAnchorStateChangedEvent(Entity<TransformComponent> cable, bool detaching = false)
+    public CableAnchorStateChangedEvent(TransformComponent transform, bool detaching = false)
     {
-        Cable = cable;
         Detaching = detaching;
+        Transform = transform;
     }
 }

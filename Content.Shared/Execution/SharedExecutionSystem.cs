@@ -1,17 +1,18 @@
 using Content.Shared.ActionBlocker;
+using Content.Shared.Chat;
 using Content.Shared.CombatMode;
 using Content.Shared.Damage.Components;
 using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.IdentityManagement;
-using Content.Shared.Interaction.Events;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
-using Content.Shared.Suicide;
 using Content.Shared.Verbs;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
+using Content.Shared.Interaction.Events;
+using Robust.Shared.Player;
 using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared.Execution;
@@ -72,11 +73,13 @@ public sealed partial class SharedExecutionSystem : EntitySystem
 
         if (attacker == victim)
         {
-            ShowExecutionPopup(comp.InternalSelfExecutionMessage, comp.ExternalSelfExecutionMessage, attacker, victim, weapon);
+            ShowExecutionInternalPopup(comp.InternalSelfExecutionMessage, attacker, victim, weapon);
+            ShowExecutionExternalPopup(comp.ExternalSelfExecutionMessage, attacker, victim, weapon);
         }
         else
         {
-            ShowExecutionPopup(comp.InternalMeleeExecutionMessage, comp.ExternalMeleeExecutionMessage, attacker, victim, weapon);
+            ShowExecutionInternalPopup(comp.InternalMeleeExecutionMessage, attacker, victim, weapon);
+            ShowExecutionExternalPopup(comp.ExternalMeleeExecutionMessage, attacker, victim, weapon);
         }
 
         var doAfter =
@@ -143,20 +146,44 @@ public sealed partial class SharedExecutionSystem : EntitySystem
         if (!TryComp<DamageableComponent>(args.Victim, out var damageableComponent))
             return;
 
-        ShowExecutionPopup(internalMsg, externalMsg, args.Victim, args.Victim, entity);
+        ShowExecutionInternalPopup(internalMsg, args.Victim, args.Victim, entity, false);
+        ShowExecutionExternalPopup(externalMsg, args.Victim, args.Victim, entity);
         _audio.PlayPredicted(melee.HitSound, args.Victim, args.Victim);
         _suicide.ApplyLethalDamage((args.Victim, damageableComponent), melee.Damage);
         args.Handled = true;
     }
 
-    private void ShowExecutionPopup(string targetMessage, string otherMessage, EntityUid attacker, EntityUid victim, EntityUid weapon)
+    private void ShowExecutionInternalPopup(string locString, EntityUid attacker, EntityUid victim, EntityUid weapon, bool predict = true)
+    {
+        if (predict)
+        {
+            _popup.PopupClient(
+               Loc.GetString(locString, ("attacker", Identity.Entity(attacker, EntityManager)), ("victim", Identity.Entity(victim, EntityManager)), ("weapon", weapon)),
+               attacker,
+               attacker,
+               PopupType.MediumCaution
+               );
+        }
+        else
+        {
+            _popup.PopupEntity(
+               Loc.GetString(locString, ("attacker", Identity.Entity(attacker, EntityManager)), ("victim", Identity.Entity(victim, EntityManager)), ("weapon", weapon)),
+               attacker,
+               attacker,
+               PopupType.MediumCaution
+               );
+        }
+    }
+
+    private void ShowExecutionExternalPopup(string locString, EntityUid attacker, EntityUid victim, EntityUid weapon)
     {
         _popup.PopupEntity(
-            Loc.GetString(targetMessage, ("attacker", Identity.Entity(attacker, EntityManager)), ("victim", Identity.Entity(victim, EntityManager)), ("weapon", weapon)),
-            Loc.GetString(otherMessage, ("attacker", Identity.Entity(attacker, EntityManager)), ("victim", Identity.Entity(victim, EntityManager)), ("weapon", weapon)),
+            Loc.GetString(locString, ("attacker", Identity.Entity(attacker, EntityManager)), ("victim", Identity.Entity(victim, EntityManager)), ("weapon", weapon)),
             attacker,
-            attacker,
-            PopupType.MediumCaution);
+            Filter.PvsExcept(attacker),
+            true,
+            PopupType.MediumCaution
+            );
     }
 
     private void OnExecutionDoAfter(Entity<ExecutionComponent> entity, ref ExecutionDoAfterEvent args)
@@ -201,7 +228,8 @@ public sealed partial class SharedExecutionSystem : EntitySystem
 
         if (attacker != victim)
         {
-            _execution.ShowExecutionPopup(internalMsg, externalMsg, attacker, victim, entity);
+            _execution.ShowExecutionInternalPopup(internalMsg, attacker, victim, entity);
+            _execution.ShowExecutionExternalPopup(externalMsg, attacker, victim, entity);
         }
     }
 }

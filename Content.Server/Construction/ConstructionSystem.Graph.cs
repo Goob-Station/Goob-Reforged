@@ -320,7 +320,7 @@ namespace Content.Server.Construction
             Resolve(uid, ref containerManager, false);
 
             // We create the new entity.
-            var newUid = EntityManager.CreateEntityUninitialized(newEntity, transform.Coordinates, rotation: transform.LocalRotation);
+            var newUid = EntityManager.CreateEntityUninitialized(newEntity, transform.Coordinates);
 
             // Construction transferring.
             var newConstruction = EnsureComp<ConstructionComponent>(newUid);
@@ -363,9 +363,8 @@ namespace Content.Server.Construction
             // Transform transferring.
             var newTransform = Transform(newUid);
             TransformSystem.AttachToGridOrMap(newUid, newTransform); // in case in hands or a container
-#pragma warning disable CS0618 // Setting anchored state directly, AnchorEntity/Unanchor requires an initialized entity.
+            newTransform.LocalRotation = transform.LocalRotation;
             newTransform.Anchored = transform.Anchored;
-#pragma warning restore CS0618
 
             // Container transferring.
             if (containerManager != null)

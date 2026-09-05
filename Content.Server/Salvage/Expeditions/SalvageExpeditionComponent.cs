@@ -4,6 +4,7 @@ using Content.Shared.Salvage.Expeditions;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
 
 namespace Content.Server.Salvage.Expeditions;
 
@@ -31,7 +32,7 @@ public sealed partial class SalvageExpeditionComponent : SharedSalvageExpedition
     /// <summary>
     /// Station whose mission this is.
     /// </summary>
-    [DataField]
+    [DataField("station")]
     public EntityUid Station;
 
     [ViewVariables] public bool Completed = false;
@@ -48,7 +49,7 @@ public sealed partial class SalvageExpeditionComponent : SharedSalvageExpedition
     [ViewVariables(VVAccess.ReadWrite), DataField]
     public SoundSpecifier Sound = new SoundCollectionSpecifier("ExpeditionEnd")
     {
-        Params = AudioParams.Default.AddVolume(-5),
+        Params = AudioParams.Default.WithVolume(-5),
     };
 
     /// <summary>

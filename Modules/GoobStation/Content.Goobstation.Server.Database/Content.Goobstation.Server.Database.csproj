@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>RA0003</NoWarn>
+  </PropertyGroup>
+  <Import Project="..\..\..\MSBuild\Content.props"/>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+
+    <!-- Necessary at design time -->
+    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Condition="'$(UseSystemSqlite)' == 'True' and '$(Configuration)' != 'Release'" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Condition="'$(UseSystemSqlite)' != 'True' and '$(Configuration)' != 'Release'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Content.Server.Database\Content.Server.Database.csproj" />
+  </ItemGroup>
+
+  <!--EF.Core Design now shits out BuildHost folders so I have to at least hide them-->
+  <ItemGroup>
+    <Content Update="@(Content)">
+      <Visible Condition="'%(NuGetItemType)' == 'Content'">false</Visible>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\Postgres\" />
+    <Folder Include="Migrations\Sqlite\" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+</Project>

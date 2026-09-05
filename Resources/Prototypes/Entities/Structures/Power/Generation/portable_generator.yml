@@ -6,7 +6,7 @@
 - type: entity
   abstract: true
   id: PortableGeneratorBase
-  parent: [ BaseMachine, SmallConstructibleMachine, StructureWheeled, BaseConstructibleMachineDestructible]
+  parent: [ BaseMachine, SmallConstructibleMachine, StructureWheeled]
   components:
   # Basic properties
   - type: Transform
@@ -57,13 +57,17 @@
 
   - type: Destructible
     thresholds:
-    - trigger: &DamageMachineNormal
+    - trigger:
         !type:DamageTrigger
-        damage: 175
+        damage: 100
       behaviors:
       - !type:PlaySoundBehavior
         sound:
           collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
   - type: GuideHelp
     guides:
     - PortableGenerator
@@ -322,10 +326,19 @@
     tileBreakScale: 0
   - type: Destructible
     thresholds:
-    - trigger: *DamageMachineNormal
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
       behaviors:
       - !type:SpillBehavior
         solution: tank
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
     - trigger:
         !type:DamageTypeTrigger
         damageType: Piercing

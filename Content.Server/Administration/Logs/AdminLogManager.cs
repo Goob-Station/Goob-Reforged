@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Server.Administration.Systems;
 using Content.Server.Database;
-using Content.Server.EUI;
 using Content.Server.GameTicking;
 using Content.Shared.Administration.Logs;
 using Content.Shared.CCVar;
@@ -30,7 +29,6 @@ public sealed partial class AdminLogManager : SharedAdminLogManager, IAdminLogMa
 {
     [Dependency] private IConfigurationManager _configuration = default!;
     [Dependency] private ILogManager _logManager = default!;
-    [Dependency] private EuiManager _euis = default!;
     [Dependency] private IServerDbManager _db = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IDynamicTypeFactory _typeFactory = default!;
@@ -634,17 +632,5 @@ public sealed partial class AdminLogManager : SharedAdminLogManager, IAdminLogMa
     public Task<int> CountLogs(int round)
     {
         return _db.CountAdminLogs(round);
-    }
-
-    public void OpenEui(ICommonSession admin, string? search = null, Guid? targetPlayer = null)
-    {
-        var ui = new AdminLogsEui();
-        _euis.OpenEui(ui, admin);
-
-        List<Guid>? userList = null;
-        if (targetPlayer is not null)
-            userList = [targetPlayer.Value];
-
-        ui.SetLogFilter(search, userList);
     }
 }

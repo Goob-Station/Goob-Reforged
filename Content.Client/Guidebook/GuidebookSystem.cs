@@ -27,7 +27,6 @@ public sealed partial class GuidebookSystem : EntitySystem
     [Dependency] private VerbSystem _verbSystem = default!;
     [Dependency] private RgbLightControllerSystem _rgbLightControllerSystem = default!;
     [Dependency] private SharedPointLightSystem _pointLightSystem = default!;
-    [Dependency] private SharedTransformSystem _xform = default!;
     [Dependency] private TagSystem _tags = default!;
 
     public event Action<List<ProtoId<GuideEntryPrototype>>,
@@ -77,7 +76,7 @@ public sealed partial class GuidebookSystem : EntitySystem
         args.Verbs.Add(new()
         {
             Text = Loc.GetString("guide-help-verb"),
-            Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/information.svg.192dpi.png")),
+            Icon = new SpriteSpecifier.Texture(new ("/Textures/Interface/VerbIcons/information.svg.192dpi.png")),
             Act = () => OnGuidebookOpen?.Invoke(component.Guides, null, null, component.IncludeChildren, component.Guides[0]),
             ClientExclusive = true,
             CloseMenu = true
@@ -107,9 +106,8 @@ public sealed partial class GuidebookSystem : EntitySystem
         {
             Act = () =>
             {
-                var xform = Transform(uid);
-                if (xform.LocalRotation != Angle.Zero)
-                    _xform.SetLocalRotationNoLerp(uid, xform.LocalRotation - Angle.FromDegrees(90), xform);
+                if (Transform(uid).LocalRotation != Angle.Zero)
+                    Transform(uid).LocalRotation -= Angle.FromDegrees(90);
             },
             Text = Loc.GetString("guidebook-monkey-unspin"),
             Priority = -9999,
@@ -140,8 +138,7 @@ public sealed partial class GuidebookSystem : EntitySystem
 
     private void OnGuidebookControlsTestActivateInWorld(EntityUid uid, GuidebookControlsTestComponent component, ActivateInWorldEvent args)
     {
-        var xform = Transform(uid);
-        _xform.SetLocalRotationNoLerp(uid, xform.LocalRotation + Angle.FromDegrees(90), xform);
+        Transform(uid).LocalRotation += Angle.FromDegrees(90);
     }
 
     private void OnGuidebookControlsTestInteractHand(EntityUid uid, GuidebookControlsTestComponent component, InteractHandEvent args)

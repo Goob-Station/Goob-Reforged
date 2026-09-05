@@ -12,8 +12,7 @@
       metabolites:
         Theobromine: 0.1
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
       - !type:ModifyStatusEffect
         effectProto: StatusEffectDrowsiness
@@ -51,8 +50,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 1
 
 - type: reagent
@@ -66,8 +64,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 4 # Coconut water is 94% water
 
 - type: reagent
@@ -81,8 +78,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
 
 - type: reagent
@@ -102,8 +98,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
       - !type:ModifyStatusEffect
         effectProto: StatusEffectDrowsiness
@@ -161,8 +156,7 @@
       metabolites:
         Theobromine: 0.1
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
       - !type:ModifyStatusEffect
         effectProto: StatusEffectDrowsiness
@@ -216,8 +210,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
       - !type:HealthChange
         damage:
           types:
@@ -241,8 +234,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
 
 - type: reagent
@@ -262,8 +254,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 4
 
 - type: reagent
@@ -290,8 +281,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 4
 
 - type: reagent
@@ -314,8 +304,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: -2
 
 - type: reagent
@@ -327,8 +316,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
         # TODO heal mimes
 
@@ -350,8 +338,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 6
       - !type:ModifyStatusEffect
         effectProto: StatusEffectDrowsiness
@@ -390,8 +377,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
       - !type:ModifyStatusEffect
         effectProto: StatusEffectDrowsiness
@@ -451,8 +437,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 4
     Respiration:
       effects:
@@ -482,8 +467,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 3 # Slightly worse for quenching thirst than just straight water
   plantMetabolism:
   - !type:PlantAdjustWater
@@ -506,8 +490,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Hunger
+      - !type:SatiateHunger
         factor: 1
 
 - type: reagent
@@ -521,8 +504,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Hunger
+      - !type:SatiateHunger
         factor: 4
 
 - type: reagent
@@ -544,8 +526,7 @@
       metabolites:
         Theobromine: 0.1
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 4
 
 - type: reagent
@@ -559,8 +540,7 @@
   metabolisms:
     Digestion:
       effects:
-        - !type:Satiate
-          satiationType: Thirst
+        - !type:SatiateThirst
           factor: 1
   fizziness: 0.3
 
@@ -616,8 +596,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 0.6
 
 - type: reagent

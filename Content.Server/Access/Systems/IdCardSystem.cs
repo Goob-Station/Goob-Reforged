@@ -96,10 +96,12 @@ public sealed partial class IdCardSystem : SharedIdCardSystem
         }
     }
 
-    public override bool ExpireId(Entity<ExpireIdCardComponent> ent)
+    public override void ExpireId(Entity<ExpireIdCardComponent> ent)
     {
-        if (!base.ExpireId(ent))
-            return false;
+        if (ent.Comp.Expired)
+            return;
+
+        base.ExpireId(ent);
 
         if (ent.Comp.ExpireMessage != null)
         {
@@ -110,7 +112,5 @@ public sealed partial class IdCardSystem : SharedIdCardSystem
                 ChatTransmitRange.Normal,
                 true);
         }
-
-        return true;
     }
 }

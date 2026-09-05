@@ -1,23 +1,24 @@
 - type: constructionGraph
-  id: EnergyGate
+  id: Turnstile
   start: start
   graph:
   - node: start
     actions:
     - !type:DeleteEntity { }
     edges:
-    - to: energyGate
+    - to: turnstile
       completed:
       - !type:SnapToGrid
       steps:
       - material: MetalRod
         amount: 4
+        doAfter: 6
       - material: Steel
         amount: 1
-        doAfter: 6
+        doAfter: 2
 
-  - node: energyGate
-    entity: EnergyGate
+  - node: turnstile
+    entity: Turnstile
     edges:
     - to: start
       completed:

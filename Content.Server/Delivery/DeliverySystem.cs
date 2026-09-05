@@ -1,6 +1,7 @@
 using Content.Server.Cargo.Systems;
 using Content.Server.Chat.Systems;
 using Content.Server.Station.Systems;
+using Content.Server.StationRecords.Systems;
 using Content.Shared.Cargo.Components;
 using Content.Shared.Cargo.Prototypes;
 using Content.Shared.Chat;
@@ -8,7 +9,6 @@ using Content.Shared.Delivery;
 using Content.Shared.FingerprintReader;
 using Content.Shared.Labels.EntitySystems;
 using Content.Shared.StationRecords;
-using Content.Shared.StationRecords.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
@@ -52,7 +52,7 @@ public sealed partial class DeliverySystem : SharedDeliverySystem
         if (_station.GetStationInMap(Transform(ent).MapID) is not { } stationId)
             return;
 
-        if (!_records.TryGetRandomRecord<GeneralStationRecord>(stationId, out var entry, seedEntity: ent))
+        if (!_records.TryGetRandomRecord<GeneralStationRecord>(stationId, out var entry))
             return;
 
         ent.Comp.RecipientName = entry.Name;

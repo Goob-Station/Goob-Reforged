@@ -22,7 +22,7 @@ using Content.Shared.Timing;
 using Content.Shared.Toggleable;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.FixedPoint;
-using JetBrains.Annotations;
+using Content.Shared.Temperature.Components;
 using Robust.Server.Audio;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Events;
@@ -58,8 +58,6 @@ namespace Content.Server.Atmos.EntitySystems
 
         private readonly Dictionary<Entity<FlammableComponent>, float> _fireEvents = new();
 
-        private const int FirestackEnergy = 37500; // joules release when on fire
-
         public override void Initialize()
         {
             UpdatesAfter.Add(typeof(AtmosphereSystem));
@@ -87,7 +85,7 @@ namespace Content.Server.Atmos.EntitySystems
         {
             // You know I'm really not sure if having AdjustFireStacks *after* Extinguish,
             // but I'm just moving this code, not questioning it.
-            TryExtinguish(ent.AsNullable());
+            Extinguish(ent, ent.Comp);
             AdjustFireStacks(ent, args.FireStacksAdjustment, ent.Comp);
         }
 
@@ -249,9 +247,9 @@ namespace Content.Server.Atmos.EntitySystems
                 _fireEvents[ent] = tempDelta;
         }
 
-        private void OnRejuvenate(Entity<FlammableComponent> ent, ref RejuvenateEvent args)
+        private void OnRejuvenate(EntityUid uid, FlammableComponent component, RejuvenateEvent args)
         {
-            TryExtinguish(ent.AsNullable());
+            Extinguish(uid, component);
         }
 
         private void OnResistFireAlert(Entity<FlammableComponent> ent, ref ResistFireAlertEvent args)
@@ -300,7 +298,7 @@ namespace Content.Server.Atmos.EntitySystems
 
             if (flammable.FireStacks <= 0)
             {
-                TryExtinguish((uid, flammable));
+                Extinguish(uid, flammable);
             }
             else
             {
@@ -309,46 +307,24 @@ namespace Content.Server.Atmos.EntitySystems
             }
         }
 
-        /// <summary>
-        /// Extinguishes an entity if it can be extinguished.
-        /// </summary>
-        [PublicAPI]
-        [Obsolete("Use TryExtinguish(Entity<FlammableComponent>) instead.")]
         public void Extinguish(EntityUid uid, FlammableComponent? flammable = null)
         {
-            // Maintaining prior resolve behavior.
             if (!Resolve(uid, ref flammable))
                 return;
 
-            TryExtinguish((uid, flammable));
-        }
+            if (!flammable.OnFire || !flammable.CanExtinguish)
+                return;
 
-        /// <summary>
-        /// Extinguishes an entity if it can be extinguished.
-        /// </summary>
-        /// <returns>
-        /// Whether or not <paramref name="uid"> was extinguished.
-        /// </returns>
-        [PublicAPI]
-        public bool TryExtinguish(Entity<FlammableComponent?> ent)
-        {
-            if (!Resolve(ent, ref ent.Comp, false))
-                return false;
+            _adminLogger.Add(LogType.Flammable, $"{ToPrettyString(uid):entity} stopped being on fire damage");
+            flammable.OnFire = false;
+            flammable.FireStacks = 0;
 
-            if (!ent.Comp.OnFire || !ent.Comp.CanExtinguish)
-                return false;
-
-            _adminLogger.Add(LogType.Flammable, $"{ToPrettyString(ent):entity} stopped being on fire damage");
-            ent.Comp.OnFire = false;
-            ent.Comp.FireStacks = 0;
-
-            _ignitionSourceSystem.SetIgnited(ent.Owner, false);
+            _ignitionSourceSystem.SetIgnited(uid, false);
 
             var extinguished = new ExtinguishedEvent();
-            RaiseLocalEvent(ent, ref extinguished);
+            RaiseLocalEvent(uid, ref extinguished);
 
-            UpdateAppearance(ent, ent.Comp);
-            return true;
+            UpdateAppearance(uid, flammable);
         }
 
         public void Ignite(EntityUid uid, EntityUid ignitionSource, FlammableComponent? flammable = null,
@@ -470,14 +446,15 @@ namespace Content.Server.Atmos.EntitySystems
                     // If we're in an oxygenless environment, put the fire out.
                     if (air == null || air.GetMoles(Gas.Oxygen) < 1f)
                     {
-                        TryExtinguish((uid, flammable));
+                        Extinguish(uid, flammable);
                         continue;
                     }
 
                     var source = EnsureComp<IgnitionSourceComponent>(uid);
                     _ignitionSourceSystem.SetIgnited((uid, source));
 
-                    _temperatureSystem.ChangeHeat(uid, FirestackEnergy * flammable.FireStacks, false);
+                    if (TryComp(uid, out TemperatureComponent? temp))
+                        _temperatureSystem.ChangeHeat(uid, 12500 * flammable.FireStacks, false, temp);
 
                     var ev = new GetFireProtectionEvent();
                     // let the thing on fire handle it
@@ -492,30 +469,9 @@ namespace Content.Server.Atmos.EntitySystems
                 }
                 else
                 {
-                    TryExtinguish((uid, flammable));
+                    Extinguish(uid, flammable);
                 }
             }
-        }
-
-        public void CopyComponent(Entity<FlammableComponent?> entity, EntityUid clone)
-        {
-            if (!Resolve(entity, ref entity.Comp, false))
-                return;
-
-            // Don't clone being on fire here.
-            var cloneComp = EnsureComp<FlammableComponent>(clone);
-            cloneComp.Displacement = entity.Comp.Displacement;
-            cloneComp.AlwaysCombustible = entity.Comp.AlwaysCombustible;
-            cloneComp.CanExtinguish = entity.Comp.CanExtinguish;
-            cloneComp.Damage = entity.Comp.Damage.Clone();
-            cloneComp.FirestackFade = entity.Comp.FirestackFade;
-            cloneComp.FirestacksOnIgnite = entity.Comp.FirestacksOnIgnite;
-            cloneComp.MaximumFireStacks = entity.Comp.MaximumFireStacks;
-            cloneComp.MinimumFireStacks = entity.Comp.MinimumFireStacks;
-            cloneComp.ResistTime = entity.Comp.ResistTime;
-            Dirty(clone, cloneComp);
-
-            UpdateAppearance(clone, cloneComp);
         }
     }
 }

@@ -9,6 +9,8 @@ using System.Net;
 using System.Text.Json;
 using Content.Shared.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Content.Server.Database
 {
@@ -16,6 +18,24 @@ namespace Content.Server.Database
     {
         protected ServerDbContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            ((IDbContextOptionsBuilderInfrastructure) options).AddOrUpdateExtension(new SnakeCaseExtension());
+
+            options.ConfigureWarnings(x =>
+            {
+                x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning);
+#if DEBUG
+                // for tests
+                x.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning);
+#endif
+            });
+
+#if DEBUG
+            options.EnableSensitiveDataLogging();
+#endif
         }
 
         public DbSet<Preference> Preference { get; set; } = null!;
@@ -153,7 +173,7 @@ namespace Content.Server.Database
             // Ban exemption can't have flags 0 since that wouldn't exempt anything.
             // The row should be removed if setting to 0.
             modelBuilder.Entity<ServerBanExemption>().ToTable(t =>
-                t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0")); // Goob
+                t.HasCheckConstraint("FlagsNotZero", "flags != 0"));
 
             modelBuilder.Entity<Player>()
                 .HasIndex(p => p.UserId)
@@ -267,7 +287,7 @@ namespace Content.Server.Database
             // A message cannot be "dismissed" without also being "seen".
             modelBuilder.Entity<AdminMessage>().ToTable(t =>
                 t.HasCheckConstraint("NotDismissedAndSeen",
-                    "NOT \"Dismissed\" OR \"Seen\"")); // Goob
+                    "NOT dismissed OR seen"));
 
             modelBuilder.Entity<RoleWhitelist>()
                 .HasOne(w => w.Player)

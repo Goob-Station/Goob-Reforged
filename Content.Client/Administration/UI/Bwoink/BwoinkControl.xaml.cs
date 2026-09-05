@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
-//
-// SPDX-License-Identifier: MIT-WIZARDS
-
 using System.Linq;
 using System.Text;
 using Content.Client.Administration.Managers;
@@ -160,10 +156,11 @@ namespace Content.Client.Administration.UI.Bwoink
                 return bch.LastMessage.CompareTo(ach.LastMessage);
             };
 
-            PlayerLogs.OnPressed += _ =>
+
+            Bans.OnPressed += _ =>
             {
                 if (_currentPlayer is not null)
-                    _console.ExecuteCommand($"adminlogs \"{_currentPlayer.SessionId}\"");
+                    _console.ExecuteCommand($"banlist \"{_currentPlayer.SessionId}\"");
             };
 
             Notes.OnPressed += _ =>
@@ -231,8 +228,8 @@ namespace Content.Client.Administration.UI.Bwoink
         {
             var disabled = _currentPlayer == null;
 
-            PlayerLogs.Visible = _adminManager.HasFlag(AdminFlags.Logs);
-            PlayerLogs.Disabled = !PlayerLogs.Visible || disabled;
+            Bans.Visible = _adminManager.HasFlag(AdminFlags.Ban);
+            Bans.Disabled = !Bans.Visible || disabled;
 
             Notes.Visible = _adminManager.HasFlag(AdminFlags.ViewNotes);
             Notes.Disabled = !Notes.Visible || disabled;

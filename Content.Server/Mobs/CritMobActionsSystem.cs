@@ -5,10 +5,9 @@ using Content.Shared.Chat;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
-using Content.Shared.Speech.Muting;
-using Content.Shared.StatusEffectNew;
 using Robust.Server.Console;
 using Robust.Shared.Player;
+using Content.Shared.Speech.Muting;
 
 namespace Content.Server.Mobs;
 
@@ -23,7 +22,6 @@ public sealed partial class CritMobActionsSystem : EntitySystem
     [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private PopupSystem _popupSystem = default!;
     [Dependency] private QuickDialogSystem _quickDialog = default!;
-    [Dependency] private StatusEffectsSystem _statusEffects = default!;
 
     private const int MaxLastWordsLength = 30;
 
@@ -50,7 +48,7 @@ public sealed partial class CritMobActionsSystem : EntitySystem
         if (!_mobState.IsCritical(uid))
             return;
 
-        if (_statusEffects.HasEffectComp<MutedStatusEffectComponent>(uid))
+        if (HasComp<MutedComponent>(uid))
         {
             _popupSystem.PopupEntity(Loc.GetString("fake-death-muted"), uid, uid);
             return;

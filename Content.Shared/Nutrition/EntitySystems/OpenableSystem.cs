@@ -162,7 +162,10 @@ public sealed partial class OpenableSystem : EntitySystem
 
         if (user != null)
         {
-            _popup.PopupEntity(Loc.GetString(comp.ClosedPopup, ("owner", uid)), user.Value, user.Value);
+            if (predicted)
+                _popup.PopupClient(Loc.GetString(comp.ClosedPopup, ("owner", uid)), user.Value, user.Value);
+            else
+                _popup.PopupEntity(Loc.GetString(comp.ClosedPopup, ("owner", uid)), user.Value, user.Value);
         }
 
         return true;

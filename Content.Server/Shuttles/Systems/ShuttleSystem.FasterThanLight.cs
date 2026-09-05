@@ -26,11 +26,12 @@ using FTLMapComponent = Content.Shared.Shuttles.Components.FTLMapComponent;
 
 namespace Content.Server.Shuttles.Systems;
 
-/// <summary>
-/// This is a way to move a shuttle from one location to another, via an intermediate map for fanciness.
-/// </summary>
 public sealed partial class ShuttleSystem
 {
+    /*
+     * This is a way to move a shuttle from one location to another, via an intermediate map for fanciness.
+     */
+
     [Dependency] private EntityQuery<BodyComponent> _bodyQuery = default!;
     [Dependency] private EntityQuery<FTLSmashImmuneComponent> _immuneQuery = default!;
     [Dependency] private EntityQuery<MapGridComponent> _mapGridQuery = default!;
@@ -39,12 +40,12 @@ public sealed partial class ShuttleSystem
 
     private readonly SoundSpecifier _startupSound = new SoundPathSpecifier("/Audio/Effects/Shuttle/hyperspace_begin.ogg")
     {
-        Params = AudioParams.Default.AddVolume(-5f),
+        Params = AudioParams.Default.WithVolume(-5f),
     };
 
     private readonly SoundSpecifier _arrivalSound = new SoundPathSpecifier("/Audio/Effects/Shuttle/hyperspace_end.ogg")
     {
-        Params = AudioParams.Default.AddVolume(-5f),
+        Params = AudioParams.Default.WithVolume(-5f),
     };
 
     public float DefaultStartupTime;
@@ -224,7 +225,7 @@ public sealed partial class ShuttleSystem
         {
 
             // Too large to FTL
-            if (FTLMassLimit > 0 && shuttlePhysics.Mass > FTLMassLimit)
+            if (FTLMassLimit > 0 &&  shuttlePhysics.Mass > FTLMassLimit)
             {
                 reason = Loc.GetString("shuttle-console-mass");
                 return false;
@@ -402,7 +403,7 @@ public sealed partial class ShuttleSystem
         LeaveNoFTLBehind((entity.Owner, xform), oldGridMatrix, oldMapUid);
 
         // Reset rotation so they always face the same direction.
-        _transform.SetLocalRotation(entity, Angle.Zero, xform);
+        xform.LocalRotation = Angle.Zero;
         _index += width + Buffer;
         comp.StateTime = StartEndTime.FromCurTime(_gameTiming, comp.TravelTime - DefaultArrivalTime);
 
@@ -595,6 +596,14 @@ public sealed partial class ShuttleSystem
         }
     }
 
+    private float GetSoundRange(EntityUid uid)
+    {
+        if (!_mapGridQuery.TryComp(uid, out var grid))
+            return 4f;
+
+        return MathF.Max(grid.LocalAABB.Width, grid.LocalAABB.Height) + 12.5f;
+    }
+
     /// <summary>
     /// Puts everyone unbuckled on the floor, paralyzed.
     /// </summary>
@@ -706,7 +715,7 @@ public sealed partial class ShuttleSystem
     {
         config = null;
 
-        if (!TryComp(shuttleUid, out TransformComponent? shuttleXform) ||
+        if (!TryComp(shuttleUid, out TransformComponent?  shuttleXform) ||
             !TryComp(targetUid, out TransformComponent? targetXform) ||
             targetXform.MapUid == null ||
             !targetXform.MapUid.Value.IsValid())

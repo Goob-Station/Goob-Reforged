@@ -5,6 +5,7 @@
     params:
       volume: -12
     collection: AmbienceGeneral
+  rules: AlwaysTrue
 
 - type: ambientMusic
   id: SpookyFog
@@ -12,14 +13,8 @@
     params:
       volume: -12
     collection: AmbienceSpookyFog
+  rules: NearSpookyFog
   priority: 5
-  conditions:
-  - !type:NearbyEntitiesCondition
-    count: 5
-    whitelist:
-      tags:
-      - SpookyFog
-    range: 4
 
 - type: ambientMusic
   id: Holy
@@ -27,10 +22,14 @@
     params:
       volume: -12
     collection: AmbienceHoly
+  rules: NearPrayable
   priority: 4
-  conditions:
-  - !type:NearbyComponentsCondition
-    anchored: true
-    components:
-    - type: Prayable
-    range: 5
+
+- type: ambientMusic
+  id: Train
+  sound:
+    params:
+      volume: -8
+    collection: AmbienceTrain
+  rules: NearTrain
+  priority: 4

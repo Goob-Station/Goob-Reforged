@@ -27,7 +27,7 @@
 
 - type: entity
   id: MobGoliath
-  parent: [ BaseMobAsteroid, MobBloodstream, BaseSlicingRefinable, BaseMobDestructible ]
+  parent: [ BaseMobAsteroid, MobBloodstream, BaseSlicingRefinable ]
   name: goliath
   description: A massive beast that uses long tentacles to ensnare its prey, threatening them is not advised under any conditions.
   components:
@@ -101,17 +101,15 @@
   components:
   - type: Action
     raiseOnUser: true
+    icon:
+      sprite: Mobs/Aliens/Asteroid/goliath.rsi
+      state: goliath_tentacle_spawn
+    iconOn:
+      sprite: Mobs/Aliens/Asteroid/goliath.rsi
+      state: goliath_tentacle_wiggle
     sound:
       path: "/Audio/Weapons/slash.ogg"
     useDelay: 8
-  - type: Sprite
-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
-    layers:
-    - state: goliath_tentacle_spawn
-      map: ["enum.ActionVisuals.Icon"]
-    - state: goliath_tentacle_wiggle
-      map: ["enum.ActionVisuals.IconToggled"]
-      visible: false
   - type: TargetAction
     range: 10
   - type: WorldTargetAction
@@ -131,10 +129,7 @@
     sprite: Mobs/Aliens/Asteroid/goliath.rsi
     layers:
     - state: goliath_tentacle_wiggle
-  - type: StunOnCollide
-    stunAmount: 1
-    knockdownAmount: 5
-    fixture: fix
+  - type: StunOnContact
     blacklist:
       tags:
       - Goliath
@@ -194,7 +189,7 @@
 
 - type: entity
   id: MobHivelord
-  parent: [ BaseMobAsteroid, FlyingMobBase, BaseSlicingRefinable, BaseMobDestructible ]
+  parent: [ BaseMobAsteroid, FlyingMobBase, BaseSlicingRefinable ]
   name: hivelord
   description: A truly alien creature, it is a mass of unknown organic material, constantly fluctuating. When attacking, pieces of it split off and attack in tandem with the original.
   components:
@@ -359,7 +354,7 @@
 
 - type: entity
   id: MobBasilisk
-  parent: [ BaseMobAsteroid, MobBloodstream, BaseSlicingRefinable, BaseMobDestructible ]
+  parent: [ BaseMobAsteroid, MobBloodstream, BaseSlicingRefinable ]
   name: basilisk
   description: A territorial beast, covered in a thick shell that absorbs energy. Its stare causes victims to freeze from the inside.
   components:

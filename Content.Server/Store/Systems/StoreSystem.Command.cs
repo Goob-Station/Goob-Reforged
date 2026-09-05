@@ -1,9 +1,8 @@
 using System.Linq;
 using Content.Server.Store.Components;
+using Content.Shared.FixedPoint;
 using Content.Server.Administration;
 using Content.Shared.Administration;
-using Content.Shared.FixedPoint;
-using Content.Shared.Store;
 using Content.Shared.Store.Components;
 using Robust.Shared.Console;
 
@@ -34,17 +33,15 @@ public sealed partial class StoreSystem
             return;
         }
 
-        var currency = args[1];
-        if (!ProtoMan.HasIndex<CurrencyPrototype>(currency))
-        {
-            shell.WriteError($"Unknown currency {currency}");
-            return;
-        }
-
         if (!TryComp<StoreComponent>(uid, out var store))
             return;
 
-        TryAddCurrency(new() { { currency, id } }, uid.Value, store);
+        var currency = new Dictionary<string, FixedPoint2>
+        {
+            { args[1], id }
+        };
+
+        TryAddCurrency(currency, uid.Value, store);
     }
 
     private CompletionResult AddCurrencyCommandCompletions(IConsoleShell shell, string[] args)

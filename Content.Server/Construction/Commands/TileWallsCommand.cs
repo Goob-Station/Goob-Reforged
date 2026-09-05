@@ -7,7 +7,6 @@ using Robust.Shared.Map;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
-using Content.Shared.Wall;
 
 namespace Content.Server.Construction.Commands;
 
@@ -23,6 +22,7 @@ public sealed partial class TileWallsCommand : IConsoleCommand
     public string Help => $"Usage: {Command} <gridId> | {Command}";
 
     public static readonly ProtoId<ContentTileDefinition> TilePrototypeId = "Plating";
+    public static readonly ProtoId<TagPrototype> WallTag = "Wall";
     public static readonly ProtoId<TagPrototype> DiagonalTag = "Diagonal";
 
     public void Execute(IConsoleShell shell, string argStr, string[] args)
@@ -79,7 +79,7 @@ public sealed partial class TileWallsCommand : IConsoleCommand
                 continue;
             }
 
-            if (!_entManager.HasComponent<WallComponent>(child))
+            if (!tagSystem.HasTag(child, WallTag))
             {
                 continue;
             }

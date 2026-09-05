@@ -87,7 +87,7 @@ public sealed partial class SprayPainterSystem : SharedSprayPainterSystem
         else
         {
             var gridUid = _transform.GetGrid(args.ClickLocation);
-            if (gridUid is not { } grid)
+            if (gridUid is not { } grid || !TryComp<DecalGridComponent>(grid, out var decalGridComp))
             {
                 _popup.PopupEntity(Loc.GetString("spray-painter-interact-nothing-to-remove"), args.User, args.User);
                 return;
@@ -102,7 +102,7 @@ public sealed partial class SprayPainterSystem : SharedSprayPainterSystem
 
             foreach (var decal in decals)
             {
-                _decals.RemoveDecal(grid, decal.Index);
+                _decals.RemoveDecal(grid, decal.Index, decalGridComp);
             }
         }
 

@@ -249,9 +249,7 @@ public sealed partial class NetworkConfiguratorSystem : SharedNetworkConfigurato
         if (_accessSystem.IsAllowed(user.Value, target, reader))
             return true;
 
-        var audioParams = component.SoundNoAccess?.Params ?? AudioParams.Default;
-        audioParams = audioParams.AddVolume(-2f).WithPitchScale(1.2f);
-        _audioSystem.PlayPvs(component.SoundNoAccess, user.Value, audioParams);
+        _audioSystem.PlayPvs(component.SoundNoAccess, user.Value, AudioParams.Default.WithVolume(-2f).WithPitchScale(1.2f));
         _popupSystem.PopupEntity(Loc.GetString("network-configurator-device-access-denied"), target, user.Value);
 
         return false;
@@ -303,9 +301,7 @@ public sealed partial class NetworkConfiguratorSystem : SharedNetworkConfigurato
         _appearanceSystem.SetData(configuratorUid, NetworkConfiguratorVisuals.Mode, configurator.LinkModeActive);
 
         var pitch = configurator.LinkModeActive ? 1 : 0.8f;
-        var audioParams = configurator.SoundSwitchMode?.Params ?? AudioParams.Default;
-        audioParams = audioParams.AddVolume(1.5f).WithPitchScale(pitch);
-        _audioSystem.PlayPvs(configurator.SoundSwitchMode, userUid, audioParams);
+        _audioSystem.PlayPvs(configurator.SoundSwitchMode, userUid, AudioParams.Default.WithVolume(1.5f).WithPitchScale(pitch));
     }
 
     /// <summary>

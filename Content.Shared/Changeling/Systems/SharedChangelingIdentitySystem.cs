@@ -44,7 +44,7 @@ public abstract partial class SharedChangelingIdentitySystem : EntitySystem
     {
         if (args.ObtainedIdentity)
         {
-            GrantIdentity(ent.Owner, args.Devoured, true);
+            GrantIdentity(ent, args.Devoured);
         }
 
         if (args.GrantedDna && TryGetDataFromOriginal(ent.AsNullable(), args.Devoured, out var data))
@@ -66,10 +66,13 @@ public abstract partial class SharedChangelingIdentitySystem : EntitySystem
     private void OnMapInit(Entity<ChangelingIdentityComponent> ent, ref MapInitEvent args)
     {
         // Make a backup of our current identity so we can transform back.
-        GrantIdentity(ent.Owner, ent.Owner);
+        GrantIdentity(ent, ent.Owner);
 
         if (!TryGetDataFromOriginal(ent.AsNullable(), ent, out var data))
             return;
+
+        data.Starting = true;
+        data.GrantedDna = true; // I have no idea how you're supposed to ever get DNA from yourself, but just in case.
 
         ent.Comp.CurrentIdentity = data.Identity;
     }
@@ -193,18 +196,12 @@ public abstract partial class SharedChangelingIdentitySystem : EntitySystem
     /// </summary>
     /// <param name="ent">The Changeling.</param>
     /// <param name="target">The target to clone.</param>
-    /// <param name="devoured">Whether this identity was granted via devouring, aka granted DNA to the changeling.</param>
-    public EntityUid? GrantIdentity(Entity<ChangelingIdentityComponent?> ent, EntityUid target, bool devoured = false)
+    public EntityUid? GrantIdentity(Entity<ChangelingIdentityComponent> ent, EntityUid target)
     {
-        if (!Resolve(ent.Owner, ref ent.Comp))
-            return null;
-
         var clone = CloneToPausedMap(ent.Comp.IdentityCloningSettings, target);
 
         if (clone == null)
             return null;
-
-        var isNew = false;
 
         // We see if we already have a identity slot for this entity.
         // This can happen if we devoured them before, but then dropped their stored identity.
@@ -212,23 +209,10 @@ public abstract partial class SharedChangelingIdentitySystem : EntitySystem
         {
             newIdentity = new ChangelingIdentityData();
             ent.Comp.ConsumedIdentities.Add(newIdentity);
-            isNew = true; // Data didn't exist before so its not an update.
         }
 
         UpdateIdentityData(newIdentity, clone.Value, target);
-        AddDevouredReference(ent!, target);
-
-        newIdentity.GrantedDna = devoured;
-
-        if (newIdentity.Original == ent)
-        {
-            // This is an identity of us, we don't wanna count it for objectives n stuff.
-            newIdentity.Starting = true;
-            newIdentity.GrantedDna = true;
-        }
-
-        var ev = new ChangelingGainedOrUpdatedIdentityEvent(ent, newIdentity, isNew);
-        RaiseLocalEvent(ent, ref ev, true); // Broadcast it to allow the mind tracker to update.
+        AddDevouredReference(ent, target);
 
         HandlePvsOverride(ent, clone.Value);
         Dirty(ent);

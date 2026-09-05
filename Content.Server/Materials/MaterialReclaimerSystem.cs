@@ -5,7 +5,6 @@ using Content.Server.Popups;
 using Content.Server.Stack;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.Emag.Components;
@@ -37,8 +36,6 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
     [Dependency] private StackSystem _stack = default!;
     [Dependency] private SharedMindSystem _mind = default!;
     [Dependency] private IAdminLogManager _adminLogger = default!;
-    [Dependency] private SharedDestructibleSystem _destructible = default!;
-    [Dependency] private DamageableSystem _damage = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -157,35 +154,24 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
         if (component.ReclaimMaterials)
             SpawnMaterialsFromComposition(uid, item, completion * component.Efficiency, xform: xform);
 
-        var playSound = true;
-
-        if (CanDamageAndGib(uid, item, component))
+        if (CanGib(uid, item, component))
         {
-            var didBloody = false;
-
-            if (component.DamageOnEmag is not null && _damage.TryChangeDamage(item, component.DamageOnEmag, false)) // It shouldn't ignore resistance
-                didBloody = true;
-
-            if (_destructible.CanDestroy(item) && component.GibOnEmag)
-            {
-                var logImpact = HasComp<HumanoidProfileComponent>(item) ? LogImpact.Extreme : LogImpact.Medium;
-                _adminLogger.Add(LogType.Gib, logImpact, $"{ToPrettyString(item):victim} was gibbed by {ToPrettyString(uid):entity}");
-
-                playSound = false; // Gibbing already make the noise!
-
-                _gibbing.Gib(item);
-
-                didBloody = true;
-            }
-
-            if (didBloody)
-                _appearance.SetData(uid, RecyclerVisuals.Bloody, true);
+            var logImpact = HasComp<HumanoidProfileComponent>(item) ? LogImpact.Extreme : LogImpact.Medium;
+            _adminLogger.Add(LogType.Gib, logImpact, $"{ToPrettyString(item):victim} was gibbed by {ToPrettyString(uid):entity} ");
+            if (component.ReclaimSolutions)
+                SpawnChemicalsFromComposition(uid, item, completion, false, component, xform);
+            _gibbing.Gib(item);
+            _appearance.SetData(uid, RecyclerVisuals.Bloody, true);
+        }
+        else
+        {
+            if (component.ReclaimSolutions)
+                SpawnChemicalsFromComposition(uid, item, completion, true, component, xform);
         }
 
-        if (_destructible.CanDestroy(item) && component.ReclaimSolutions)
-            SpawnChemicalsFromComposition(uid, item, completion, playSound, component, xform);
-
-        _destructible.DestroyEntity(item);
+        var eventArgs = new DestructionEventArgs();
+        RaiseLocalEvent(item, eventArgs);
+        QueueDel(item);
     }
 
     private void SpawnMaterialsFromComposition(EntityUid reclaimer,
@@ -233,14 +219,10 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
         TransformComponent? xform = null,
         PhysicalCompositionComponent? composition = null)
     {
-        if (!Resolve(reclaimer, ref reclaimerComponent, ref xform))
+        if (!Resolve(reclaimer, ref reclaimerComponent, ref xform) || reclaimerComponent.SolutionContainerId == null)
             return;
 
         efficiency *= reclaimerComponent.Efficiency;
-
-        // Solution will be empty, nothing to do.
-        if (efficiency <= 0)
-            return;
 
         var totalChemicals = new Solution();
 
@@ -272,13 +254,9 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
             }
         }
 
-        // Transfer or spill the solution if there's anything to move.
-        if (totalChemicals.Volume <= 0)
-            return;
-
-        if (reclaimerComponent.SolutionContainerId == null ||
-            !_solutionContainer.TryGetSolution(reclaimer, reclaimerComponent.SolutionContainerId, out var outputSolution) ||
-            !_solutionContainer.TryTransferSolution(outputSolution.Value, totalChemicals, totalChemicals.Volume))
+        if (!_solutionContainer.TryGetSolution(reclaimer, reclaimerComponent.SolutionContainerId, out var outputSolution) ||
+            !_solutionContainer.TryTransferSolution(outputSolution.Value, totalChemicals, totalChemicals.Volume) ||
+            totalChemicals.Volume > 0)
         {
             _puddle.TrySpillAt(reclaimer, totalChemicals, out _, sound, transformComponent: xform);
         }

@@ -338,7 +338,6 @@ public partial class SharedGunSystem
 
         var count = GetRevolverCount(ent.Comp);
         Appearance.SetData(ent, AmmoVisuals.HasAmmo, count != 0, appearance);
-        Appearance.SetData(ent, AmmoVisuals.IsFull, count == ent.Comp.Capacity, appearance);
         Appearance.SetData(ent, AmmoVisuals.AmmoCount, count, appearance);
         Appearance.SetData(ent, AmmoVisuals.AmmoMax, ent.Comp.Capacity, appearance);
     }
@@ -373,7 +372,7 @@ public partial class SharedGunSystem
                 if (chamber == true)
                 {
                     // Pretend it's always been there.
-                    ammoEnt = SpawnAtPosition(ent.Comp.FillPrototype, args.Coordinates);
+                    ammoEnt = Spawn(ent.Comp.FillPrototype, args.Coordinates);
 
                     if (!_netManager.IsClient)
                     {
@@ -396,7 +395,7 @@ public partial class SharedGunSystem
 
                 // Mark cartridge as spent and if it's caseless delete from the chamber slot.
                 SetCartridgeSpent(ammoEnt.Value, cartridge, true);
-                var spawned = SpawnAtPosition(cartridge.Prototype, args.Coordinates);
+                var spawned = Spawn(cartridge.Prototype, args.Coordinates);
                 args.Ammo.Add((spawned, EnsureComp<AmmoComponent>(spawned)));
 
                 if (cartridge.DeleteOnSpawn)

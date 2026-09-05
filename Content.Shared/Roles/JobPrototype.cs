@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Access;
 using Content.Shared.Guidebook;
 using Content.Shared.Players.PlayTimeTracking;
@@ -81,6 +80,22 @@ public sealed partial class JobPrototype : IPrototype
     [DataField]
     public bool? OverrideConsoleVisibility;
 
+    /// <summary>
+    /// The "weight" or importance of this job. If this number is large, the job system will assign this job
+    /// before assigning other jobs.
+    /// </summary>
+    [DataField]
+    public int Weight;
+
+    /// <summary>
+    /// How to sort this job relative to other jobs in the UI.
+    /// Jobs with a higher value with sort before jobs with a lower value.
+    /// If not set, <see cref="Weight"/> is used as a fallback.
+    /// </summary>
+    [DataField]
+    public int? DisplayWeight;
+
+    public int RealDisplayWeight => DisplayWeight ?? Weight;
 
     /// <summary>
     /// A numerical score for how much easier this job is for antagonists.
@@ -137,52 +152,12 @@ public sealed partial class JobPrototype : IPrototype
 }
 
 /// <summary>
-/// Sorts <see cref="JobPrototype"/>s appropriately for display using a map's job weighting profile.
+/// Sorts <see cref="JobPrototype"/>s appropriately for display in the UI,
+/// respecting their <see cref="JobPrototype.Weight"/>.
 /// </summary>
 public sealed class JobUIComparer : IComparer<JobPrototype>
 {
-    private readonly IReadOnlyDictionary<ProtoId<JobPrototype>, int> _weights;
-
-    private JobUIComparer(IReadOnlyDictionary<ProtoId<JobPrototype>, int> weights)
-    {
-        _weights = weights;
-    }
-
-    /// <summary>
-    /// Creates a comparer when the global fallback profile exists.
-    /// Without one, callers should retain the source order rather than sorting jobs.
-    /// </summary>
-    public static bool TryCreate(
-        IPrototypeManager prototypes,
-        ProtoId<JobWeightPrototype>? jobWeights,
-        [NotNullWhen(true)] out JobUIComparer? comparer)
-    {
-        if (!prototypes.TryIndex(JobWeightPrototype.Default, out var defaultProfile))
-        {
-            comparer = null;
-            return false;
-        }
-
-        var weights = new Dictionary<ProtoId<JobPrototype>, int>(defaultProfile.Weights);
-        if (jobWeights != null && prototypes.TryIndex(jobWeights.Value, out var mapProfile))
-        {
-            foreach (var (job, weight) in mapProfile.Weights)
-            {
-                weights[job] = weight;
-            }
-        }
-
-        comparer = new JobUIComparer(weights);
-        return true;
-    }
-
-    /// <summary>
-    /// Gets the configured display weight for a job, if one exists.
-    /// </summary>
-    public int? GetWeight(JobPrototype job)
-    {
-        return _weights.TryGetValue(job.ID, out var weight) ? weight : null;
-    }
+    public static readonly JobUIComparer Instance = new();
 
     public int Compare(JobPrototype? x, JobPrototype? y)
     {
@@ -193,14 +168,7 @@ public sealed class JobUIComparer : IComparer<JobPrototype>
         if (ReferenceEquals(null, x))
             return -1;
 
-        var xWeight = GetWeight(x);
-        var yWeight = GetWeight(y);
-        if (xWeight == null || yWeight == null)
-        {
-            return 0;
-        }
-
-        var cmp = -xWeight.Value.CompareTo(yWeight.Value);
+        var cmp = -x.RealDisplayWeight.CompareTo(y.RealDisplayWeight);
         if (cmp != 0)
             return cmp;
         return string.Compare(x.ID, y.ID, StringComparison.Ordinal);

@@ -25,7 +25,14 @@
   id: Drunk
 
 - type: statusEffect
-  id: SlurredSpeechr
+  id: SlurredSpeech
+
+- type: statusEffect
+  id: PressureImmunity
+
+- type: statusEffect
+  id: Muted
+  alert: Muted
 
 - type: statusEffect
   id: Corporeal
@@ -33,3 +40,10 @@
 
 - type: statusEffect
   id: Pacified #cannot attack
+
+- type: statusEffect
+  id: RatvarianLanguage #Praise him
+
+- type: statusEffect
+  id: Adrenaline
+  alert: Adrenaline

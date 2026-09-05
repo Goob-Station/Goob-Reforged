@@ -1,7 +1,6 @@
-using Content.IntegrationTests.Fixtures.Attributes;
+﻿using Content.Server.Atmos.Piping.Trinary.Components;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Piping.Binary.Components;
-using Content.Shared.Atmos.Piping.Trinary.Components;
 using Robust.Shared.Utility;
 
 namespace Content.IntegrationTests.Tests.Atmos;
@@ -26,59 +25,62 @@ public sealed class AtmosMapLoadSettingsTest : AtmosTest
     /// Test to verify that the settings have been properly applied.
     /// </summary>
     [Test]
-    [RunOnSide(Side.Server)]
-    public void TestMapLoading()
+    public async Task TestMapLoading()
     {
-        var volumePumpQuery = SEntMan.EntityQueryEnumerator<GasVolumePumpComponent>();
-        while (volumePumpQuery.MoveNext(out var volumePump))
+        await Server.WaitAssertion(() =>
         {
-            using (Assert.EnterMultipleScope())
+            var volumePumpQuery = SEntMan.EntityQueryEnumerator<GasVolumePumpComponent>();
+            while (volumePumpQuery.MoveNext(out var volumePump))
             {
-                Assert.That(volumePump.Enabled, Is.True, "Volume pump did not load enabled!");
-                Assert.That(
-                    volumePump.TransferRate,
-                    Is.EqualTo(PumpSetting),
-                    "Volume pump did not load correct setting!"
-                );
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(volumePump.Enabled, Is.True, "Volume pump did not load enabled!");
+                    Assert.That(
+                        volumePump.TransferRate,
+                        Is.EqualTo(PumpSetting),
+                        "Volume pump did not load correct setting!"
+                        );
+                }
             }
-        }
 
-        var pressurePumpQuery = SEntMan.EntityQueryEnumerator<GasPressurePumpComponent>();
-        while (pressurePumpQuery.MoveNext(out var pressurePump))
-        {
-            using (Assert.EnterMultipleScope())
+            var pressurePumpQuery = SEntMan.EntityQueryEnumerator<GasPressurePumpComponent>();
+            while (pressurePumpQuery.MoveNext(out var pressurePump))
             {
-                Assert.That(pressurePump.Enabled, Is.True, "Pressure pump did not load enabled!");
-                Assert.That(
-                    pressurePump.TargetPressure,
-                    Is.EqualTo(PumpSetting),
-                    "Pressure pump did not load correct setting!"
-                );
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(pressurePump.Enabled, Is.True, "Pressure pump did not load enabled!");
+                    Assert.That(
+                        pressurePump.TargetPressure,
+                        Is.EqualTo(PumpSetting),
+                        "Pressure pump did not load correct setting!"
+                        );
+                }
             }
-        }
 
-        var mixerQuery = SEntMan.EntityQueryEnumerator<GasMixerComponent>();
-        while (mixerQuery.MoveNext(out var mixer))
-        {
-            using (Assert.EnterMultipleScope())
+            var mixerQuery = SEntMan.EntityQueryEnumerator<GasMixerComponent>();
+            while (mixerQuery.MoveNext(out var mixer))
             {
-                Assert.That(mixer.Enabled, Is.True, "Mixer did not load enabled!");
-                Assert.That(
-                    mixer.TargetPressure,
-                    Is.EqualTo(PumpSetting),
-                    "Mixer pump did not load correct setting!"
-                );
-                Assert.That(
-                    mixer.InletOneConcentration,
-                    Is.EqualTo(MixerMainSetting),
-                    "Mixer split did not load correct setting!"
-                );
-                Assert.That(
-                    mixer.InletTwoConcentration,
-                    Is.EqualTo(MixerSideSetting),
-                    "Mixer split did not load correct setting!"
-                );
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(mixer.Enabled, Is.True, "Mixer did not load enabled!");
+                    Assert.That(
+                        mixer.TargetPressure,
+                        Is.EqualTo(PumpSetting),
+                        "Mixer pump did not load correct setting!"
+                        );
+                    Assert.That(
+                        mixer.InletOneConcentration,
+                        Is.EqualTo(MixerMainSetting),
+                        "Mixer split did not load correct setting!"
+                        );
+                    Assert.That(
+                        mixer.InletTwoConcentration,
+                        Is.EqualTo(MixerSideSetting),
+                        "Mixer split did not load correct setting!"
+                        );
+                }
             }
-        }
+
+        });
     }
 }

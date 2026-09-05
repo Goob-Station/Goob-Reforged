@@ -1,7 +1,6 @@
 using Content.Client.Movement.Systems;
 using Content.Shared.Actions;
-using Content.Shared.Ghost.Components;
-using Content.Shared.Ghost.Systems;
+using Content.Shared.Ghost;
 using Content.Shared.NightVision;
 using Content.Shared.Overlays;
 using Robust.Client.Console;
@@ -24,10 +23,10 @@ namespace Content.Client.Ghost
 
         private bool _ghostVisibility = true;
 
-        public bool GhostVisibility
+        private bool GhostVisibility
         {
             get => _ghostVisibility;
-            private set
+            set
             {
                 if (_ghostVisibility == value)
                 {

@@ -88,7 +88,7 @@ public sealed partial class ReactionMixerSystem : EntitySystem
         if (!TryMix(ent.AsNullable(), args.Target.Value))
             return;
 
-        _popup.PopupEntity(
+        _popup.PopupClient(
             Loc.GetString(ent.Comp.MixMessage,
                 ("mixed", Identity.Entity(args.Target.Value, EntityManager)),
                 ("mixer", Identity.Entity(ent.Owner, EntityManager))),

@@ -6,7 +6,7 @@ using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.CombatMode;
 using Content.Shared.Database;
-using Content.Shared.Ghost.Components;
+using Content.Shared.Ghost;
 using Content.Shared.Hands;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -34,7 +34,9 @@ using Robust.Shared.Containers;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Map;
+using Robust.Shared.Network;
 using Robust.Shared.Physics;
+using Robust.Shared.Physics.Collision.Shapes;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
@@ -151,7 +153,6 @@ namespace Content.Shared.Interaction
         private void OnBoundInterfaceInteractAttempt(Entity<UserInterfaceComponent> ent, ref BoundUserInterfaceMessageAttempt ev)
         {
             _uiQuery.TryComp(ev.Target, out var aUiComp);
-
             if (!_actionBlockerSystem.CanInteract(ev.Actor, ev.Target))
             {
                 // We permit ghosts to open uis unless explicitly blocked
@@ -176,10 +177,6 @@ namespace Content.Shared.Interaction
             }
 
             if (aUiComp == null)
-                return;
-
-            // Key shouldn't ever be null.
-            if (!aUiComp.Key.Equals(ev.UiKey))
                 return;
 
             if (aUiComp.SingleUser && aUiComp.CurrentSingleUser != null && aUiComp.CurrentSingleUser != ev.Actor)
@@ -607,7 +604,7 @@ namespace Content.Shared.Interaction
         public float UnobstructedDistance(
             MapCoordinates origin,
             MapCoordinates other,
-            int collisionMask = (int)InRangeUnobstructedMask,
+            int collisionMask = (int) InRangeUnobstructedMask,
             Ignored? predicate = null)
         {
             var dir = other.Position - origin.Position;
@@ -679,7 +676,7 @@ namespace Content.Shared.Interaction
                 length = MaxRaycastRange;
             }
 
-            var ray = new CollisionRay(origin.Position, dir.Normalized(), (int)collisionMask);
+            var ray = new CollisionRay(origin.Position, dir.Normalized(), (int) collisionMask);
             var rayResults = _broadphase.IntersectRayWithPredicate(origin.MapId, ray, length, predicate.Invoke, false).ToList();
 
             return rayResults.Count == 0;
@@ -832,7 +829,7 @@ namespace Content.Shared.Interaction
             if (!inRange && popup && _gameTiming.IsFirstTimePredicted)
             {
                 var message = Loc.GetString("interaction-system-user-interaction-cannot-reach");
-                _popupSystem.PopupEntity(message, origin, origin);
+                _popupSystem.PopupClient(message, origin, origin);
             }
 
             return inRange;
@@ -1276,7 +1273,7 @@ namespace Content.Shared.Interaction
                 rotation = mover.TargetRelativeRotation;
             }
 
-            _transform.SetLocalRotationNoLerp(item, rotation);
+            Transform(item).LocalRotation = rotation;
 
             var dropMsg = new DroppedEvent(user);
             RaiseLocalEvent(item, dropMsg, true);
@@ -1430,7 +1427,7 @@ namespace Content.Shared.Interaction
                 return;
 
             if (!TryComp(uidB, out MetaDataComponent? metaB) || metaB.EntityPaused)
-                return;
+                return ;
 
             // TODO Struct event
             var ev = new ContactInteractionEvent(uidB.Value);

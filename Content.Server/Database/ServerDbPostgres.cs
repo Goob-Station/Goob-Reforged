@@ -18,7 +18,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Server.Database
 {
-    public sealed partial class ServerDbPostgres : ServerDbBase
+    public sealed partial class ServerDbPostgres : ServerDbBase<PostgresServerDbContext>
     {
         private readonly DbContextOptions<PostgresServerDbContext> _options;
         private readonly ISawmill _notifyLog;
@@ -33,7 +33,7 @@ namespace Content.Server.Database
             ISawmill opsLog,
             ISawmill notifyLog,
             ISerializationManager serialization)
-            : base(opsLog, serialization)
+            : base(opsLog, serialization, new PostgresDbProvider())
         {
             var concurrency = cfg.GetCVar(CCVars.DatabasePgConcurrency);
 
@@ -64,7 +64,7 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl();
 
-            var query = db.PgDbContext.Ban
+            var query = db.TypedContext.Ban
                 .ApplyIncludes(GetBanDefIncludes())
                 .Where(p => p.Id == id)
                 .AsSplitQuery();
@@ -113,7 +113,7 @@ namespace Content.Server.Database
             await using var db = await GetDbImpl();
 
             var exempt = type == BanType.Role ? null : await GetBanExemptionCore(db, userId);
-            var newPlayer = !await db.PgDbContext.Player.AnyAsync(p => p.UserId == userId);
+            var newPlayer = !await db.TypedContext.Player.AnyAsync(p => p.UserId == userId);
             var query = MakeBanLookupQuery(address, userId, hwId, modernHWIds, db, includeUnbanned, exempt, newPlayer, type);
             var queryBans = await query.ToArrayAsync();
             var bans = new List<BanDef>(queryBans.Length);
@@ -137,7 +137,7 @@ namespace Content.Server.Database
             NetUserId? userId,
             ImmutableArray<byte>? hwId,
             ImmutableArray<ImmutableArray<byte>>? modernHWIds,
-            DbGuardImpl db,
+            DbGuard<PostgresServerDbContext> db,
             bool includeUnbanned,
             ServerBanExemptFlags? exemptFlags,
             bool newPlayer,
@@ -170,7 +170,7 @@ namespace Content.Server.Database
             if (address != null && !exemptFlags.GetValueOrDefault(ServerBanExemptFlags.None)
                     .HasFlag(ServerBanExemptFlags.IP))
             {
-                selectorQueries.Add(db.PgDbContext.BanAddress
+                selectorQueries.Add(db.TypedContext.BanAddress
                     .Where(ba => EF.Functions.ContainsOrEqual(ba.Address, address)
                                  && !(ba.Ban!.ExemptFlags.HasFlag(ServerBanExemptFlags.BlacklistedRange) &&
                                       !newPlayer)));
@@ -292,9 +292,9 @@ namespace Content.Server.Database
                         })
                         .ToList(),
             };
-            db.PgDbContext.Ban.Add(banEntity);
+            db.TypedContext.Ban.Add(banEntity);
 
-            await db.PgDbContext.SaveChangesAsync();
+            await db.TypedContext.SaveChangesAsync();
             return ConvertBan(banEntity);
         }
 
@@ -302,14 +302,14 @@ namespace Content.Server.Database
         {
             await using var db = await GetDbImpl();
 
-            db.PgDbContext.Unban.Add(new Unban
+            db.TypedContext.Unban.Add(new Unban
             {
                 BanId = unban.BanId,
                 UnbanningAdmin = unban.UnbanningAdmin?.UserId,
                 UnbanTime = unban.UnbanTime.UtcDateTime
             });
 
-            await db.PgDbContext.SaveChangesAsync();
+            await db.TypedContext.SaveChangesAsync();
         }
         #endregion
 
@@ -336,9 +336,9 @@ namespace Content.Server.Database
                 Trust = trust,
             };
 
-            db.PgDbContext.ConnectionLog.Add(connectionLog);
+            db.TypedContext.ConnectionLog.Add(connectionLog);
 
-            await db.PgDbContext.SaveChangesAsync();
+            await db.TypedContext.SaveChangesAsync();
 
             return connectionLog.Id;
         }
@@ -353,9 +353,9 @@ namespace Content.Server.Database
                 await db.DbContext.Database.BeginTransactionAsync(IsolationLevel.RepeatableRead, cancel);
 
             // Join with the player table to find their last seen username, if they have one.
-            var admins = await db.PgDbContext.Admin
+            var admins = await db.TypedContext.Admin
                 .Include(a => a.Flags)
-                .GroupJoin(db.PgDbContext.Player, a => a.UserId, p => p.UserId, (a, grouping) => new {a, grouping})
+                .GroupJoin(db.TypedContext.Player, a => a.UserId, p => p.UserId, (a, grouping) => new {a, grouping})
                 .SelectMany(t => t.grouping.DefaultIfEmpty(), (t, p) => new {t.a, p!.LastSeenUserName})
                 .ToArrayAsync(cancel);
 
@@ -379,13 +379,14 @@ WHERE to_tsvector('english'::regconfig, a.message) @@ websearch_to_tsquery('engl
             return db.AdminLog;
         }
 
-        protected override DateTime NormalizeDatabaseTime(DateTime time)
+        protected override Task<DbGuard<PostgresServerDbContext>> GetTypedDb(
+            CancellationToken cancel = default,
+            [CallerMemberName] string? name = null)
         {
-            DebugTools.Assert(time.Kind == DateTimeKind.Utc);
-            return time;
+            return GetDbImpl(cancel, name);
         }
 
-        private async Task<DbGuardImpl> GetDbImpl(
+        private async Task<DbGuard<PostgresServerDbContext>> GetDbImpl(
             CancellationToken cancel = default,
             [CallerMemberName] string? name = null)
         {
@@ -397,34 +398,7 @@ WHERE to_tsvector('english'::regconfig, a.message) @@ websearch_to_tsquery('engl
             if (_msLag > 0)
                 await Task.Delay(_msLag, cancel);
 
-            return new DbGuardImpl(this, new PostgresServerDbContext(_options));
-        }
-
-        protected override async Task<DbGuard> GetDb(
-            CancellationToken cancel = default,
-            [CallerMemberName] string? name = null)
-        {
-            return await GetDbImpl(cancel, name);
-        }
-
-        private sealed class DbGuardImpl : DbGuard
-        {
-            private readonly ServerDbPostgres _db;
-
-            public DbGuardImpl(ServerDbPostgres db, PostgresServerDbContext dbC)
-            {
-                _db = db;
-                PgDbContext = dbC;
-            }
-
-            public PostgresServerDbContext PgDbContext { get; }
-            public override ServerDbContext DbContext => PgDbContext;
-
-            public override async ValueTask DisposeAsync()
-            {
-                await DbContext.DisposeAsync();
-                _db._prefsSemaphore.Release();
-            }
+            return new DbGuard<PostgresServerDbContext>(new PostgresServerDbContext(_options), _prefsSemaphore);
         }
     }
 }

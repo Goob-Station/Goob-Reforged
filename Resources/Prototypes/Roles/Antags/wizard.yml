@@ -22,7 +22,7 @@
   spawnerPrototype: SpawnPointGhostWizard
   startingGear: WizardBlueGear
   roleLoadout:
-  - RoleSurvivalExtendedAntag
+  - RoleSurvivalExtended
   briefing:
     text: wizard-role-greeting
     color: Turquoise

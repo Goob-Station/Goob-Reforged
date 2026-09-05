@@ -195,23 +195,17 @@ namespace Content.Client.Changelog
         [DataDefinition]
         public sealed partial class ChangelogEntry
         {
-            [DataField]
+            [DataField("id")]
             public int Id { get; private set; }
 
-            [DataField]
+            [DataField("author")]
             public string Author { get; private set; } = "";
 
             [DataField]
             public DateTime Time { get; private set; }
 
-            [DataField]
+            [DataField("changes")]
             public List<ChangelogChange> Changes { get; private set; } = default!;
-
-            /// <summary>
-            ///     Labels attached to the related PR, passed on via the SS14.Changelog parser.
-            /// </summary>
-            [DataField]
-            public List<string> Labels { get; private set; } = [];
         }
 
         [DataDefinition]

@@ -3,11 +3,11 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Clothing;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Fluids.Components;
-using Content.Shared.Foldable;
 using Content.Shared.Interaction.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Storage;
+using Content.Shared.Weapons.Ranged.Systems;
 
 namespace Content.Shared.Nutrition.EntitySystems;
 
@@ -19,7 +19,6 @@ public sealed partial class IngestionSystem
     {
         SubscribeLocalEvent<UnremoveableComponent, IngestibleEvent>(OnUnremovableIngestion);
         SubscribeLocalEvent<IngestionBlockerComponent, ItemMaskToggledEvent>(OnBlockerMaskToggled);
-        SubscribeLocalEvent<IngestionBlockerComponent, FoldedEvent>(OnBlockerFolded);
         SubscribeLocalEvent<IngestionBlockerComponent, IngestionAttemptEvent>(OnIngestionBlockerAttempt);
         SubscribeLocalEvent<IngestionBlockerComponent, InventoryRelayedEvent<IngestionAttemptEvent>>(OnIngestionBlockerAttempt);
 
@@ -47,12 +46,6 @@ public sealed partial class IngestionSystem
     private void OnBlockerMaskToggled(Entity<IngestionBlockerComponent> entity, ref ItemMaskToggledEvent args)
     {
         entity.Comp.Enabled = !args.Mask.Comp.IsToggled;
-        Dirty(entity);
-    }
-
-    private void OnBlockerFolded(Entity<IngestionBlockerComponent> entity, ref FoldedEvent args)
-    {
-        entity.Comp.Enabled = !args.IsFolded;
         Dirty(entity);
     }
 
@@ -90,7 +83,7 @@ public sealed partial class IngestionSystem
         {
             args.Cancelled = true;
 
-            _popup.PopupEntity(Loc.GetString("ingestion-try-use-is-empty", ("entity", entity)), entity, args.User);
+            _popup.PopupClient(Loc.GetString("ingestion-try-use-is-empty", ("entity", entity)), entity, args.User);
             return;
         }
 
@@ -108,7 +101,7 @@ public sealed partial class IngestionSystem
 
         args.Cancelled = true;
 
-        _popup.PopupEntity(Loc.GetString("edible-has-used-storage", ("food", ent), ("verb", GetEdibleVerb(ent.Owner))), args.User, args.User);
+        _popup.PopupClient(Loc.GetString("edible-has-used-storage", ("food", ent), ("verb", GetEdibleVerb(ent.Owner))), args.User, args.User);
     }
 
     private void OnItemSlotsEdible(Entity<ItemSlotsComponent> ent, ref EdibleEvent args)
@@ -121,7 +114,7 @@ public sealed partial class IngestionSystem
 
         args.Cancelled = true;
 
-        _popup.PopupEntity(Loc.GetString("edible-has-used-storage", ("food", ent), ("verb", GetEdibleVerb(ent.Owner))), args.User, args.User);
+        _popup.PopupClient(Loc.GetString("edible-has-used-storage", ("food", ent), ("verb", GetEdibleVerb(ent.Owner))), args.User, args.User);
     }
 
     private void OnOpenableEdible(Entity<OpenableComponent> ent, ref EdibleEvent args)

@@ -4,6 +4,7 @@ using Content.Server.Administration.Managers;
 using Content.Server.EUI;
 using Content.Server.GameTicking.Events;
 using Content.Server.Ghost.Roles.Components;
+using Content.Server.Ghost.Roles.Events;
 using Content.Shared.Ghost.Roles.Raffles;
 using Content.Server.Ghost.Roles.UI;
 using Content.Shared.Administration;
@@ -34,8 +35,6 @@ using Content.Shared.Verbs;
 using Robust.Shared.Collections;
 using Content.Shared.Ghost.Roles.Components;
 using Content.Shared.Roles.Components;
-using Content.Shared.Ghost.Systems;
-using Content.Shared.Ghost.Components;
 
 namespace Content.Server.Ghost.Roles;
 
@@ -779,13 +778,11 @@ public sealed partial class GhostRoleSystem : EntitySystem
         if (string.IsNullOrEmpty(component.Prototype))
             throw new NullReferenceException("Prototype string cannot be null or empty!");
 
-        if (!_transform.TryGetMapOrGridCoordinates(uid, out var spawnCoordinates))
-            return;
-
-        var mob = Spawn(component.Prototype, spawnCoordinates.Value);
+        var mob = Spawn(component.Prototype, Transform(uid).Coordinates);
+        _transform.AttachToGridOrMap(mob);
 
         var spawnedEvent = new GhostRoleSpawnerUsedEvent(uid, mob);
-        RaiseLocalEvent(mob, ref spawnedEvent);
+        RaiseLocalEvent(mob, spawnedEvent);
 
         if (ghostRole.MakeSentient)
             _mindSystem.MakeSentient(mob, ghostRole.AllowMovement, ghostRole.AllowSpeech);

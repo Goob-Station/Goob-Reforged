@@ -1,5 +1,6 @@
 using Content.Shared.Weather;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared.Salvage.Expeditions.Modifiers;
 
@@ -11,7 +12,7 @@ public sealed partial class SalvageWeatherMod : IPrototype, IBiomeSpecificMod
     [DataField("desc")] public LocId Description { get; private set; } = string.Empty;
 
     /// <inheritdoc/>
-    [DataField]
+    [DataField("cost")]
     public float Cost { get; private set; } = 0f;
 
     /// <inheritdoc/>
@@ -22,5 +23,5 @@ public sealed partial class SalvageWeatherMod : IPrototype, IBiomeSpecificMod
     /// Weather status effect prototype to use on the planet.
     /// </summary>
     [DataField("weather", required: true)]
-    public EntProtoId<WeatherStatusEffectComponent> WeatherPrototype = string.Empty;
+    public EntProtoId WeatherPrototype = string.Empty;
 }

@@ -2,7 +2,7 @@ using Content.Shared.DeviceLinking;
 using Content.Shared.Doors.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
-using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared.Doors.Components;
 
@@ -17,9 +17,11 @@ public sealed partial class AirlockComponent : Component
     public bool Powered;
 
     // Need to network airlock safety state to avoid mis-predicts when a door auto-closes as the client walks through the door.
+    [ViewVariables(VVAccess.ReadWrite)]
     [DataField, AutoNetworkedField]
     public bool Safety = true;
 
+    [ViewVariables(VVAccess.ReadWrite)]
     [DataField, AutoNetworkedField]
     public bool EmergencyAccess = false;
 
@@ -72,14 +74,14 @@ public sealed partial class AirlockComponent : Component
     /// Multiplicative modifier for the auto-close delay. Can be modified by hacking the airlock wires. Setting to
     /// zero will disable auto-closing.
     /// </summary>
-    [DataField]
+    [ViewVariables(VVAccess.ReadWrite)]
     public float AutoCloseDelayModifier = 1.0f;
 
     /// <summary>
     /// The receiver port for turning off automatic closing.
     /// </summary>
-    [DataField]
-    public ProtoId<SinkPortPrototype> AutoClosePort = "AutoClose";
+    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<SinkPortPrototype>))]
+    public string AutoClosePort = "AutoClose";
 
     [DataField]
     public LocId PryFailedPopup = "airlock-component-cannot-pry-is-powered-message";

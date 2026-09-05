@@ -62,10 +62,8 @@
   blacklist:
     components:
       - BorgChassis
-  specials:
-  - !type:ApplyStatusEffectSpecial
-    statusEffects:
-    - TraitStatusEffectMuted
+  components:
+    - type: Muted
 
 - type: trait
   id: Paracusia

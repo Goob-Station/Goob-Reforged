@@ -2,4 +2,4 @@
 
 namespace Content.Client.Store;
 
-public sealed partial class StoreSystem : SharedStoreSystem;
+public sealed class StoreSystem : SharedStoreSystem;

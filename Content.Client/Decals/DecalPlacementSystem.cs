@@ -25,6 +25,7 @@ public sealed partial class DecalPlacementSystem : EntitySystem
     [Dependency] private SharedMapSystem _maps = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private SpriteSystem _sprite = default!;
+
     public static readonly EntProtoId DecalAction = "BaseMappingDecalAction";
 
     private string? _decalId;
@@ -73,7 +74,7 @@ public sealed partial class DecalPlacementSystem : EntitySystem
                     return false;
 
                 var decal = new Decal(coords.Position, _decalId, _decalColor, _decalAngle, _zIndex, _cleanable);
-                RaisePredictiveEvent(new RequestDecalPlacementEvent(decal, GetNetCoordinates(coords)));
+                RaiseNetworkEvent(new RequestDecalPlacementEvent(decal, GetNetCoordinates(coords)));
 
                 return true;
             },
@@ -93,7 +94,7 @@ public sealed partial class DecalPlacementSystem : EntitySystem
 
                 _erasing = true;
 
-                RaisePredictiveEvent(new RequestDecalRemovalEvent(GetNetCoordinates(coords)));
+                RaiseNetworkEvent(new RequestDecalRemovalEvent(GetNetCoordinates(coords)));
 
                 return true;
             }, (session, coords, uid) =>
@@ -131,7 +132,7 @@ public sealed partial class DecalPlacementSystem : EntitySystem
         args.Target = args.Target.Offset(new Vector2(-0.5f, -0.5f));
 
         var decal = new Decal(args.Target.Position, args.DecalId, args.Color, Angle.FromDegrees(args.Rotation), args.ZIndex, args.Cleanable);
-        RaisePredictiveEvent(new RequestDecalPlacementEvent(decal, GetNetCoordinates(args.Target)));
+        RaiseNetworkEvent(new RequestDecalPlacementEvent(decal, GetNetCoordinates(args.Target)));
     }
 
     private void OnFillSlot(FillActionSlotEvent ev)

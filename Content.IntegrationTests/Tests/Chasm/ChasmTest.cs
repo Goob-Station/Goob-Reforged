@@ -36,10 +36,10 @@ public sealed class ChasmTest : MovementTest
         // We should be falling right now.
         Assert.That(TryComp<ChasmFallingComponent>(Player, out var falling), "Player is not falling after walking over a chasm.");
 
-        var fallTime = (float)falling.EffectsTime.TotalSeconds; // Goob
+        var fallTime = (float)falling.EffectsTime.TotalSeconds;
 
         // Wait until we get deleted.
-        await Pair.RunSeconds(fallTime); // Goob
+        await Pair.RunSeconds(fallTime);
 
         // Check that the player was deleted.
         AssertDeleted(Player);

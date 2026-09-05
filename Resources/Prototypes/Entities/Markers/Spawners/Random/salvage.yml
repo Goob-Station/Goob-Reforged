@@ -27,11 +27,11 @@
         - id: CrateSalvageEquipment
         - id: CrateMaterialSteel
         - id: CrateMaterialGlass
-        - id: CrateJanitorialSupplies
+        - id: CrateServiceJanitorialSupplies
         - id: CrateHydroponicsSeedsMedicinal
-        - id: CrateEmergencyEVA
+        - id: CrateEmergencyInternals
         - id: CrateFoodMRE
-        - id: CrateMaterialCloth
+        - id: CrateMaterialTextiles
         - id: CrateMedicalSupplies
         - id: CrateEngineeringCableBulk
         - id: CrateMaterialCardboard

@@ -1,9 +1,11 @@
 #nullable enable
-using System.Linq;
 using System.Reflection;
+using System.Linq;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Server.Afk;
+using Content.Server.GameTicking;
+using Content.Shared.Afk;
 using Content.Shared.CCVar;
 using Content.Shared.Input;
 using Robust.Server.Player;
@@ -17,19 +19,19 @@ using Robust.Shared.Timing;
 
 namespace Content.IntegrationTests.Tests.Afk;
 
-[TestOf(typeof(AfkSystem))]
+[TestOf(typeof(AFKSystem))]
 [TestOf(typeof(AfkConfirmSystem))]
 public sealed class AfkSystemTest : GameTest
 {
     // Saves having to go through the input API on client and dealing with shenanigans.
     private static readonly MethodInfo HandleInputCmd =
-        typeof(AfkSystem).GetMethod("HandleInputCmd", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        typeof(AFKSystem).GetMethod("HandleInputCmd", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     private static readonly MethodInfo OnBoundUiMessageReceived =
-        typeof(AfkSystem).GetMethod("OnBoundUiMessageReceived", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        typeof(AFKSystem).GetMethod("OnBoundUiMessageReceived", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     [SidedDependency(Side.Server)] private readonly IAfkManager _afkManager = default!;
-    [SidedDependency(Side.Server)] private readonly AfkSystem _afkSystem = default!;
+    [SidedDependency(Side.Server)] private readonly AFKSystem _afkSystem = default!;
     [SidedDependency(Side.Server)] private readonly AfkConfirmSystem _afkConfirm = default!;
     [SidedDependency(Side.Server)] private readonly IPlayerManager _playerManager = default!;
     [SidedDependency(Side.Server)] private readonly IConfigurationManager _cfg = default!;

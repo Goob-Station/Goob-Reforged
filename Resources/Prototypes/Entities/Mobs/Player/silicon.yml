@@ -32,7 +32,6 @@
   - type: StationAiOverlay
   - type: ShowElectrocutionHUD
   - type: ActionGrant
-    removeOnShutdown: false
     actions:
     - ActionJumpToCore
     - ActionAIViewLaws
@@ -204,7 +203,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 500
+        damage: 400
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -213,7 +212,7 @@
         acts: [ "Breakage" ]
     - trigger:
         !type:DamageTrigger
-        damage: 1000
+        damage: 2000
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -842,10 +841,7 @@
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
   - type: RandomMetadata
-    nameSegments: # TODO: add unique syndieborg-specific names; right now this is the same pool that syndicate agents use
-    - NamesDeathCommandoFirst
-    - NamesDeathCommandoLast
-    nameFormat: name-format-standard
+    nameSegments: [NamesDeathCommando]
 
 - type: entity
   parent: PlayerSyndicateAssaultBorgDerelict

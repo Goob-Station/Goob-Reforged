@@ -37,7 +37,7 @@ public sealed partial class ActivatableUIRequiresAnchorSystem : EntitySystem
 
         if (ent.Comp.Popup != null && !args.Silent)
         {
-            _popup.PopupEntity(Loc.GetString(ent.Comp.Popup), args.User, args.User);
+            _popup.PopupClient(Loc.GetString(ent.Comp.Popup), args.User);
         }
 
         args.Cancel();

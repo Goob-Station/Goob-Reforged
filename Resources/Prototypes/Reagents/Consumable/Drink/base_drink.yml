@@ -7,8 +7,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 3
   reactiveEffects:
     Extinguish:
@@ -29,8 +28,7 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
   plantMetabolism:
   - !type:PlantAdjustNutrition
@@ -55,8 +53,7 @@
       metabolites:
         Ethanol: 0.12
       effects:
-      - !type:Satiate
-        satiationType: Thirst
+      - !type:SatiateThirst
         factor: 2
   reactiveEffects:
     Flammable:
