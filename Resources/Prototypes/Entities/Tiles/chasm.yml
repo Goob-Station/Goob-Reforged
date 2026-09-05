@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  id: BaseFloorChasmEntity
+  id: BaseFloorChasmEntity # Goob
   name: chasm
   description: You can't even see the bottom.
   placement:
@@ -8,6 +8,7 @@
     snap:
     - Wall
   components:
+  - type: Chasm
   - type: StepTrigger
     requiredTriggeredSpeed: 0
     intersectRatio: 0.4
@@ -18,18 +19,18 @@
     anchored: true
   - type: Clickable
   - type: Sprite
-    sprite: Tiles/Planet/Chasms/basalt_chasm.rsi
+    sprite: Tiles/Planet/Chasms/basalt_chasm.rsi # Goob
     drawdepth: BelowFloor
-    layers:
-    - state: chasm
+    layers: # Goob
+    - state: chasm # goob
   - type: Icon
-    sprite: Tiles/Planet/Chasms/basalt_chasm.rsi
+    sprite: Tiles/Planet/Chasms/basalt_chasm.rsi # Goob
     state: full
   - type: IconSmooth
     key: chasm
     additionalKeys:
     - walls
-    base: chasm
+    base: chasm # Goob
   - type: Physics
     bodyType: Static
   - type: Fixtures
@@ -44,10 +45,12 @@
         - ItemMask
         density: 1000
         hard: false
-  - type: Chasm
   - type: Tag
     tags:
     - HideContextMenu
+
+
+# Goob start, this is here with hopes upstream version gets merged.
 
 - type: entity
   parent: BaseFloorChasmEntity
@@ -97,3 +100,5 @@
       chasm: !type:Container
   - type: ChasmContainer
     containerId: chasm
+
+# Goob end

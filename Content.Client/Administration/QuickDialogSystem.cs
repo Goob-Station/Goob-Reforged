@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
 using Content.Client.UserInterface.Controls;
 using Content.Shared.Administration;
 
@@ -6,7 +10,7 @@ namespace Content.Client.Administration;
 /// <summary>
 /// This handles the client portion of quick dialogs.
 /// </summary>
-public sealed class QuickDialogSystem : EntitySystem
+public sealed partial class QuickDialogSystem : EntitySystem
 {
     /// <inheritdoc/>
     public override void Initialize()
