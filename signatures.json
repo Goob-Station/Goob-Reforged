@@ -24,6 +24,14 @@
       "method": "reaction",
       "pull_request": 96,
       "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/96#issuecomment-5317911612"
+    },
+    {
+      "login": "NotActuallyMarty",
+      "id": 27968892,
+      "signed_at": "2026-09-05T15:06:43.616Z",
+      "method": "reaction",
+      "pull_request": 100,
+      "evidence": "https://github.com/Goob-Station/Goob-Reforged/pull/100#issuecomment-5551679367"
     }
   ],
   "pending": {
