@@ -21,9 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout trusted tooling
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: trusted
+          allow-unsafe-pr-checkout: true
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
           sparse-checkout: |
@@ -31,9 +32,10 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Checkout PR files (data only, never executed)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: pr
+          allow-unsafe-pr-checkout: true
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
