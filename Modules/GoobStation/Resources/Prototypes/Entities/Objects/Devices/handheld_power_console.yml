@@ -1,0 +1,48 @@
+- type: entity
+  parent: BaseItem
+  id: BaseHandheldPowerMonitoringConsole
+  name: handheld power console
+  description: Fine-crafted handheld power map console for Chief Engineers. Allows the user to view the powergrid.
+  abstract: true
+  components:
+  - type: StationMap
+  - type: Sprite
+    sprite: Objects/Devices/tablets.rsi
+    layers:
+      - state: tablet
+      - state: powerconsole
+        shader: unshaded
+  - type: ActivatableUI
+    inHandsOnly: true
+    singleUser: true
+    key: enum.PowerMonitoringConsoleUiKey.Key
+  - type: PowerMonitoringConsole
+  - type: PowerMonitoringCableNetworks
+  - type: NodeContainer
+  - type: UserInterface
+    interfaces:
+      enum.PowerMonitoringConsoleUiKey.Key:
+        type: PowerMonitoringConsoleBoundUserInterface
+
+- type: entity
+  id: HandheldPowerMonitoringConsole
+  parent:
+  - BaseHandheldPowerMonitoringConsole
+  suffix: Handheld, Always Powered
+  components:
+  - type: Damageable
+  - type: Injurable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+- type: entity
+  id: HandheldPowerMonitoringConsolePowered
+  parent: [HandheldPowerMonitoringConsole, BaseHandheldComputer]
+  suffix: Handheld

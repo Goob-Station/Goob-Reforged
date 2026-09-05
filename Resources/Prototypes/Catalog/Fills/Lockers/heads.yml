@@ -168,6 +168,7 @@
     - id: MetalFoamGrenade
     - id: PlushieLizardJobChiefengineer
       prob: 0.02
+    - id: HandheldPowerMonitoringConsole # Goobstation - TODO: Mapping
 
 # Hardsuit table, used for suit storage as well
 - type: entityTable
