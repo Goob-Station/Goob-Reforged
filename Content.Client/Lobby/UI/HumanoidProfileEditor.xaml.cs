@@ -2,6 +2,7 @@ using Content.Client.Humanoid;
 using Content.Client.Message;
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Sprite;
+using Content.Goobstation.Common.ConVars;
 using Content.Shared.CCVar;
 using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
@@ -200,6 +201,18 @@ namespace Content.Client.Lobby.UI
 
             #endregion Gender
 
+            // Goob Station start
+            #region Barks
+
+            if (configurationManager.GetCVar(GoobConVars.BarksEnabled))
+            {
+                BarksContainer.Visible = true;
+                InitializeBarkVoice();
+            }
+
+            #endregion
+            // Goob end
+
             RefreshSpecies();
 
             SpeciesButton.OnItemSelected += args =>
@@ -386,6 +399,7 @@ namespace Content.Client.Lobby.UI
             UpdateEyePickers();
             UpdateSaveButton();
             UpdateMarkings();
+            UpdateBarkVoice(); // Goob Station - Barks
 
             RefreshAntags();
             RefreshJobs();
@@ -394,6 +408,7 @@ namespace Content.Client.Lobby.UI
             RefreshTraits();
             RefreshFlavorText();
             ReloadPreview();
+            UpdateBarkVoice(); // Goob Station - Barks
 
             if (Profile != null)
             {

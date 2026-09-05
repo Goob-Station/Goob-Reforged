@@ -184,7 +184,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("AdminMessages", t =>
                         {
-                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT \"Dismissed\" OR \"Seen\""); // Goob
+                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT \"Dismissed\" OR \"Seen\"");
                         });
                 });
 
@@ -446,7 +446,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("Ban", t =>
                         {
-                            t.HasCheckConstraint("NoExemptOnRoleBan", "\"Type\" = 0 OR \"ExemptFlags\" = 0"); // Goob
+                            t.HasCheckConstraint("NoExemptOnRoleBan", "\"Type\" = 0 OR \"ExemptFlags\" = 0");
                         });
                 });
 
@@ -846,6 +846,10 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Property<int>("Age")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("BarkVoice")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CharacterName")
                         .IsRequired()
                         .HasColumnType("TEXT")
@@ -1049,7 +1053,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("server_ban_exemption", t =>
                         {
-                            t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0"); // Goob
+                            t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0");
                         });
                 });
 
@@ -1155,21 +1159,21 @@ namespace Content.Server.Database.Migrations.Sqlite
                 });
 
             modelBuilder.Entity("PlayerRound", b =>
-            {
-                b.Property<int>("PlayersId")
-                    .HasColumnType("INTEGER")
-                    .HasColumnName("players_id");
+                {
+                    b.Property<int>("PlayersId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("players_id");
 
-                b.Property<int>("RoundsId")
-                    .HasColumnType("INTEGER")
-                    .HasColumnName("rounds_id");
+                    b.Property<int>("RoundsId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("rounds_id");
 
-                b.HasKey("PlayersId", "RoundsId");
+                    b.HasKey("PlayersId", "RoundsId");
 
-                b.HasIndex("RoundsId");
+                    b.HasIndex("RoundsId");
 
-                b.ToTable("player_round");
-            });
+                    b.ToTable("player_round", (string)null);
+                });
 
             modelBuilder.Entity("Content.Server.Database.Admin", b =>
                 {

@@ -1,3 +1,4 @@
+using Content.Goobstation.Common.Barks;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences;
@@ -34,4 +35,7 @@ public sealed partial class HumanoidProfileComponent : Component
 
     [DataField, AutoNetworkedField]
     public ProtoId<SpeciesPrototype> Species = HumanoidCharacterProfile.DefaultSpecies;
+
+    [DataField] // Goob Station - Barks
+    public ProtoId<BarkPrototype> BarkVoice { get; set; } = HumanoidCharacterProfile.DefaultBarkVoice; // Goob Station - Barks
 }

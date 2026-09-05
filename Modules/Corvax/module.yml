@@ -1,0 +1,6 @@
+name: Corvax
+id: corvax
+version: 1.0.0
+
+resources:
+  - Resources # I REALLY hope we only use this for resources and not csproj every fucking module

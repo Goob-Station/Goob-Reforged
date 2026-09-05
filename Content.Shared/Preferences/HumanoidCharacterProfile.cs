@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Content.Goobstation.Common.Barks;
 using Content.Shared.CCVar;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.EntityEffects.Effects;
@@ -35,6 +36,7 @@ namespace Content.Shared.Preferences
     {
         public static readonly ProtoId<SpeciesPrototype> DefaultSpecies = "Human";
         public static readonly ProtoId<EmoteSoundsPrototype> DefaultVoice = "MaleHuman";
+        public static readonly ProtoId<BarkPrototype> DefaultBarkVoice = "Alto"; // Goob Station - Barks
         private static readonly Regex RestrictedNameRegex = new(@"[^A-Za-z0-9 '\-]");
         private static readonly Regex ICNameCaseRegex = new(@"^(?<word>\w)|\b(?<word>\w)(?=\w*$)");
 
@@ -95,6 +97,11 @@ namespace Content.Shared.Preferences
 
         [DataField]
         public Gender Gender { get; private set; } = Gender.Male;
+
+        // Goob Station - Barks Start
+        [DataField]
+        public ProtoId<BarkPrototype> BarkVoice { get; set; } = DefaultBarkVoice;
+        // Goob Station - Barks End
 
         /// <summary>
         /// Stores markings, eye colors, etc for the profile.
@@ -193,6 +200,7 @@ namespace Content.Shared.Preferences
                 new HashSet<ProtoId<TraitPrototype>>(other.TraitPreferences),
                 new Dictionary<string, RoleLoadout>(other.Loadouts))
         {
+            BarkVoice = other.BarkVoice; // Goob Station - Barks
         }
 
         /// <summary>
@@ -215,11 +223,22 @@ namespace Content.Shared.Preferences
             species ??= HumanoidCharacterProfile.DefaultSpecies;
             sex ??= Sex.Male;
 
+            // Goob Station - Barks Start
+            var prototypeManager = IoCManager.Resolve<IPrototypeManager>();
+            var random = IoCManager.Resolve<IRobustRandom>();
+            var barkvoiceId = random.Pick(prototypeManager
+                .EnumeratePrototypes<BarkPrototype>()
+                .Where(o => o.RoundStart && (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(species.Value)))
+                .ToArray()
+            ).ID;
+            // Goob Station - Barks End
+
             return new()
             {
                 Species = species.Value,
                 Sex = sex.Value,
                 Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value, sex.Value),
+                BarkVoice = barkvoiceId, // Goob Station - Barks
             };
         }
 
@@ -368,6 +387,16 @@ namespace Content.Shared.Preferences
             profile.Name = (randomizeCfg & RandomizeCfg.Name) != 0 ? RandomName(speciesProto, profile.Gender) : baseProfile.Name;
             profile.Age = (randomizeCfg & RandomizeCfg.Age) != 0 ? RandomAge(speciesProto) : baseProfile.Age;
 
+            // Goob Station - Barks Start
+            var random = IoCManager.Resolve<IRobustRandom>();
+            profile.BarkVoice = random.Pick(prototypeManager
+                .EnumeratePrototypes<BarkPrototype>()
+                .Where(o => o.RoundStart &&
+                            (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(profile.Species)))
+                .ToArray()
+            ).ID;
+            // Goob Station - Barks End
+
             profile.Appearance = HumanoidCharacterAppearance.Random(speciesProto, profile.Sex, randomizeCfg, baseProfile.Appearance);
 
             return profile;
@@ -412,6 +441,13 @@ namespace Content.Shared.Preferences
         {
             return new(this) { Voice = voice };
         }
+
+        // Goob Station - Barks Start
+        public HumanoidCharacterProfile WithBarkVoice(ProtoId<BarkPrototype> barkVoice)
+        {
+            return new(this) { BarkVoice = barkVoice };
+        }
+        // Goob Station - Barks End
 
         public HumanoidCharacterProfile WithGender(Gender gender)
         {
@@ -616,6 +652,7 @@ namespace Content.Shared.Preferences
             if (Age != other.Age) return false;
             if (Sex != other.Sex) return false;
             if (Voice != other.Voice) return false;
+            if (BarkVoice != other.BarkVoice) return false; // Goob Station - Barks
             if (Gender != other.Gender) return false;
             if (Species != other.Species) return false;
             if (PreferenceUnavailable != other.PreferenceUnavailable) return false;
@@ -801,7 +838,48 @@ namespace Content.Shared.Preferences
             {
                 _loadouts.Remove(value);
             }
+
+            // Goob Station - Barks Start
+            if (!prototypeManager.TryIndex<BarkPrototype>(BarkVoice, out var bark) ||
+                (bark.SpeciesWhitelist != null && !bark.SpeciesWhitelist.Contains(Species)))
+            {
+                var barks = prototypeManager
+                    .EnumeratePrototypes<BarkPrototype>()
+                    .Where(o => o.RoundStart &&
+                                (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(Species)))
+                    .ToArray();
+
+                BarkVoice = barks.Length > 0
+                    ? barks[0].ID
+                    : DefaultBarkVoice;
+            }
+            // Goob Station - Barks End
         }
+
+        // Goob Station - Barks Start
+        public void SetBarkVoice(EntityUid uid, IEntityManager entityManager, IPrototypeManager prototypeManager)
+        {
+            var barkVoice = BarkVoice;
+
+            if (!prototypeManager.TryIndex<BarkPrototype>(barkVoice, out var bark) ||
+                (bark.SpeciesWhitelist != null && !bark.SpeciesWhitelist.Contains(Species)))
+            {
+                var barks = prototypeManager
+                    .EnumeratePrototypes<BarkPrototype>()
+                    .Where(o => o.RoundStart &&
+                                (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(Species)))
+                    .ToArray();
+
+                barkVoice = barks.Length > 0
+                    ? barks[0].ID
+                    : DefaultBarkVoice;
+            }
+
+            var speech = entityManager.EnsureComponent<SpeechSynthesisComponent>(uid);
+            speech.VoicePrototypeId = barkVoice;
+            BarkVoice = barkVoice;
+        }
+        // Goob Station - Barks End
 
         /// <summary>
         /// Takes in an IEnumerable of traits and returns a List of the valid traits.
@@ -882,6 +960,7 @@ namespace Content.Shared.Preferences
             hashCode.Add(Age);
             hashCode.Add((int)Sex);
             hashCode.Add(Voice);
+            hashCode.Add(BarkVoice); // Goob Station - Barks
             hashCode.Add((int)Gender);
             hashCode.Add(Appearance);
             hashCode.Add((int)SpawnPriority);

@@ -202,7 +202,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("AdminMessages", t =>
                         {
-                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT \"Dismissed\" OR \"Seen\""); // Goob
+                            t.HasCheckConstraint("NotDismissedAndSeen", "NOT \"Dismissed\" OR \"Seen\"");
                         });
                 });
 
@@ -478,7 +478,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("Ban", t =>
                         {
-                            t.HasCheckConstraint("NoExemptOnRoleBan", "\"Type\" = 0 OR \"ExemptFlags\" = 0"); // Goob
+                            t.HasCheckConstraint("NoExemptOnRoleBan", "\"Type\" = 0 OR \"ExemptFlags\" = 0");
                         });
                 });
 
@@ -502,7 +502,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("BanAddress", t =>
                         {
-                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\""); // Goob
+                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\"");
                         });
                 });
 
@@ -691,7 +691,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("connection_log", t =>
                         {
-                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\""); // Goob
+                            t.HasCheckConstraint("AddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"Address\"");
                         });
                 });
 
@@ -866,7 +866,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("player", t =>
                         {
-                            t.HasCheckConstraint("LastSeenAddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"LastSeenAddress\""); // Goob
+                            t.HasCheckConstraint("LastSeenAddressNotIPv6MappedIPv4", "NOT inet '::ffff:0.0.0.0/96' >>= \"LastSeenAddress\"");
                         });
                 });
 
@@ -910,6 +910,10 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.Property<int>("Age")
                         .HasColumnType("integer");
+
+                    b.Property<string>("BarkVoice")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("CharacterName")
                         .IsRequired()
@@ -1124,7 +1128,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("server_ban_exemption", t =>
                         {
-                            t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0"); // Goob
+                            t.HasCheckConstraint("FlagsNotZero", "\"Flags\" != 0");
                         });
                 });
 
@@ -1238,21 +1242,21 @@ namespace Content.Server.Database.Migrations.Postgres
                 });
 
             modelBuilder.Entity("PlayerRound", b =>
-            {
-                b.Property<int>("PlayersId")
-                    .HasColumnType("integer")
-                    .HasColumnName("players_id");
+                {
+                    b.Property<int>("PlayersId")
+                        .HasColumnType("integer")
+                        .HasColumnName("players_id");
 
-                b.Property<int>("RoundsId")
-                    .HasColumnType("integer")
-                    .HasColumnName("rounds_id");
+                    b.Property<int>("RoundsId")
+                        .HasColumnType("integer")
+                        .HasColumnName("rounds_id");
 
-                b.HasKey("PlayersId", "RoundsId");
+                    b.HasKey("PlayersId", "RoundsId");
 
-                b.HasIndex("RoundsId");
+                    b.HasIndex("RoundsId");
 
-                b.ToTable("player_round");
-            });
+                    b.ToTable("player_round", (string)null);
+                });
 
             modelBuilder.Entity("Content.Server.Database.Admin", b =>
                 {
