@@ -36,21 +36,36 @@ public static class ModuleManifestLoader
         if (!IsValidId(manifest.Id))
             throw new InvalidDataException($"Invalid module ID '{manifest.Id}' in {manifestPath}. Must be lowercase alphanumeric with underscores only.");
 
-        if (!root.TryGet("projects", out var projectsNode) || projectsNode is not SequenceDataNode projectsSeq)
-            throw new InvalidDataException($"Module manifest must contain 'projects' list: {manifestPath}");
+        var hasProjects = root.TryGet("projects", out var projectsNode);
+        var hasResources = root.TryGet("resources", out var resourcesNode);
 
-        manifest.Projects = ParseProjects(projectsSeq, manifestPath);
+        if (!hasProjects && !hasResources)
+            throw new InvalidDataException($"Module manifest must contain at least one 'projects' or 'resources' list: {manifestPath}");
 
-        if (manifest.Projects.Count == 0)
-            throw new InvalidDataException($"Module manifest must contain at least one project: {manifestPath}");
+        if (hasProjects)
+        {
+            if (projectsNode is not SequenceDataNode projectsSeq)
+                throw new InvalidDataException($"Field 'projects' must be a list in {manifestPath}");
 
-        if (root.TryGet("resources", out var resourcesNode))
+            manifest.Projects = ParseProjects(projectsSeq, manifestPath);
+
+            if (manifest.Projects.Count == 0 && !hasResources)
+                throw new InvalidDataException($"Project-only module manifest must contain at least one project: {manifestPath}");
+        }
+
+        if (hasResources)
         {
             if (resourcesNode is not SequenceDataNode resourcesSeq)
                 throw new InvalidDataException($"Field 'resources' must be a list in {manifestPath}");
 
             manifest.Resources = ParseResources(resourcesSeq, manifestPath);
+
+            if (manifest.Resources.Count == 0 && !hasProjects)
+                throw new InvalidDataException($"Resource-only module manifest must contain at least one resource path: {manifestPath}");
         }
+
+        if (manifest.Projects.Count == 0 && manifest.Resources.Count == 0)
+            throw new InvalidDataException($"Module manifest must contain at least one project or resource path: {manifestPath}");
 
         return manifest;
     }

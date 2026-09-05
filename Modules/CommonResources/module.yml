@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT-WIZARDS
 
 name: CommonResources
-id: commonResources
+id: common_resources
 version: 1.0.0
 
 resources:
