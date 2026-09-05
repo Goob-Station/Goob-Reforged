@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using Content.Goobstation.Common.Barks;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences;
@@ -34,4 +39,7 @@ public sealed partial class HumanoidProfileComponent : Component
 
     [DataField, AutoNetworkedField]
     public ProtoId<SpeciesPrototype> Species = HumanoidCharacterProfile.DefaultSpecies;
+
+    [DataField, AutoNetworkedField] // Goob Station - Barks
+    public ProtoId<BarkPrototype> BarkVoice { get; set; } = HumanoidCharacterProfile.DefaultBarkVoice; // Goob Station - Barks
 }

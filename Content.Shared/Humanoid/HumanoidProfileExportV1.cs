@@ -1,4 +1,10 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using System.Linq;
 using System.Numerics;
+using Content.Goobstation.Common.Barks;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
@@ -82,7 +88,9 @@ public sealed partial class HumanoidCharacterProfileV1
 
     public HumanoidCharacterProfile ToV2()
     {
-        return new(Name, FlavorText, Species, Age, Sex, GetDefaultVoice(Species, Sex), Gender, Appearance.ToV2(Species), SpawnPriority, JobPriorities, PreferenceUnavailable, AntagPreferences, TraitPreferences, Loadouts);
+        return new(Name, FlavorText, Species, Age, Sex, GetDefaultVoice(Species, Sex),
+            GetDefaultBarkVoice(Species), // Goob
+            Gender, Appearance.ToV2(Species), SpawnPriority, JobPriorities, PreferenceUnavailable, AntagPreferences, TraitPreferences, Loadouts);
     }
 
     // In V2 voices are stored as a separate database entry, this picks the default for the species and sex, which would give the same voice as pre-nubody.
@@ -93,6 +101,20 @@ public sealed partial class HumanoidCharacterProfileV1
         var speciesPrototye = prototypeManager.Index(species);
         return speciesPrototye.DefaultSoundsBySex[(int)sex];
     }
+
+    // Goob Station - Barks Start
+    private ProtoId<BarkPrototype> GetDefaultBarkVoice(ProtoId<SpeciesPrototype> species)
+    {
+        var prototypeManager = IoCManager.Resolve<IPrototypeManager>();
+
+        var bark = prototypeManager
+            .EnumeratePrototypes<BarkPrototype>()
+            .FirstOrDefault(o => o.RoundStart &&
+                                 (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(species)));
+
+        return bark?.ID ?? HumanoidCharacterProfile.DefaultBarkVoice;
+    }
+    // Goob Station - Barks End
 }
 
 
