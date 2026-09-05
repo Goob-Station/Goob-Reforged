@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
 #nullable enable
 using System;
 using System.IO;
@@ -259,7 +263,7 @@ public struct QueryBenchEvent
     public int HashCode;
 }
 
-public sealed class QueryBenchSystem : EntitySystem
+public sealed partial class QueryBenchSystem : EntitySystem
 {
     public override void Initialize()
     {

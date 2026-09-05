@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
 name: CRLF Check
 
 concurrency:
@@ -7,6 +11,10 @@ concurrency:
 on:
   pull_request:
     types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true  # We only care about latest.
 
 jobs:
   build:
