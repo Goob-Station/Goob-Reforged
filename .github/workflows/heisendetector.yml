@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
 name: Hunt for Heisentests
 
 on:
@@ -84,4 +88,4 @@ jobs:
         with:
           filename: .github/ISSUE_TEMPLATE/heisentest_template.md
           update_existing: true
-          search_existing: all
+          search_existing: open

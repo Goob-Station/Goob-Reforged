@@ -65,8 +65,30 @@ internal static class ModelBan
         //     .HasMethod("gist")
         //     .HasOperators("inet_ops");
 
+        // Goob start
+        // I dont know what happened with the new wizden DB dude.
+        modelBuilder.Entity<Player>()
+            .HasMany(player => player.Rounds)
+            .WithMany(round => round.Players)
+            .UsingEntity<Dictionary<string, object>>("PlayerRound",
+                right =>
+                    right.HasOne<Round>()
+                        .WithMany()
+                        .HasForeignKey("RoundsId"),
+                left =>
+                    left.HasOne<Player>()
+                    .WithMany()
+                    .HasForeignKey("PlayersId"),
+                join =>
+                {
+                    join.ToTable("player_round");
+                    join.Property<int>("PlayersId").HasColumnName("players_id");
+                    join.Property<int>("RoundsId").HasColumnName("rounds_id");
+                });
+        // Goob end
+
         modelBuilder.Entity<Ban>()
-            .ToTable(t => t.HasCheckConstraint("NoExemptOnRoleBan", $"type = {(int)BanType.Server} OR exempt_flags = 0"));
+            .ToTable(t => t.HasCheckConstraint("NoExemptOnRoleBan", $"\"Type\" = {(int)BanType.Server} OR \"ExemptFlags\" = 0")); // Goob
     }
 }
 
