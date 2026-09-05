@@ -7,6 +7,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Goobstation.Common.ConVars;
+using Content.Shared.Humanoid;
 
 namespace Content.Goobstation.Client.Barks;
 
@@ -49,10 +50,13 @@ public sealed class BarkSystem : EntitySystem
     private void OnPlayBark(PlayBarkEvent ev)
     {
         var sourceEntity = GetEntity(ev.SourceUid);
-        if (!TryComp<SpeechSynthesisComponent>(sourceEntity, out var comp)
-            || comp.VoicePrototypeId is null
-            || !_prototypeManager.TryIndex<BarkPrototype>(comp.VoicePrototypeId, out var proto))
+
+        // Goob Station - Barks Start
+        if (!HasComp<SpeechSynthesisComponent>(sourceEntity)
+            || !TryComp<HumanoidProfileComponent>(sourceEntity, out var humanoid)
+            || !_prototypeManager.TryIndex<BarkPrototype>(humanoid.BarkVoice, out var proto))
             return;
+        // Goob Station - Barks End
 
         PlayBark(sourceEntity, ev.Message,
             //ev.Whisper, todo marty

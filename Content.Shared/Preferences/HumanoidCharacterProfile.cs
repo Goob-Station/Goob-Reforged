@@ -144,6 +144,7 @@ namespace Content.Shared.Preferences
             int age,
             Sex sex,
             ProtoId<EmoteSoundsPrototype> voice,
+            ProtoId<BarkPrototype> barkVoice, // Goob Station - Barks
             Gender gender,
             HumanoidCharacterAppearance appearance,
             SpawnPriorityPreference spawnPriority,
@@ -159,6 +160,7 @@ namespace Content.Shared.Preferences
             Age = age;
             Sex = sex;
             Voice = voice;
+            BarkVoice = barkVoice; // Goob Station - Barks
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
@@ -191,6 +193,7 @@ namespace Content.Shared.Preferences
                 other.Age,
                 other.Sex,
                 other.Voice,
+                other.BarkVoice, // Goob Station - Barks
                 other.Gender,
                 other.Appearance.Clone(),
                 other.SpawnPriority,
@@ -200,7 +203,6 @@ namespace Content.Shared.Preferences
                 new HashSet<ProtoId<TraitPrototype>>(other.TraitPreferences),
                 new Dictionary<string, RoleLoadout>(other.Loadouts))
         {
-            BarkVoice = other.BarkVoice; // Goob Station - Barks
         }
 
         /// <summary>
@@ -688,6 +690,23 @@ namespace Content.Shared.Preferences
             if (!speciesPrototype.Voices.Contains(voice))
                 voice = speciesPrototype.DefaultSoundsBySex[(int)sex];
 
+            // Goob Station - Barks Start
+            var barkVoice = BarkVoice;
+            if (!prototypeManager.TryIndex<BarkPrototype>(barkVoice, out var bark) ||
+                (bark.SpeciesWhitelist != null && !bark.SpeciesWhitelist.Contains(Species)))
+            {
+                var barks = prototypeManager
+                    .EnumeratePrototypes<BarkPrototype>()
+                    .Where(o => o.RoundStart &&
+                                (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(Species)))
+                    .ToArray();
+
+                barkVoice = barks.Length > 0
+                    ? barks[0].ID
+                    : DefaultBarkVoice;
+            }
+            // Goob Station - Barks End
+
             // ensure the species can be that sex and their age fits the founds
             if (!speciesPrototype.Sexes.Contains(sex))
                 sex = speciesPrototype.Sexes[0];
@@ -798,6 +817,7 @@ namespace Content.Shared.Preferences
             Age = age;
             Sex = sex;
             Voice = voice;
+            BarkVoice = barkVoice; // Goob Station - Barks
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
@@ -838,48 +858,7 @@ namespace Content.Shared.Preferences
             {
                 _loadouts.Remove(value);
             }
-
-            // Goob Station - Barks Start
-            if (!prototypeManager.TryIndex<BarkPrototype>(BarkVoice, out var bark) ||
-                (bark.SpeciesWhitelist != null && !bark.SpeciesWhitelist.Contains(Species)))
-            {
-                var barks = prototypeManager
-                    .EnumeratePrototypes<BarkPrototype>()
-                    .Where(o => o.RoundStart &&
-                                (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(Species)))
-                    .ToArray();
-
-                BarkVoice = barks.Length > 0
-                    ? barks[0].ID
-                    : DefaultBarkVoice;
-            }
-            // Goob Station - Barks End
         }
-
-        // Goob Station - Barks Start
-        public void SetBarkVoice(EntityUid uid, IEntityManager entityManager, IPrototypeManager prototypeManager)
-        {
-            var barkVoice = BarkVoice;
-
-            if (!prototypeManager.TryIndex<BarkPrototype>(barkVoice, out var bark) ||
-                (bark.SpeciesWhitelist != null && !bark.SpeciesWhitelist.Contains(Species)))
-            {
-                var barks = prototypeManager
-                    .EnumeratePrototypes<BarkPrototype>()
-                    .Where(o => o.RoundStart &&
-                                (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(Species)))
-                    .ToArray();
-
-                barkVoice = barks.Length > 0
-                    ? barks[0].ID
-                    : DefaultBarkVoice;
-            }
-
-            var speech = entityManager.EnsureComponent<SpeechSynthesisComponent>(uid);
-            speech.VoicePrototypeId = barkVoice;
-            BarkVoice = barkVoice;
-        }
-        // Goob Station - Barks End
 
         /// <summary>
         /// Takes in an IEnumerable of traits and returns a List of the valid traits.

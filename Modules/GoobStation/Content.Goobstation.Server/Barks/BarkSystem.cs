@@ -17,9 +17,8 @@ public sealed class BarkSystem : EntitySystem
 
     private void OnEntitySpoke(EntityUid uid, SpeechSynthesisComponent comp, EntitySpokeEvent args)
     {
-        if (comp.VoicePrototypeId is null
-            //|| !args.Language.SpeechOverride.RequireSpeech // todo marty languages
-            || !_configurationManager.GetCVar(GoobConVars.BarksEnabled))
+        if ( // !args.Language.SpeechOverride.RequireSpeech || // todo marty languages
+            !_configurationManager.GetCVar(GoobConVars.BarksEnabled))
             return;
 
         var sourceEntity = GetNetEntity(uid);

@@ -1,7 +1,10 @@
+using Content.Goobstation.Common.Barks;
+using Content.Goobstation.Common.ConVars;
 using Content.Shared.Examine;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Preferences;
+using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects.Components.Localization;
 using Robust.Shared.Prototypes;
 
@@ -10,6 +13,7 @@ namespace Content.Shared.Humanoid;
 public sealed partial class HumanoidProfileSystem : EntitySystem
 {
     [Dependency] private GrammarSystem _grammar = default!;
+    [Dependency] private IConfigurationManager _cfg = default!; // Goob Station - Barks
 
     public override void Initialize()
     {
@@ -27,8 +31,17 @@ public sealed partial class HumanoidProfileSystem : EntitySystem
         ent.Comp.Age = profile.Age;
         ent.Comp.Species = profile.Species;
         ent.Comp.Voice = profile.Voice;
+        ent.Comp.BarkVoice = profile.BarkVoice; // Goob Station - Barks
         ent.Comp.Sex = profile.Sex;
         Dirty(ent);
+
+        // Goob Station - Barks Start
+        if (_cfg.GetCVar(GoobConVars.BarksEnabled))
+        {
+            var speech = EnsureComp<SpeechSynthesisComponent>(ent);
+            Dirty(ent, speech);
+        }
+        // Goob Station - Barks End
 
         var voiceChanged = new VoiceChangedEvent(ent.Comp.Voice, profile.Voice);
         RaiseLocalEvent(ent, ref voiceChanged);

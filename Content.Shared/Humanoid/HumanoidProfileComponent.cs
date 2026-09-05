@@ -36,6 +36,6 @@ public sealed partial class HumanoidProfileComponent : Component
     [DataField, AutoNetworkedField]
     public ProtoId<SpeciesPrototype> Species = HumanoidCharacterProfile.DefaultSpecies;
 
-    [DataField] // Goob Station - Barks
+    [DataField, AutoNetworkedField] // Goob Station - Barks
     public ProtoId<BarkPrototype> BarkVoice { get; set; } = HumanoidCharacterProfile.DefaultBarkVoice; // Goob Station - Barks
 }
