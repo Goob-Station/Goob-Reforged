@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
 using Content.Goobstation.Common.Barks;
 using Content.Goobstation.Common.ConVars;
 using Content.Shared.Examine;

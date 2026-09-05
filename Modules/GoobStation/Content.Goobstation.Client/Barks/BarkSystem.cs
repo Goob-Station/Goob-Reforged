@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Goob Station Contributors
+//
+// SPDX-License-Identifier: LicenseRef-GAG-1.0.txt
+
 using Content.Goobstation.Common.Barks;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
