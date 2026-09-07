@@ -85,7 +85,7 @@ mkdir -p Modules/YourModule/Content.YourModule.Shared
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Content.YourModule.Shared</RootNamespace>

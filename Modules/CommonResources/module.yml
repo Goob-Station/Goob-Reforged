@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: MIT-WIZARDS
+
+name: CommonResources
+id: common_resources
+version: 1.0.0
+
+resources:
+  - Resources
