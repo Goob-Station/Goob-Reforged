@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -335,6 +339,7 @@ namespace Content.Server.Database
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;
         public string Species { get; set; } = null!;
+        public string BarkVoice { get; set; } = null!; // Goob Station - Barks
         [Column(TypeName = "jsonb")] public JsonDocument? OrganMarkings { get; set; } = null!;
         [Column(TypeName = "jsonb")] public JsonDocument? Markings { get; set; } = null!;
         public string HairName { get; set; } = null!;

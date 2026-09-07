@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
 using Content.Shared.Audio;
 using Content.Shared.GameTicking;
 using AudioComponent = Robust.Shared.Audio.Components.AudioComponent;
@@ -29,7 +33,8 @@ public sealed partial class ContentAudioSystem : SharedContentAudioSystem
     public const float AmbientMusicMultiplier = 3f;
     public const float LobbyMultiplier = 3f;
     public const float InterfaceMultiplier = 2f;
-    
+    public const float BarksMultiplier = 3f; // Goob Station - Barks
+
     public override void Initialize()
     {
         base.Initialize();

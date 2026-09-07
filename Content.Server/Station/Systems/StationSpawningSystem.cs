@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using Content.Goobstation.Common.Barks;
 using Content.Server.Access.Systems;
 using Content.Server.Humanoid;
 using Content.Server.Mind;

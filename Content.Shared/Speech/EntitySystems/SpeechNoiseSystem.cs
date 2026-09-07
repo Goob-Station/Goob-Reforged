@@ -1,7 +1,14 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
+using Content.Goobstation.Common.Barks;
+using Content.Goobstation.Common.ConVars;
 using Content.Shared.Chat;
 using Content.Shared.Random.Helpers;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -14,11 +21,21 @@ public sealed partial class SpeechSoundSystem : EntitySystem
     [Dependency] private INetManager _net = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
 
+
+    [Dependency] private readonly IConfigurationManager _cfg = default!; // Goobstation
+
     [SubscribeLocalEvent]
     private void OnEntitySpoke(Entity<SpeechComponent> ent, ref EntitySpokeEvent args)
     {
         if (ent.Comp.SpeechSounds == null)
             return;
+
+        // Goob station - Barks
+        // todo marty language here
+        if (_cfg.GetCVar(GoobConVars.BarksEnabled) // Goob Station - Barks
+            && HasComp<SpeechSynthesisComponent>(ent))
+            return;
+        // END
 
         var currentTime = _gameTiming.CurTime;
         var cooldown = TimeSpan.FromSeconds(ent.Comp.SoundCooldownTime);
