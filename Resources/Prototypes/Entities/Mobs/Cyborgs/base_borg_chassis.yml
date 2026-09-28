@@ -228,6 +228,8 @@
     requiredMobState:
     - Critical
     - Dead
+  - type: SpeechSynthesis # Corvax-Frontier-Barks
+    voice: Borg
 
 - type: entity
   abstract: true

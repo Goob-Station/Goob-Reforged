@@ -1,8 +1,13 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MIT-WIZARDS
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Content.Goobstation.Common.Barks;
 using Content.Server.Afk;
 using Content.Server.Database;
 using Content.Shared.Body;
@@ -122,6 +127,24 @@ namespace Content.Server.Preferences.Managers
             if (!_prototypeManager.HasIndex(voice))
                 voice = speciesPrototype.DefaultSoundsBySex[(int)sex];
 
+            // Goob Station - Barks Start
+            var barkVoice = profile.BarkVoice;
+
+            if (!_prototypeManager.TryIndex<BarkPrototype>(barkVoice, out var bark) ||
+                (bark.SpeciesWhitelist != null && !bark.SpeciesWhitelist.Contains(species)))
+            {
+                var barks = _prototypeManager
+                    .EnumeratePrototypes<BarkPrototype>()
+                    .Where(o => o.RoundStart &&
+                                (o.SpeciesWhitelist is null || o.SpeciesWhitelist.Contains(species)))
+                    .ToArray();
+
+                barkVoice = barks.Length > 0
+                    ? barks[0].ID
+                    : HumanoidCharacterProfile.DefaultBarkVoice;
+            }
+            // Goob Station - Barks End
+
             if (profile.OrganMarkings?.RootElement is { } element)
             {
                 var data = element.ToDataNode();
@@ -183,6 +206,7 @@ namespace Content.Server.Preferences.Managers
                 profile.Age,
                 sex,
                 voice,
+                barkVoice, // Goob Station - Barks
                 gender,
                 new HumanoidCharacterAppearance
                 (
