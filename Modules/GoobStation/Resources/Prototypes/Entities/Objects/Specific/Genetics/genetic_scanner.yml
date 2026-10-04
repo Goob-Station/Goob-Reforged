@@ -1,0 +1,10 @@
+- type: entity
+  parent: BaseItem
+  id: GeneticSequenceScanner
+  name: genetic sequence scanner
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Research/anomalyscanner.rsi
+    layers:
+    - state: icon
+  - type: HandheldGeneticsScanner

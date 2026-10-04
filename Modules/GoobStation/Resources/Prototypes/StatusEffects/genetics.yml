@@ -1,0 +1,42 @@
+- type: entity
+  id: StatusEffectDnaMelting
+  name: DNA melting
+
+- type: entity
+  parent: StatusEffectBase
+  id: MutationStatusEffectBase
+  abstract: true
+
+## Adaptations
+
+- type: entity
+  id: MutationStatusEffectColdAdaptation
+  parent: MutationStatusEffectBase
+  components:
+  - type: HeatAdaptationStatusEffect
+    coldDamageThreshold: -999999
+
+- type: entity
+  id: MutationStatusEffectHeatAdaptation
+  parent: MutationStatusEffectBase
+  components:
+  - type: HeatAdaptationStatusEffect
+    heatDamageThreshold: 999999
+
+- type: entity
+  id: MutationStatusEffectThermalAdaptation
+  parent: [MutationStatusEffectColdAdaptation, MutationStatusEffectHeatAdaptation]
+
+- type: entity
+  id: MutationStatusEffectPressureAdaptation
+  parent: MutationStatusEffectBase
+  components:
+  - type: PressureImmunityStatusEffect
+
+## Disabilities
+
+- type: entity
+  id: MutationStatusEffectSocialAnxiety
+  parent: MutationStatusEffectBase
+  components:
+  - type: SocialAnxietyStatusEffect

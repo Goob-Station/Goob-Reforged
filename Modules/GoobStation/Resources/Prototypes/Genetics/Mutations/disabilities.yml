@@ -1,0 +1,69 @@
+
+
+- type: mutation
+  id: TouretteSyndrome
+  name: Tourette's Syndrome 
+  description: A chronic twitch that forces the user to scream bad words.
+  flavorGain: You twitch...
+  medicalExamination: Subject curses out loudly and twitches.
+#  statusEffects:
+#  - StatusEffectTourette
+
+- type: mutation
+  id: Deafness
+  name: Deafness
+  description: The holder of this genome is completely deaf.
+  instability: NegativeMajor
+  flavorGain: You can't seem to hear anything...
+#  statusEffects:
+#  - StatusEffectDeaf
+
+- type: mutation
+  id: Blindness
+  name: Blindness 
+  description: Renders the subject completely blind.
+  instability: NegativeMajor
+  flavorGain: You can't seem to see anything!
+  statusEffects:
+  - BlindnessStatusEffect
+
+- type: mutation
+  id: NearSightness
+  name: Near Sightness 
+  description: The holder of this mutation has poor eyesight.
+  instability: NegativeModerate
+  flavorGain: You can't see very well.
+#  statusEffects:
+#  - StatusEffectNearSighted
+
+- type: mutation
+  id: Cough
+  name: Cough
+  description: A chronic cough.
+  instability: NegativeModerate
+  flavorGain: You start coughing.
+#  statusEffects:
+#  - StatusEffectChronicCough
+
+- type: mutation
+  id: Paranoia
+  name: Paranoia
+  description: Subject is easily terrified, and may suffer from hallucinations.
+  instability: NegativeModerate
+  flavorGain: You feel screams echo through your mind...
+#  statusEffects:
+#  - StatusEffectParanoia
+
+- type: mutation
+  id: SocialAnxiety
+  name: Social Anxiety
+  description: Subject exhibits extreme aversion to physical intimacy.
+  instability: NegativeModerate
+  flavorGain: You feel anxious...
+  statusEffects:
+  - MutationStatusEffectSocialAnxiety
+# idk 
+#  conditions:
+#  - type: HasComponentCondition
+#    component: SocialAnxiety
+#    inverted: true
