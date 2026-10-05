@@ -64,14 +64,6 @@ public sealed partial class MutationPrototype : IPrototype, IInheritingPrototype
     [DataField]
     public string? MedicalExamination;
 
-    /// <summary>
-    /// Components this mutation adds on addition and removes on removal.
-    /// TODO: Use component tracking sorta thing so generic components can be used too.
-    /// </summary>
-    [DataField]
-    [AlwaysPushInheritance]
-    public ComponentRegistry? Components;
-
     [DataField]
     [AlwaysPushInheritance]
     public List<EntProtoId<StatusEffectComponent>>? StatusEffects;

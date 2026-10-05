@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-using Robust.Shared.GameStates;
-
 namespace Content.Goobstation.Shared.Genetics.Mutations.Components;
 
 [RegisterComponent]

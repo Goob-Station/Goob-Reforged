@@ -14,6 +14,11 @@ namespace Content.Goobstation.Shared.Genetics.Systems;
 // ok so we need a way to add and remove a status effect on mutation add/remove
 // but also we need to make sure you cant just add and remove a mutation to
 // remove an undesirable side effect caused by something else..
+// Ok so ideally probably we have some sort of status effect type for tracked components
+// Although i have no idea for making generic stuff for status effects that would have datafields and stuff
+// Because then if we have two copies of advanced generic status effect, they could have different datafield definitions
+// And it isnt really clear how to handle it. I figure we have to make a hyper specific system for all that stuff,
+// dunno....
 
 /// <summary>
 /// Handles the direct effects of mutations being added/removed.
@@ -32,7 +37,6 @@ public sealed partial class MutationEffectsSystem : EntitySystem
         var mutation = _proto.Index(args.MutationId);
 
         HandleAddEffects(ent, mutation);
-        HandleAddComponents(ent, mutation);
         HandleStabilityChange(ent);
     }
 
@@ -42,24 +46,7 @@ public sealed partial class MutationEffectsSystem : EntitySystem
         var mutation = _proto.Index(args.MutationId);
 
         HandleRemoveEffects(ent, mutation);
-        HandleRemoveComponents(ent, mutation);
         HandleStabilityChange(ent);
-    }
-
-    private void HandleAddComponents(Entity<MutableComponent> ent, MutationPrototype mutation)
-    {
-        if (mutation.Components is null)
-            return;
-
-        EntityManager.AddComponents(ent, mutation.Components);
-    }
-
-    private void HandleRemoveComponents(Entity<MutableComponent> ent, MutationPrototype mutation)
-    {
-        if (mutation.Components is null)
-            return;
-
-        EntityManager.RemoveComponents(ent, mutation.Components);
     }
 
     private void HandleAddEffects(Entity<MutableComponent> ent, MutationPrototype mutation)
