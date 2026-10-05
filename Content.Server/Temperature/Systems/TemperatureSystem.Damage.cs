@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MPL-2.0
+
 using Content.Server.Administration.Logs;
 using Content.Server.Body.Components;
 using Content.Server.Temperature.Components;
@@ -10,6 +14,10 @@ using Content.Shared.Temperature;
 using Content.Shared.Temperature.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+
+// <Goob>
+using Content.Goobstation.Common.Temperature;
+// </Goob>
 
 namespace Content.Server.Temperature.Systems;
 
@@ -97,6 +105,16 @@ public sealed partial class TemperatureSystem
 
         var heatDamageThreshold = entity.Comp.ParentHeatDamageThreshold ?? entity.Comp.HeatDamageThreshold;
         var coldDamageThreshold = entity.Comp.ParentColdDamageThreshold ?? entity.Comp.ColdDamageThreshold;
+
+        // <Goobstation>
+        var hev = new TemperatureDamageThresholdOverrideEvent(
+            heatDamageThreshold,
+            coldDamageThreshold
+        );
+        RaiseLocalEvent(entity, ref hev);
+        heatDamageThreshold = hev.HeatDamageThreshold;
+        coldDamageThreshold = hev.ColdDamageThreshold;
+        // </Goobstation>
 
         if (temperature.Temperature >= heatDamageThreshold)
         {

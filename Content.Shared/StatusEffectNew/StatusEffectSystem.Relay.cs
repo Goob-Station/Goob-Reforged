@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+//
+// SPDX-License-Identifier: MPL-2.0
+
 using Content.Shared.Body.Events;
 using Content.Shared.Atmos;
 using Content.Shared.Chat;
@@ -22,6 +26,11 @@ using Content.Shared.Throwing;
 using Content.Shared.Weapons.Ranged.Events;
 using Robust.Shared.Collections;
 using Robust.Shared.Player;
+
+// <Goob>
+using Content.Goobstation.Common.Temperature;
+using Content.Shared.Interaction.Events;
+// </Goob>
 
 namespace Content.Shared.StatusEffectNew;
 
@@ -67,6 +76,11 @@ public sealed partial class StatusEffectsSystem
 
         SubscribeLocalEvent<StatusEffectContainerComponent, CatchAttemptEvent>(RefRelayStatusEffectEvent);
         SubscribeLocalEvent<StatusEffectContainerComponent, SelfBeforeGunShotEvent>(RelayStatusEffectEvent);
+
+        // <Goobstation>
+        SubscribeLocalEvent<StatusEffectContainerComponent, InteractionSuccessEvent>(RefRelayStatusEffectEvent);
+        SubscribeLocalEvent<StatusEffectContainerComponent, TemperatureDamageThresholdOverrideEvent>(RefRelayStatusEffectEvent);
+        // </Goobstation
     }
 
     private void RefRelayStatusEffectEvent<T>(EntityUid uid, StatusEffectContainerComponent component, ref T args) where T : struct

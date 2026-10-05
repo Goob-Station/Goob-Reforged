@@ -1,0 +1,7 @@
+## Disabilities
+
+- type: entity
+  id: TraitStatusEffectSocialAnxiety
+  parent: StatusEffectBase
+  components:
+  - type: SocialAnxietyStatusEffect

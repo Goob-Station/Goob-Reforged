@@ -1,0 +1,45 @@
+# TODO: the actual aura vfx for these adaptations
+
+- type: mutation
+  id: ColdAdaptation
+  name: Cold Adaptation
+  description: A strange mutation that renders the host immune to damage from low temperature environments. It also prevents the host from slipping on ice.
+  instability: PositiveModerate
+  medicalExamination: Subject has a pulsating blue "aura".
+  flavorGain: Your body feels refreshingly cold.
+  mutuallyExclusive: [HeatAdaptation, ThermalAdaptation, PressureAdaptation]
+  statusEffects:
+  - MutationStatusEffectColdAdaptation
+
+- type: mutation
+  id: HeatAdaptation
+  name: Heat Adaptation
+  description: A strange mutation that renders the host immune to damage from high temperature, including being set alight, though the flame itself still burns clothing. It also seems to make the host resist ash storms
+  instability: PositiveModerate
+  medicalExamination: Subject has a pulsating orange "aura".
+  flavorGain: Your body feels invigoratingly warm.
+  mutuallyExclusive: [ColdAdaptation, ThermalAdaptation, PressureAdaptation, FierySweat]
+  statusEffects:
+  - MutationStatusEffectHeatAdaptation
+
+- type: mutation
+  id: ThermalAdaptation
+  name: Thermal Adaptation
+  description: A strange mutation that renders the host immune to damage from both low and high pressure environments. Does not protect from temperature, including the cold of space.
+  instability: PositiveModerate
+  medicalExamination: Subject has a pulsating green "aura".
+  flavorGain: Your body feels pleasantly room temperature.
+  mutuallyExclusive: [ColdAdaptation, HeatAdaptation, PressureAdaptation]
+  statusEffects:
+  - MutationStatusEffectThermalAdaptation
+
+- type: mutation
+  id: PressureAdaptation
+  name: Pressure Adaptation
+  description: A strange mutation that renders the host immune to damage from both low and high temperature environments. Does not protect from high or low pressure environments.
+  instability: PositiveModerate
+  medicalExamination: Subject has a pulsating pink "aura".
+  flavorGain: Your body feels numb.
+  mutuallyExclusive: [ColdAdaptation, HeatAdaptation, ThermalAdaptation]
+  statusEffects:
+  - MutationStatusEffectPressureAdaptation

@@ -1,0 +1,62 @@
+- type: mutationRecipe
+  id: ThermalAdaptation
+  required:
+  - ColdAdaptation
+  - HeatAdaptation
+  result: ThermalAdaptation
+
+- type: mutationRecipe
+  id: MindReader
+  required:
+  - Antenna
+  - Paranoia
+  result: MindReader
+
+- type: mutationRecipe
+  id: AntiGlow
+  required:
+  - Glowy
+  - VoidMagnet
+  result: AntiGlow
+
+- type: mutationRecipe
+  id: InternalMartyrdom
+  required:
+  - Strength
+  - Stimmed
+  result: InternalMartyrdom
+
+- type: mutationRecipe
+  id: RockAbsorber
+  required:
+  - RockEater
+  - Stoner
+  result: RockAbsorber
+
+- type: mutationRecipe
+  id: Cindikinesis
+  required:
+  - Geladikinesis
+  - FierySweat
+  result: Cindikinesis
+
+- type: mutationRecipe
+  id: Pyrokinesis
+  required:
+  - Cryokinesis
+  - FierySweat
+  result: Pyrokinesis
+
+- type: mutationRecipe
+  id: HeckaciousLarincks
+  required:
+  - Wacky
+  - Stoner
+  result: HeckaciousLarincks
+
+- type: mutationRecipe
+  id: ChemSpike
+  required:
+  - TongueSpike
+  - Stimmed
+  result: ChemSpike

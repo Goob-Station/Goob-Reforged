@@ -1,0 +1,46 @@
+#- type: mutationPool
+#  id: default
+#  mutations:
+#  # Adaptations
+#  - ColdAdaptation
+#  - HeatAdaptation
+#  # Combat
+#  - Adrenaline
+#  - TongueSpike
+#  - MendingTouch
+#  - Stimmed
+#  - FierySweat
+#  # Disabilities
+#  - Muteness
+#  - TouretteSyndrome
+#  - Paranoia
+#  # Intelligence
+#  - Antenna
+#  - Clever
+#  - Unintelligible
+#  - Illiterate
+
+#- type: mutationPool
+#  id: BasicAdaptations
+#  mutations:
+#  - ColdAdaptation
+#  - HeatAdaptation
+#  - PressureAdaptation
+
+- type: mutationPool
+#  parent: [BasicAdaptations]
+  id: default
+  mutations:
+  - ColdAdaptation
+  - HeatAdaptation
+  - PressureAdaptation
+  - Blindness
+  - NearSightness
+  - SocialAnxiety
+
+# TODO: MAKE PARENTING WORK !!
+#- type: mutationPool
+#  parent: default
+#  id: silly
+#  mutations:
+#  - Clumsy
