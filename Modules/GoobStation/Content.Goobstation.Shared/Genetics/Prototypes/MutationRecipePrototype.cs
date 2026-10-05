@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Goob Station Contributors
+//
+// SPDX-License-Identifier: MPL-2.0
+
 using Robust.Shared.Prototypes;
 
 namespace Content.Goobstation.Shared.Genetics.Prototypes;
